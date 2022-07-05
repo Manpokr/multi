@@ -106,7 +106,7 @@ EOF
 
 sleep 1
 echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/bbr.sh"
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
 chmod +x /usr/bin/bbr
 bbr >/dev/null 2>&1
 rm /usr/bin/bbr >/dev/null 2>&1
@@ -122,10 +122,10 @@ systemctl restart trojan
 systemctl enable trojan
 
 cd /usr/bin
-wget -O add-tr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/add-tr.sh"
-wget -O del-tr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/del-tr.sh"
-wget -O cek-tr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/cek-tr.sh"
-wget -O renew-tr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/renew-tr.sh"
+wget -O add-tr "https://raw.githubusercontent.com/Manpokr/multi/main/add-tr.sh"
+wget -O del-tr "https://raw.githubusercontent.com/Manpokr/multi/main/del-tr.sh"
+wget -O cek-tr "https://raw.githubusercontent.com/Manpokr/multi/main/cek-tr.sh"
+wget -O renew-tr "https://raw.githubusercontent.com/Manpokr/multi/main/renew-tr.sh"
 chmod +x add-tr
 chmod +x cek-tr
 chmod +x del-tr
