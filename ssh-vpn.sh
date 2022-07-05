@@ -21,7 +21,7 @@ commonname=www.ianvpn.xyz
 email=admin@IanVPN.xyz
 
 # simple password minimal
-wget -O /etc/pam.d/common-password "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/password"
+wget -O /etc/pam.d/common-password "https://raw.githubusercontent.com/Manpokr/multi/main/password"
 chmod +x /etc/pam.d/common-password
 
 # go to root
@@ -179,7 +179,7 @@ rm -f /usr/share/nginx/html.zip*
 
 # install badvpn
 cd
-wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/badvpn-udpgw64"
+wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Manpokr/multi/main/badvpn-udpgw64"
 chmod +x /usr/bin/badvpn-udpgw
 sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500' /etc/rc.local
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500
@@ -199,7 +199,7 @@ echo "/usr/sbin/nologin" >> /etc/shells
 # install squid
 cd
 apt -y install squid3
-wget -O /etc/squid/squid.conf "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/squid3.conf"
+wget -O /etc/squid/squid.conf "https://raw.githubusercontent.com/Manpokr/multi/main/squid3.conf"
 sed -i $MYIP2 /etc/squid/squid.conf
 
 # setting vnstat
@@ -249,7 +249,7 @@ sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
 /etc/init.d/stunnel4 restart
 
 #OpenVPN
-wget https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/vpn.sh &&  chmod +x vpn.sh && ./vpn.sh
+wget https://raw.githubusercontent.com/Manpokr/multi/main/vpn.sh &&  chmod +x vpn.sh && ./vpn.sh
 
 # install fail2ban
 apt -y install fail2ban
@@ -265,7 +265,7 @@ clear
 echo; echo 'Installing DOS-Deflate 0.6'; echo
 echo; echo -n 'Downloading source files...'
 apt install -y dnsutils tcpdump dsniff grepcidr
-wget -qO ddos.zip "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/ddos-deflate.zip"
+wget -qO ddos.zip "https://raw.githubusercontent.com/Manpokr/multi/main/ddos-deflate.zip"
 unzip ddos.zip
 cd ddos-deflate
 chmod +x install.sh
@@ -278,7 +278,7 @@ echo 'Config file is at /usr/local/ddos/ddos.conf'
 echo 'Please send in your comments and/or suggestions to zaf@vsnl.com'
 
 # banner /etc/issue.net
-wget -O /etc/issue.net "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/banner.conf"
+wget -O /etc/issue.net "https://raw.githubusercontent.com/Manpokr/multi/main/banner.conf"
 echo "Banner /etc/issue.net" >>/etc/ssh/sshd_config
 sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear
 
@@ -302,61 +302,61 @@ netfilter-persistent reload
 # download script
 cd /usr/bin
 # menu
-wget -O menu "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/menu.sh"
+wget -O menu "https://raw.githubusercontent.com/Manpokr/multi/main/menu.sh"
 # menu ssh-ovpn
-wget -O m-sshovpn "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-sshovpn.sh"
-wget -O usernew "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/usernew.sh"
-wget -O trial "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/trial.sh"
-wget -O renew "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/renew.sh"
-wget -O hapus "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/hapus.sh"
-wget -O cek "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/cek.sh"
-wget -O member "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/member.sh"
-wget -O delete "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/delete.sh"
-wget -O autokill "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/autokill.sh"
-wget -O ceklim "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/ceklim.sh"
+wget -O m-sshovpn "https://raw.githubusercontent.com/Manpokr/multi/main/m-sshovpn.sh"
+wget -O usernew "https://raw.githubusercontent.com/Manpokr/multi/main/usernew.sh"
+wget -O trial "https://raw.githubusercontent.com/Manpokr/multi/main/trial.sh"
+wget -O renew "https://raw.githubusercontent.com/Manpokr/multi/main/renew.sh"
+wget -O hapus "https://raw.githubusercontent.com/Manpokr/multi/main/hapus.sh"
+wget -O cek "https://raw.githubusercontent.com/Manpokr/multi/main/cek.sh"
+wget -O member "https://raw.githubusercontent.com/Manpokr/multi/main/member.sh"
+wget -O delete "https://raw.githubusercontent.com/Manpokr/multi/main/delete.sh"
+wget -O autokill "https://raw.githubusercontent.com/Manpokr/multi/main/autokill.sh"
+wget -O ceklim "https://raw.githubusercontent.com/Manpokr/multi/main/ceklim.sh"
 wget -O tendang "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/tendang.sh"
 # menu wg
 cd /usr/bin
-wget -O m-wg "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-wg.sh"
+wget -O m-wg "https://raw.githubusercontent.com/Manpokr/multi/main/m-wg.sh"
 # menu ssr
-wget -O m-ss "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-ss.sh"
+wget -O m-ss "https://raw.githubusercontent.com/Manpokr/multi/main/m-ss.sh"
 # menu trojan
-wget -O m-trojan "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-trojan.sh"
+wget -O m-trojan "https://raw.githubusercontent.com/Manpokr/multi/main/m-trojan.sh"
 # menu system
-wget -O m-system "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-system.sh"
-wget -O m-domain "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-domain.sh"
-wget -O add-host "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/add-host.sh"
-wget -O cff "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/cff.sh"
-wget -O cfd "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/cfd.sh"
-wget -O cfh "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/cfh.sh"
-wget -O certv2ray "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/certv2ray.sh"
-wget -O port-change "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/port-change.sh"
+wget -O m-system "https://raw.githubusercontent.com/Manpokr/multi/main/m-system.sh"
+wget -O m-domain "https://raw.githubusercontent.com/Manpokr/multi/main/m-domain.sh"
+wget -O add-host "https://raw.githubusercontent.com/Manpokr/multi/main/add-host.sh"
+wget -O cff "https://raw.githubusercontent.com/Manpokr/multi/main/cff.sh"
+wget -O cfd "https://raw.githubusercontent.com/Manpokr/multi/main/cfd.sh"
+wget -O cfh "https://raw.githubusercontent.com/Manpokr/multi/main/cfh.sh"
+wget -O certv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/certv2ray.sh"
+wget -O port-change "https://raw.githubusercontent.com/Manpokr/multi/main/port-change.sh"
    # change port
-wget -O port-ssl "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/port-ssl.sh"
-wget -O port-ovpn "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/port-ovpn.sh"
-wget -O port-wg "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/port-wg.sh"
-wget -O port-tr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/port-tr.sh"
-wget -O port-squid "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/port-squid.sh"
+wget -O port-ssl "https://raw.githubusercontent.com/Manpokr/multi/main/port-ssl.sh"
+wget -O port-ovpn "https://raw.githubusercontent.com/Manpokr/multi/main/port-ovpn.sh"
+wget -O port-wg "https://raw.githubusercontent.com/Manpokr/multi/main/port-wg.sh"
+wget -O port-tr "https://raw.githubusercontent.com/Manpokr/multi/main/port-tr.sh"
+wget -O port-squid "https://raw.githubusercontent.com/Manpokr/multi/main/port-squid.sh"
 # menu system
-wget -O m-webmin "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/m-webmin.sh"
-wget -O ram "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/ram.sh"
-wget -O speedtest "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/speedtest_cli.py"
-wget -O info-menu "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/info-menu.sh"
-wget -O vpsinfo "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/vpsinfo.sh"
-wget -O status "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/status.sh"
-wget -O about "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/about.sh"
-wget -O bbr "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/bbr.sh"
-wget -O auto-reboot "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/auto-reboot.sh"
-wget -O clear-log "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/clear-log.sh"
-wget -O clearcache "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/clearcache.sh"
-wget -O restart "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/restart.sh"
-wget -O bw "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/bw.sh"
-wget -O resett "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/resett.sh"
-wget -O kernel-updt "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/kernel-updt.sh"
+wget -O m-webmin "https://raw.githubusercontent.com/Manpokr/multi/main/m-webmin.sh"
+wget -O ram "https://raw.githubusercontent.com/Manpokr/multi/main/ram.sh"
+wget -O speedtest "https://raw.githubusercontent.com/Manpokr/multi/main/speedtest_cli.py"
+wget -O info-menu "https://raw.githubusercontent.com/Manpokr/multi/main/info-menu.sh"
+wget -O vpsinfo "https://raw.githubusercontent.com/Manpokr/multi/main/vpsinfo.sh"
+wget -O status "https://raw.githubusercontent.com/Manpokr/multi/main/status.sh"
+wget -O about "https://raw.githubusercontent.com/Manpokr/multi/main/about.sh"
+wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+wget -O auto-reboot "https://raw.githubusercontent.com/Manpokr/multi/main/auto-reboot.sh"
+wget -O clear-log "https://raw.githubusercontent.com/Manpokr/multi/main/clear-log.sh"
+wget -O clearcache "https://raw.githubusercontent.com/Manpokr/multi/main/clearcache.sh"
+wget -O restart "https://raw.githubusercontent.com/Manpokr/multi/main/restart.sh"
+wget -O bw "https://raw.githubusercontent.com/Manpokr/multi/main/bw.sh"
+wget -O resett "https://raw.githubusercontent.com/Manpokr/multi/main/resett.sh"
+wget -O kernel-updt "https://raw.githubusercontent.com/Manpokr/multi/main/kernel-updt.sh"
 #xpired
-wget -O xp "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/xp.sh"
-wget -O xray-xp "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/xray-xp.sh"
-wget -O v2ray-xp "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/v2ray-xp.sh"
+wget -O xp "https://raw.githubusercontent.com/Manpokr/multi/main/xp.sh"
+wget -O xray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/xray-xp.sh"
+wget -O v2ray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-xp.sh"
 
 chmod +x menu
 chmod +x m-sshovpn
@@ -408,10 +408,10 @@ chmod +x kernel-updt
 echo "0 0 * * * root /sbin/hwclock -w   # synchronize hardware & system clock each day at 00:00 am" >> /etc/crontab
 echo "0 */2 * * * root /usr/bin/clear-log # clear log every  two hours" >> /etc/crontab
 echo "0 */12 * * * root /usr/bin/clearcache  #clear cache every 12hours daily" >> /etc/crontab
-echo "55 23 * * * root /usr/bin/delete # delete expired user" >> /etc/crontab
-echo "50 23 * * * root /usr/bin/xp # delete expired user" >> /etc/crontab
-echo "35 23 * * * root /usr/bin/xray-xp # delete expired user" >> /etc/crontab
-echo "15 23 * * * root /usr/bin/v2ray-xp # delete expired user" >> /etc/crontab
+echo "0 0 * * * root /usr/bin/delete # delete expired user" >> /etc/crontab
+echo "0 0 * * * root /usr/bin/xp # delete expired user" >> /etc/crontab
+echo "0 0 * * * root /usr/bin/xray-xp # delete expired user" >> /etc/crontab
+echo "0 0 * * * root /usr/bin/v2ray-xp # delete expired user" >> /etc/crontab
 # remove unnecessary files
 cd
 apt autoclean -y
