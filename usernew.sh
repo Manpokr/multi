@@ -1,4 +1,14 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting 
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
@@ -56,18 +66,5 @@ echo -e "Username       : $Login "
 echo -e "Password       : $Pass"
 echo -e "Jumlah Hari    : $masaaktif Hari"
 echo -e "Expired On     : $exp"
-echo -e ""
-echo -e "✅username pastikan semua huruf kecil"
-echo -e ""
-echo -e "Terima kasih ya kerana sudi membeli dari IanVPN🤗."
-echo -e "Jika puas hati , jangan lupa rate 5 star ya🌟🌟🌟🌟🌟"
-echo -e ""
-echo -e "✅Jgn lupa join channel dibawah utk mengetahui update2 terkini tentang vpn."                                                         
-echo -e "https://t.me/RidzVPN/IanVPNinternet"
-echo -e ""
-echo -e "✅Untuk Renew ID nanti, boleh membayar melalui dua method iaitu :-"
-echo -e "1. Shopee"
-echo -e "2. Direct bank in ( PM saya untuk account bank )"
-echo ""
-read -n 1 -s -r -p "Press any key to back on menu"
-m-sshovpn
+echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e " ScriptMod By Manternet "
