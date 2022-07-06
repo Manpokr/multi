@@ -1,5 +1,4 @@
 #!/bin/bash
-#Open HTTP Puncher By IanVPN
 #Direct Proxy Squid For OpenVPN TCP
 
 RED='\e[1;31m'
@@ -14,21 +13,21 @@ clear
 apt update 
 apt-get -y upgrade
 
-#Port Server
-#Jika Ingiin Mengubah Port Silahkan Sesuaikan Dengan Port Yang Ada Di VPS Mu
+# // Port Server
+# // Jika Ingiin Mengubah Port Silahkan Sesuaikan Dengan Port Yang Ada Di VPS Mu
 Port_OpenVPN_TCP='1194';
 Port_Squid='3128';
 Port_OHP='8087';
 
-#Installing ohp Server
+# // Installing ohp Server
 cd 
-wget -O /usr/local/bin/ohp "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/ohp"
+wget -O /usr/local/bin/ohp "https://raw.githubusercontent.com/Manpokr/multi/main/ohp"
 chmod +x /usr/local/bin/ohp
 
-#Buat File OpenVPN TCP OHP
+# // Buat File OpenVPN TCP OHP
 cat > /etc/openvpn/tcp-ohp.ovpn <<END
 # Server      : $ISP
-# My Telegram : @ianvpn
+# My Telegram : @Manternet
 # Wanna Buy PREMIUM VPN ? Just contact my Telegram
 
 setenv CLIENT_CERT 0
@@ -75,9 +74,9 @@ cd
 #Buat Service Untuk OHP
 cat > /etc/systemd/system/ohp.service <<END
 [Unit]
-Description=Direct Squid Proxy For OpenVPN TCP By OKKAY KAYYO
-Documentation=https://okkaykayyo.my
-Documentation=https://t.me/okkaykayyo
+Description=Direct Squid Proxy For OpenVPN TCP
+Documentation=https://Manternet.xyz
+Documentation=https://t.me/Manternet
 Wants=network.target
 After=network.target
 
@@ -97,4 +96,4 @@ echo ""
 echo -e "${GREEN}Done Installing OHP Server${NC}"
 echo -e "Port OVPN OHP TCP: $ohpp"
 echo -e "Link Download OVPN OHP: http://$MYIP/tcp-ohp.ovpn"
-echo -e "Script By IanVPN"
+echo -e "Script By Manternet"
