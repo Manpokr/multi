@@ -1,26 +1,31 @@
 #!/bin/bash
 # Xray Auto Setup 
 # =========================
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                                                                                                                 
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
-MYIP=$(wget -qO- ipinfo.io/ip);
 
+# // Getting 
+MYIP=$(wget -qO- ipinfo.io/ip);
 clear
-echo -e "${Info} XRAY CORE VPS AutoScript by IANVPN"
-# Detect public IPv4 address and pre-fill for the user
-# Domain 
+
+# // Detect public IPv4 address and pre-fill for the user
+# // Domain 
 domain=$(cat /etc/rare/xray/domain)
-# Uuid Service
+
+# // Uuid Service
 uuid=$(cat /proc/sys/kernel/random/uuid)
-echo -e "\e[0;32m XRAY CORE VPS AutoScript by IANVPN\e[0m"
-echo -e "\e[0;32m TELEGRAM @IanVPN\e[0m"
-sleep 5
-# INSTALL XRAY
+
+# // INSTALL XRAY
 wget -c -P /etc/rare/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
 unzip -o /etc/rare/xray/Xray-linux-64.zip -d /etc/rare/xray 
 rm -rf /etc/rare/xray/Xray-linux-64.zip
 chmod 655 /etc/rare/xray/xray
-# XRay boot service
+
+# // XRay boot service
 cat <<EOF >/etc/systemd/system/xray.service
 [Unit]
 Description=Xray - A unified platform for anti-censorship
@@ -41,6 +46,8 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# // Restart & Add File
 systemctl daemon-reload
 systemctl enable xray.service
 rm -rf /etc/rare/xray/conf/*
@@ -268,14 +275,14 @@ cat <<EOF >/etc/rare/xray/conf/06_VLESS_gRPC_inbounds.json
 ]
 }
 EOF
-# xray
+# // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
-# xray
+# // xray
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31296 -j ACCEPT
@@ -287,17 +294,20 @@ netfilter-persistent save
 netfilter-persistent reload
 systemctl daemon-reload
 
-# Starting
+# // Starting
 systemctl daemon-reload
 systemctl restart xray
 systemctl enable xray
 systemctl restart xray.service
 systemctl enable xray.service
 
+# // Download
 cd /usr/bin
 wget -O xray-menu "https://raw.githubusercontent.com/Manpokr/multi/main/xray-menu.sh"
 chmod +x xray-menu
 cd
+
 systemctl daemon-reload
 systemctl restart nginx
 systemctl restart xray
+clear
