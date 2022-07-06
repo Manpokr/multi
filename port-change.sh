@@ -1,4 +1,14 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
@@ -29,5 +39,5 @@ case $opt in
 5) clear ; port-squid ; exit ;;
 0) clear ; menu ; exit ;;
 x) exit ;;
-*) echo -e "" ; echo "Boh salah tekan, Sayang kedak Babi" ; sleep 1 ; port-change ;;
+*) echo -e "" ; echo "Boh salah tekan" ; sleep 1 ; port-change ;;
 esac
