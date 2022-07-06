@@ -19,6 +19,15 @@ done < /root/expired.txt
 rm /root/expired.txt
 Name=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $2}')
 # Color Validation
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
 DF='\e[39m'
 Bold='\e[1m'
 Blink='\e[5m'
@@ -35,10 +44,12 @@ NC='\e[0m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
 LIGHT='\033[0;37m'
-# VPS Information
-#Domain
+
+# // VPS Information
+# // Domain
 domain=$(cat /etc/rare/xray/domain)
-#Status certificate
+
+# // Status certificate
 modifyTime=$(stat $HOME/.acme.sh/${domain}_ecc/${domain}.key | sed -n '7,6p' | awk '{print $2" "$3" "$4" "$5}')
 modifyTime1=$(date +%s -d "${modifyTime}")
 currentTime=$(date +%s)
@@ -49,22 +60,27 @@ tlsStatus=${remainingDays}
 if [[ ${remainingDays} -le 0 ]]; then
 	tlsStatus="expired"
 fi
-# OS Uptime
+
+# // OS Uptime
 uptime="$(uptime -p | cut -d " " -f 2-10)"
-# Download
-#Download/Upload today
+
+# //Download
+# // Download/Upload today
 dtoday="$(vnstat -i eth0 | grep "today" | awk '{print $2" "substr ($3, 1, 1)}')"
 utoday="$(vnstat -i eth0 | grep "today" | awk '{print $5" "substr ($6, 1, 1)}')"
 ttoday="$(vnstat -i eth0 | grep "today" | awk '{print $8" "substr ($9, 1, 1)}')"
-#Download/Upload yesterday
+
+# // Download/Upload yesterday
 dyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $2" "substr ($3, 1, 1)}')"
 uyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $5" "substr ($6, 1, 1)}')"
 tyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $8" "substr ($9, 1, 1)}')"
-#Download/Upload current month
+
+# // Download/Upload current month
 dmon="$(vnstat -i eth0 -m | grep "`date +"%b '%y"`" | awk '{print $3" "substr ($4, 1, 1)}')"
 umon="$(vnstat -i eth0 -m | grep "`date +"%b '%y"`" | awk '{print $6" "substr ($7, 1, 1)}')"
 tmon="$(vnstat -i eth0 -m | grep "`date +"%b '%y"`" | awk '{print $9" "substr ($10, 1, 1)}')"
-# Getting CPU Information
+
+# // Getting CPU Information
 cpu_usage1="$(ps aux | awk 'BEGIN {sum=0} {sum+=$3}; END {print sum}')"
 cpu_usage="$((${cpu_usage1/\.*} / ${corediilik:-1}))"
 cpu_usage+=" %"
@@ -83,15 +99,6 @@ tram=$( free -m | awk 'NR==2 {print $2}' )
 uram=$( free -m | awk 'NR==2 {print $3}' )
 fram=$( free -m | awk 'NR==2 {print $4}' )
 clear 
-echo -e "\e[33m                                                            \e[0m"
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "         • Since 13 August 2019 , I LOVE YOU •       "
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\e[92m     ___ ___ ___ _____    ___   _   _  _ "
-echo -e "\e[92m    | _ \_ _|   \_  / |  |_ _| /_\ | \| |"
-echo -e "\e[92m    |   /| || |) / /| |__ | | / _ \|    |"
-echo -e "\e[92m    |_|_\___|___/___|____|___/_/ \_\_|\_|"
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "                                                                                         "
 echo -e "\e[33m CPU Model            \e[0m: $cname"
 echo -e "\e[33m CPU Frequency        \e[0m: $freq MHz"
@@ -113,43 +120,40 @@ echo -e "\e[33m Date                 \e[0m:  $DATE"
 echo -e "\e[33m Telegram             \e[0m:  $tele"
 echo -e "\e[33m Script Version       \e[0m:  $Sver"
 echo -e "\e[33m Certificate status   \e[0m:  \e[33mExpired in ${tlsStatus} days\e[0m"
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e "\e[33m Traffic\e[0m       \e[33mToday      Yesterday     Month   "
 echo -e "\e[33m Download\e[0m      $dtoday    $dyest       $dmon   \e[0m"
 echo -e "\e[33m Upload\e[0m        $utoday    $uyest       $umon   \e[0m"
 echo -e "\e[33m Total\e[0m       \033[0;36m  $ttoday    $tyest       $tmon  \e[0m "
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "                 • SCRIPT MENU, SAYANG BAU •                 "
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e " [\e[36m•1\e[0m] SSH & OpenVPN Menu  [\e[36m•7\e[0m] SYSTEM Menu"
-echo -e " [\e[36m•2\e[0m] Wireguard Menu      [\e[36m•8\e[0m] Status Service"
-echo -e " [\e[36m•3\e[0m] SSR & SS Menu       [\e[36m•9\e[0m] VPS Information"
-echo -e " [\e[36m•4\e[0m] XRAY Menu           [\e[36m10\e[0m] Script Info"
-echo -e " [\e[36m•5\e[0m] V2RAY Menu          [\e[36m11\e[0m] Clear RAM Cache"
-echo -e " [\e[36m•6\e[0m] Trojan GFW Menu     [\e[31m12\e[0m] \e[31mREBOOT\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[30;5;47m                 ⇱ SCRIPT MENU ⇲                  \033[m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
+echo -e " [${CYAN}•1${NC}] SSH & OpenVPN Menu  [${CYAN}•6${NC}] STATUS Service"                                                                                                                                                                                         
+echo -e " [${CYAN}•2${NC}] XRAY Menu           [${CYAN}•7${NC}] VPS Information"                                                                                                                                                                                      
+echo -e " [${CYAN}•3${NC}] V2XRAY Menu         [${CYAN}•8${NC}] SCRIPTS Info"                                                                                                                                                                                     
+echo -e " [${CYAN}•4${NC}] Trojan GFW Menu     [${CYAN}•9${NC}] CLEAR RAM Cache"                                                                                                                                                                                         
+echo -e " [${CYAN}•5${NC}] SYSTEM Menu         [${RED}10${NC}] ${RED}REBOOT${NC}"                                                                                                                                                                                     
 echo -e   ""
 echo -e   " Press x or [ Ctrl+C ] • To-Exit-Script"
 echo -e   ""
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e " \e[33mClient Name    \E[0m: $Name"
-echo -e " \e[33mScript Expired \E[0m: $Exp2"
-echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[2;37mClient Name\033[m    : $name"                                                                                                                                                                                                                        
+echo -e "\033[2;37mScript Expired\033[m : $exp"                                                                                                                                                                                                                        
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e   ""
 read -p " Select menu :  "  opt
 echo -e   ""
 case $opt in
 1) clear ; m-sshovpn ;;
-2) clear ; m-wg ;;
-3) clear ; m-ss ;;
-4) clear ; xray-menu ;;
-5) clear ; v2ray-menu ;;
-6) clear ; m-trojan ;;
-7) clear ; m-system ;;
-8) clear ; status ;;
-9) clear ; vpsinfo ;;
-10) clear ; info-menu ;;
-11) clear ; clearcache ;;
-12) clear ; reboot ;;
+2) clear ; xray-menu ;;
+3) clear ; v2ray-menu ;;
+4) clear ; m-trojan ;;
+5) clear ; m-system ;;
+6) clear ; status ;;
+7) clear ; vpsinfo ;;
+8) clear ; info-menu ;;
+9) clear ; clearcache ;;
+10) clear ; reboot ;;
 x) exit ;;
 esac
