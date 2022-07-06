@@ -84,8 +84,11 @@ EOF
 systemctl daemon-reload
 service nginx restart
 
+# // Version V2ray
+version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
+
 # // INSTALL v2ray
-wget -c -P /etc/rare/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/v4.42.2/v2ray-linux-64.zip"
+wget -c -P /etc/rare/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
 unzip -o /etc/rare/v2ray/v2ray-linux-64.zip -d /etc/rare/v2ray
 rm -rf /etc/rare/v2ray/v2ray-linux-64.zip
 
