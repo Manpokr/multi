@@ -1,4 +1,14 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
@@ -48,23 +58,31 @@ EOF
 	echo -e "${user}\t${uuid}\t${exp}" >> /etc/rare/v2ray/clients.txt
     cat /etc/rare/v2ray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${domain}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/rare/v2ray/conf/02_VLESS_TCP_inbounds_tmp.json
 	mv -f /etc/rare/v2ray/conf/02_VLESS_TCP_inbounds_tmp.json /etc/rare/v2ray/conf/02_VLESS_TCP_inbounds.json
+
     cat /etc/rare/v2ray/conf/03_VLESS_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","email": "'${email}'"}]' > /etc/rare/v2ray/conf/03_VLESS_WS_inbounds_tmp.json
 	mv -f /etc/rare/v2ray/conf/03_VLESS_WS_inbounds_tmp.json /etc/rare/v2ray/conf/03_VLESS_WS_inbounds.json
+
     cat /etc/rare/v2ray/conf/04_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/rare/v2ray/conf/04_trojan_TCP_inbounds_tmp.json
 	mv -f /etc/rare/v2ray/conf/04_trojan_TCP_inbounds_tmp.json /etc/rare/v2ray/conf/04_trojan_TCP_inbounds.json
+
     cat /etc/rare/v2ray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/rare/v2ray/conf/05_VMess_WS_inbounds_tmp.json
-	mv -f /etc/rare/v2ray/conf/05_VMess_WS_inbounds_tmp.json /etc/rare/v2ray/conf/05_VMess_WS_inbounds.json
-	cat <<EOF >>"/etc/rare/config-user/${user}"
-vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-splice&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user@IanVPN
-vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-direct&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user@IanVPN
-vless://$uuid@$BUG.$domain:$tls?encryption=none&security=tls&sni=$BUG&type=ws&host=$BUG&path=/v2rayws#$user@IanVPN
-trojan://$uuid@$BUG.$domain:$tls?sni=$BUG#$user@IanVPN
+	mv -f /etc/rare/v2ray/conf/05_VMess_WS_inbounds_tmp.json /etc/rare/v2ray/conf/05_VMess_WS_inbounds.jso
+
+    cat /etc/rare/v2ray/conf/06_VLESS_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/rare/v2ray/conf/06_VLESS_gRPC_inbounds_inbounds_tmp.json
+	mv -f /etc/rare/v2ray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/rare/v2ray/conf/06_VLESS_gRPC_inbounds.json
+        cat <<EOF >>"/etc/rare/config-user/${user}"
+
+vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-splice&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user
+vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-direct&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user
+vless://$uuid@$BUG.$domain:$tls?encryption=none&security=tls&sni=$BUG&type=ws&host=$BUG&path=/v2rayws#$user
+trojan://$uuid@$BUG.$domain:$tls?sni=$BUG#$user
+vless://${uuid}@$BUG.$domain:${tls}?mode=gun&security=tls&encryption=none&type=grpc&serviceName=v2raygrpc&sni=$BUG#$user
 ${vmesslink1}
 EOF
     cat <<EOF >>"/etc/rare/config-url/${user}"
 # =======================================
 # V2RAY CORE CONFIG OPEN CLASH ANDROID
-# By IanVPN telegram: @IanVPN
+# By IanVPN telegram: @Manternet
 # =======================================
 proxies:
   - {name: trojan_${user}@IanVPN, server: $BUG.$domain, port: $tls, type: trojan, password: $uuid, sni: $BUG, skip-cert-verify: true, udp: true}
@@ -185,55 +203,37 @@ dns:
 tproxy: true
 tproxy-port: 23458
 EOF
-	base64Result=$(base64 -w 0 /etc/rare/config-user/${user})
-    echo ${base64Result} >"/etc/rare/config-url/${uuid}"
-    systemctl restart v2ray.service
-    echo -e "\033[32m[Info]\033[0m v2ray Start Successfully !"
-    sleep 2
-    clear
-	echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    echo -e "\E[0;100;33m   • V2RAY USER INFORMATION •      \E[0m"
-    echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"  
-	echo -e ""
-	echo -e " Username      : $user"
-	echo -e " Expired date  : $expired"
-    echo -e " Jumlah Hari   : $duration Hari"
-    echo -e " PORT          : $tls"
-    echo -e " UUID/PASSWORD : $uuid"
-	echo -e ""
-	echo -e " Pantang Larang IANVPN"
-	echo -e " ‼️Aktiviti Berikut Adalah Dilarang"
-    echo -e " (ID akan di ban tanpa notis & tiada refund)"
-	echo -e " ❌PS4"
-	echo -e " ❌Porn"
-	echo -e " ❌Ddos Server"
-	echo -e " ❌Mining Bitcoins"
-	echo -e " ❌Abuse Usage"
-	echo -e " ❌Multi-Login ID"
-	echo -e " ❌Sharing Premium Config"	
-	echo -e ""
-    echo -e " Ip Vps        : $MYIP"
-    echo -e " Domain        : $domain"
-	echo -e " Bug Domain    : $BUG"
-    echo -e ""
-	echo -e " Link VLESS SPLICE: vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-splice&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user@IanVPN"
-    echo -e ""
-    echo -e " Link VLESS DIRECT: vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-direct&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user@IanVPN"
-    echo -e ""
-	echo -e " Link VLESS WS: vless://$uuid@$BUG.$domain:$tls?encryption=none&security=tls&sni=$BUG&type=ws&host=$BUG&path=/v2rayws#$user@IanVPN"
-    echo -e ""
-	echo -e " Link TROJAN: trojan://$uuid@$BUG.$domain:$tls?sni=$BUG#$user@IanVPN"
-    echo -e ""
-    echo -e " Link VMESS TLS: ${vmesslink1}"
-	echo -e ""
-    echo -e " Link url OPENWRT/V2rayN PC: https://${domain}/s/${uuid}"
-	echo -e ""
-	echo -e " Link url Android Clash: https://${domain}/s/${user}"
-	echo -e ""
-	echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    echo ""
-    read -n 1 -s -r -p "Press any key to back on menu"
-    v2ray-menu  
+base64Result=$(base64 -w 0 /etc/rare/config-user/${user})
+echo ${base64Result} >"/etc/rare/config-url/${uuid}"
+systemctl restart v2ray.service
+echo -e "\033[32m[Info]\033[0m v2ray Start Successfully !"
+sleep 2
+clear
+echo -e "================================="
+echo -e "          CONFIG  V2RAY          "
+echo -e "================================="
+echo -e "Remarks        : ${user}"
+echo -e "IP/Host        : ${MYIP}"
+echo -e "Domain         : ${domain}"
+echo -e "Subdomain      : ${dom}"
+echo -e "Sni/Bug        : ${BUG}"
+echo -e "Port           : $tls"
+echo -e "id             : ${uuid}"
+echo -e "================================="
+echo -e "Vless Xtls     : vless://$uuid@$BUG.$domain:$tls?flow=xtls-rprx-splice&encryption=none&security=tls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user"
+echo -e "================================="
+echo -e "Vless Ws       : vless://$uuid@$BUG.$domain:$tls?encryption=none&security=tls&sni=$BUG&type=ws&host=$BUG&path=/v2rayws#$user"
+echo -e "================================="
+echo -e "Trojan         : trojan://$uuid@$BUG.$domain:$tls?sni=$BUG#$user"
+echo -e "================================="
+echo -e "Vless Grpc     : vless://${uuid}@$BUG.$domain:${tls}?mode=gun&security=tls&encryption=none&type=grpc&serviceName=v2raygrpc&sni=$BUG#$user"
+echo -e "================================="
+echo -e "Vmess          : ${vmesslink1}"
+echo -e "================================="
+echo -e "Created        : $duration Hari"
+echo -e "Expired On     : $expired"
+echo -e "================================="
+echo -e "ScriptMod By Manternet"
 }
 
 function delete-user() {
@@ -513,5 +513,5 @@ case $opt in
 7) clear ; change-port ;;
 0) clear ; menu ;;	
 x) exit ;;
-*) echo -e "" ; echo "Boh salah tekan, Sayang kedak Babi" ; sleep 1 ; v2ray-menu ;;
+*) echo -e "" ; echo "Boh salah tekan" ; sleep 1 ; v2ray-menu ;;
 esac
