@@ -1,6 +1,10 @@
 #!/bin/bash
-# Script by : IanVPN
-#!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                                                                                                                 
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting 
 clear
 MAX=1
 if [ -e "/var/log/auth.log" ]; then
