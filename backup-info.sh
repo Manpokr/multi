@@ -1,15 +1,16 @@
 #!/bin/bash
-clear
 red='\e[1;31m'
 green='\e[0;32m'
 NC='\e[0m'
 green() { echo -e "\\033[32;1m${*}\\033[0m"; }
 red() { echo -e "\\033[31;1m${*}\\033[0m"; }
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 
 clear
 cd
-NameUser=$(curl -sS https://raw.githubusercontent.com/Iansoftware/userip/main/bossip | grep $MYIP | awk '{print $2}')
+NameUser=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $2}')
 cekdata=$(curl -sS https://raw.githubusercontent.com/Iansoftware/user-backupv1/main/$NameUser/$NameUser-last-backup | grep 404 | awk '{print $1}' | cut -d: -f1)
 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "\E[0;100;33m        • BACKUP HISTORY •         \E[0m"
