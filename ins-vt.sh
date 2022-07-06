@@ -1,4 +1,10 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                                                                                                                 
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting
 domain=$(cat /root/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
@@ -13,10 +19,12 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
+# // Add Folder
 mkdir /etc/xray/tls/
 mkdir -p /etc/trojan/
 touch /etc/trojan/akun.conf
-# install SSL
+
+# // Install Cert
 bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
 mkdir /root/.acme.sh
 curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
@@ -32,6 +40,8 @@ cat /etc/rare/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 service squid start
+
+# // Cp Json
 uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF > /etc/trojan/config.json
 {
@@ -104,13 +114,7 @@ cat <<EOF > /etc/trojan/uuid.txt
 $uuid
 EOF
 
-sleep 1
-echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
-chmod +x /usr/bin/bbr
-bbr >/dev/null 2>&1
-rm /usr/bin/bbr >/dev/null 2>&1
-
+# // IpTables
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 2087 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 2087 -j ACCEPT
 iptables-save > /etc/iptables.up.rules
@@ -122,6 +126,7 @@ systemctl restart trojan
 systemctl enable trojan
 
 cd /usr/bin
+wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
 wget -O add-tr "https://raw.githubusercontent.com/Manpokr/multi/main/add-tr.sh"
 wget -O del-tr "https://raw.githubusercontent.com/Manpokr/multi/main/del-tr.sh"
 wget -O cek-tr "https://raw.githubusercontent.com/Manpokr/multi/main/cek-tr.sh"
@@ -130,7 +135,11 @@ chmod +x add-tr
 chmod +x cek-tr
 chmod +x del-tr
 chmod +x renew-tr
+chmod +x bbr
 cd
-rm -f ins-vt.sh
+
+clear
+echo -e "Done Install Trojan-GFW
 cp /root/domain /etc/xray
+rm -f ins-vt.sh
 
