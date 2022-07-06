@@ -1,15 +1,21 @@
 #!/bin/bash
-RED='\e[1;31m'
-GREEN='\e[0;32m'
-BLUE='\e[0;34m'
-NC='\e[0m'
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
 clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\E[0;100;33m     • CHANGE DOMAIN VPS •         \E[0m"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[30;5;47m           ⇱ CHANGE DOMAIN VPS ⇲                  \033[m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""  
 echo "Please Input Your Pointing Domain In Cloudflare "
 read -rp "Domain/Host: " -e host
@@ -17,7 +23,8 @@ rm /etc/rare/xray/domain
 echo "$host" >> /etc/rare/xray/domain
 echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
 domain=$(cat /etc/rare/xray/domain)
-#Update Sertificate SSL
+
+# // Update Sertificate SSL
 echo Starting Update SSL Sertificate
 sleep 3
 sudo pkill -f nginx & wait $!
@@ -164,11 +171,8 @@ server {
 EOF
 systemctl daemon-reload
 service nginx restart
-echo -e "\033[32m[Info]\033[0m nginx Start Successfully !"
-echo ""
-echo "Location Your Domain : /var/lib/premium-script/ipvps.conf"
-echo ""
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e ""
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo ""
 read -n 1 -s -r -p "Press any key to back on menu"
 m-domain
