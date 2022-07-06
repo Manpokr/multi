@@ -1,8 +1,13 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                                                                                                                                                                     
+NC='\033[0;37m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
-
 clear
+
                hariini=`date +%d-%m-%Y`
                echo "Thank you for removing the EXPIRED USERS"
                echo "--------------------------------------"
