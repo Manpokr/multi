@@ -1,8 +1,18 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting 
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
-
 clear
+
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[Installed]${Font_color_suffix}"
 Error="${Red_font_prefix}[Not Installed]${Font_color_suffix}"
