@@ -27,26 +27,26 @@ cd
 mkdir -p /usr/lib/openvpn/
 cp /usr/lib/x86_64-linux-gnu/openvpn/plugins/openvpn-plugin-auth-pam.so /usr/lib/openvpn/openvpn-plugin-auth-pam.so
 
-# nano /etc/default/openvpn
+# // nano /etc/default/openvpn
 sed -i 's/#AUTOSTART="all"/AUTOSTART="all"/g' /etc/default/openvpn
 
-# restart openvpn dan cek status openvpn
+# // restart openvpn dan cek status openvpn
 systemctl enable --now openvpn-server@server-tcp-1194
 systemctl enable --now openvpn-server@server-udp-2200
 /etc/init.d/openvpn restart
 /etc/init.d/openvpn status
 
-# aktifkan ip4 forwarding
+# // aktifkan ip4 forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 
-# Buat config client TCP 1194
+# // Buat config client TCP 1194
 cat > /etc/openvpn/client-tcp-1194.ovpn <<-END
 # Server      : $NAMAISP
 # My Telegram : $tele
 # Wanna Buy PREMIUM VPN ? Just contact my Telegram
 
-setenv FRIENDLY_NAME "IANVPN"
+setenv FRIENDLY_NAME "Manternet"
 client
 dev tun
 proto tcp
@@ -70,7 +70,7 @@ cat > /etc/openvpn/client-udp-2200.ovpn <<-END
 # My Telegram : $tele
 # Wanna Buy PREMIUM VPN ? Just contact my Telegram
 
-setenv FRIENDLY_NAME "IANVPN"
+setenv FRIENDLY_NAME "Manternet"
 client
 dev tun
 proto udp
