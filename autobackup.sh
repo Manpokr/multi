@@ -11,7 +11,7 @@ echo "Checking VPS"
 
 IP=$(curl -sS ipinfo.io/ip);
 date=$(date +"%Y-%m-%d")
-NameUser=$(curl -sS https://raw.githubusercontent.com/Iansoftware/userip/main/bossip | grep $MYIP | awk '{print $2}')
+NameUser=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $2}')
 rsleep=$((1 + $RANDOM % 10))
 
 echo -e "[ ${green}INFO${NC} ] Wait $rsleep minutes "
