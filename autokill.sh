@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# // Getting 
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
@@ -12,11 +14,10 @@ else
 sts="${Error}"
 fi
 clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\E[0;100;33m        • AUTOKILL SSH •           \E[0m"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e ""
-echo -e "     Status Autokill $sts        "
+
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[30;5;47m           ⇱ AUTOKILL SSH $sts ⇲                  \033[m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
 echo -e " [\e[36m1\e[0m] AutoKill After 5 Minutes"
 echo -e " [\e[36m2\e[0m] AutoKill After 10 Minutes"
@@ -25,7 +26,7 @@ echo -e " [\e[36m4\e[0m] Turn Off AutoKill/MultiLogin"
 echo -e ""
 echo -e " [\e[31m•0\e[0m] \e[31mBACK TO SSH MENU\033[0m"
 echo -e ""
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"                                                                                                        
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
 read -p " Select menu :  " AutoKill
 echo -e ""
@@ -38,14 +39,14 @@ case $AutoKill in
                 echo > /etc/cron.d/tendang
                 echo "# Autokill" >>/etc/cron.d/tendang
                 echo "*/5 * * * *  root /usr/bin/tendang $max" >>/etc/cron.d/tendang
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e "\E[0;100;33m        • AUTOKILL SSH •           \E[0m"
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+                echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+                echo -e "\033[30;5;47m                ⇱ AUTOKILL SSH ⇲                  \033[m"
+                echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
                 echo -e ""
                 echo -e "      Allowed MultiLogin : $max"
                 echo -e "      AutoKill Every     : 5 Minutes"      
                 echo -e ""
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"                                                                                                                                 
+                 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
                 read -n 1 -s -r -p "Press any key to back on ssh menu"
                 m-sshovpn                                                                  
                 ;;
