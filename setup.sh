@@ -28,7 +28,7 @@ echo "Script Already Installed"
 exit 0
 fi
 
-# // Install
+# // Add Folder
 clear
 mkdir -p /etc/rare
 mkdir -p /etc/rare/xray
@@ -42,9 +42,11 @@ mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
 mkdir -p /var/log/v2ray/
 mkdir /var/lib/premium-script;
-
 touch /etc/rare/xray/clients.txt
 touch /etc/rare/v2ray/clients.txt
+
+# // CloudFlare
+wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
 echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
 echo "$host" >> /etc/rare/xray/domain
 echo "$host" >> /root/domain
