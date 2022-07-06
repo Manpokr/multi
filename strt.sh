@@ -1,4 +1,10 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                                                                                                                 
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting 
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
