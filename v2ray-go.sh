@@ -9,16 +9,14 @@ Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 
 clear
-echo -e "${Info} V2ray CORE VPS AutoScript by IanVPN"
-# Detect public IPv4 address and pre-fill for the user
-# Domain
+# // Detect public IPv4 address and pre-fill for the user
+# // Domain
 domain=$(cat /etc/rare/xray/domain)
-# Uuid Service
+
+# // Uuid Service
 uuid=$(cat /proc/sys/kernel/random/uuid)
-echo -e "\e[0;32m V2ray CORE VPS AutoScript by IanVPN\e[0m"
-echo -e "\e[0;32m TELEGRAM @IanVPN\e[0m"
-sleep 5
-# NGINX V2RAY CONF
+
+# // NGINX V2RAY CONF
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 touch /etc/nginx/conf.d/alone2.conf
@@ -81,13 +79,17 @@ server {
 	}
 }
 EOF
+
+# // Restart Nginx
 systemctl daemon-reload
 service nginx restart
-# INSTALL v2ray
+
+# // INSTALL v2ray
 wget -c -P /etc/rare/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/v4.42.2/v2ray-linux-64.zip"
 unzip -o /etc/rare/v2ray/v2ray-linux-64.zip -d /etc/rare/v2ray
 rm -rf /etc/rare/v2ray/v2ray-linux-64.zip
-# v2ray boot service
+
+# // v2ray boot service
 rm -rf /etc/systemd/system/v2ray.service
 touch /etc/systemd/system/v2ray.service
 cat <<EOF >/etc/systemd/system/v2ray.service
@@ -110,6 +112,8 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# // Restart V2ray
 systemctl daemon-reload
 systemctl enable v2ray.service
 rm -rf /etc/rare/v2ray/conf/*
@@ -303,13 +307,14 @@ cat <<EOF >/etc/rare/v2ray/conf/06_VLESS_gRPC_inbounds.json
 ]
 }
 EOF
-# v2ray
+
+# // v2ray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32297 -j ACCEPT
-# v2ray
+# // v2ray
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8080 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32299 -j ACCEPT
@@ -325,6 +330,7 @@ systemctl enable v2ray
 systemctl restart v2ray.service
 systemctl enable v2ray.service
 
+# // Menu V2ray
 cd /usr/bin
 wget -O v2ray-menu "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-menu.sh"
 chmod +x v2ray-menu
@@ -332,3 +338,5 @@ cd
 systemctl daemon-reload
 systemctl restart nginx
 systemctl restart v2ray
+
+clear
