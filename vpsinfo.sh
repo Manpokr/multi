@@ -1,9 +1,19 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting 
 MYIP=$(wget -qO- icanhazip.com);
 echo "Checking VPS"
 
 clear
-# VPS Information
+# // VPS Information
 Checkstart1=$(ip route | grep default | cut -d ' ' -f 3 | head -n 1);
 if [[ $Checkstart1 == "venet0" ]]; then 
     clear
@@ -16,14 +26,16 @@ else
     typevps="KVM"
     sleep 1
 fi
-# Getting OS Information
+
+# // Getting OS Information
 source /etc/os-release
 Versi_OS=$VERSION
 ver=$VERSION_ID
 Tipe=$NAME
 URL_SUPPORT=$HOME_URL
 basedong=$ID
-# VPS ISP INFORMATION
+
+# // VPS ISP INFORMATION
 ITAM='\033[0;30m'
 echo -e "$ITAM"
 NAMAISP=$( curl -s ipinfo.io/org | cut -d " " -f 2-10  )
@@ -34,7 +46,8 @@ CITY=$( curl -s ipinfo.io/city )
 REGION=$( curl -s ipinfo.io/region )
 WAKTUE=$( curl -s ipinfo.io/timezone )
 koordinat=$( curl -s ipinfo.io/loc )
-# Color Validation
+
+# // Color Validation
 yell='\e[33m'
 RED='\033[0;31m'
 NC='\033[0m'
@@ -44,26 +57,32 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 LIGHT='\033[0;37m'
-# Download
-#Download/Upload today
+
+# // Download
+# // Download/Upload today
 dtoday="$(vnstat -i eth0 | grep "today" | awk '{print $2" "substr ($3, 1, 1)}')"
 utoday="$(vnstat -i eth0 | grep "today" | awk '{print $5" "substr ($6, 1, 1)}')"
 ttoday="$(vnstat -i eth0 | grep "today" | awk '{print $8" "substr ($9, 1, 1)}')"
-#Download/Upload yesterday
+ 
+# // Download/Upload yesterday
 dyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $2" "substr ($3, 1, 1)}')"
 uyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $5" "substr ($6, 1, 1)}')"
 tyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $8" "substr ($9, 1, 1)}')"
-#Download/Upload current month
+
+# // Download/Upload current month
 dmon="$(vnstat -i eth0 -m | grep "`date +"%b '%y"`" | awk '{print $3" "substr ($4, 1, 1)}')"
 umon="$(vnstat -i eth0 -m | grep "`date +"%b '%y"`" | awk '{print $6" "substr ($7, 1, 1)}')"
 tmon="$(vnstat -i eth0 -m | grep "`date +"%b '%y"`" | awk '{print $9" "substr ($10, 1, 1)}')"
-# Ram Usage
+
+# // Ram Usage
 total_r2am=` grep "MemAvailable: " /proc/meminfo | awk '{ print $2}'`
 MEMORY=$(($total_r2am/1024))
-# Total Ram
+
+# // Total Ram
 total_ram=` grep "MemTotal: " /proc/meminfo | awk '{ print $2}'`
 totalram=$(($total_ram/1024))
-# Tipe Processor
+
+# // Tipe Processor
 totalcore="$(grep -c "^processor" /proc/cpuinfo)" 
 totalcore+=" Core"
 corediilik="$(grep -c "^processor" /proc/cpuinfo)" 
@@ -71,28 +90,36 @@ tipeprosesor="$(awk -F ': | @' '/model name|Processor|^cpu model|chip type|^cpu 
                         printf $2;
                         exit
                         }' /proc/cpuinfo)"
-# Shell Version
+
+# // Shell Version
 shellversion=""
 shellversion=Bash
 shellversion+=" Version" 
 shellversion+=" ${BASH_VERSION/-*}" 
 versibash=$shellversion
-# Getting CPU Information
+
+# // Getting CPU Information
 cpu_usage1="$(ps aux | awk 'BEGIN {sum=0} {sum+=$3}; END {print sum}')"
 cpu_usage="$((${cpu_usage1/\.*} / ${corediilik:-1}))"
 cpu_usage+=" %"
-# OS Uptime
+
+# // OS Uptime
 uptime="$(uptime -p | cut -d " " -f 2-10)"
-# Kernel Terbaru
+
+# //.Kernel Terbaru
 kernelku=$(uname -r)
-# Waktu Sekarang 
+
+# // Waktu Sekarang 
 harini=`date -d "0 days" +"%d-%m-%Y"`
 jam=`date -d "0 days" +"%X"`
-# DNS Patch
+
+# // DNS Patch
 tipeos2=$(uname -m)
-# Getting Domain Name
+
+# // Getting Domain Name
 Domen="$(cat /etc/rare/xray/domain)"
-# Echoing Result
+
+# // Echoing Result
 clear
 echo -e "\e[33m ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e " \E[0;100;33m          Sayang ktk Lillian               \E[0m"
