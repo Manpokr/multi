@@ -19,8 +19,11 @@ domain=$(cat /etc/rare/xray/domain)
 # // Uuid Service
 uuid=$(cat /proc/sys/kernel/random/uuid)
 
+# // Xray Version
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
+		
 # // INSTALL XRAY
-wget -c -P /etc/rare/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
+wget -c -P /etc/rare/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
 unzip -o /etc/rare/xray/Xray-linux-64.zip -d /etc/rare/xray 
 rm -rf /etc/rare/xray/Xray-linux-64.zip
 chmod 655 /etc/rare/xray/xray
