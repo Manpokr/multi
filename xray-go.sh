@@ -198,6 +198,7 @@ cat <<EOF >/etc/rare/xray/conf/04_trojan_gRPC_inbounds.json
             },
             "streamSettings": {
                 "network": "grpc",
+                "security": "none",
                 "grpcSettings": {
                     "serviceName": "xraytrojangrpc"
                 }
