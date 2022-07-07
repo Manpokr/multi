@@ -11,14 +11,17 @@ biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
 #########################
 
 clear
-source /var/lib/Manpokr/ipvps.conf
-domain=$(cat /etc/xray/domain)
-uuid=$(cat /proc/sys/kernel/random/uuid)
+# // Add Xtls
+#domain=$(cat /etc/xray/domain)
+#source /var/lib/Manpokr/ipvps.conf
+#sed -i '/#XRay$/a\### '"$user $exp"'\
+#},{"id": "'""$uuid""'","flow": "'xtls-rprx-direct'","email": "'""$user""'"' /etc/xray/xrayxtls.json
 
-port=$(cat /etc/xray/xrayxtls.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g')
+domain=$(cat /etc/rare/xray/domain)
+xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 		read -rp "User: " -e user
-		CLIENT_EXISTS=$(grep -w $user /etc/xray/xrayxtls.json | wc -l)
+		CLIENT_EXISTS=$(grep -w $user /etc/rare/xray/clients.txt | wc -l)
 
 		if [[ ${CLIENT_EXISTS} == '1' ]]; then
 			echo ""
@@ -26,6 +29,8 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 			exit 1
 		fi
 	done
+email=${user}@${domain}
+echo -e "${user}\t${uuid}\t${exp}" >> /etc/rare/xray/clients.txt
 uuid=$(cat /proc/sys/kernel/random/uuid)
 read -p "Expired (days): " masaaktif
 read -p "SNI (bug) : " sni
@@ -33,15 +38,15 @@ read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " 
 dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
-sed -i '/#XRay$/a\### '"$user $exp"'\
-},{"id": "'""$uuid""'","flow": "'xtls-rprx-direct'","email": "'""$user""'"' /etc/xray/xrayxtls.json
+cat /etc/rare/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${domain}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/rare/xray/conf/02_VLESS_TCP_inbounds_tmp.json
+mv -f /etc/rare/xray/conf/02_VLESS_TCP_inbounds_tmp.json /etc/rare/xray/conf/02_VLESS_TCP_inbounds.json
 
 IP=$( curl -s ipinfo.io/ip )
 vd="vless://$uuid@$dom:$port?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-direct&sni=$sni#$user"
 vu="vless://$uuid@$dom:$port?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-direct-udp443&sni=$sni#$user"
 vs="vless://$uuid@$dom:$port?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-splice&sni=$sni#$user"
 vsu="vless://$uuid@$dom:$port?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-splice-udp443&sni=$sni#$user"
-systemctl restart xtls
+systemctl restart xray.service
 clear
 echo -e "================================="
 echo -e "        XRAY VLESS XTLS         "
