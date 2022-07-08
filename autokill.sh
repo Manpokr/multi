@@ -22,19 +22,15 @@ else
 sts="${Error}"
 fi
 clear
-
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
-echo -e "\033[30;5;47m           ⇱ AUTOKILL SSH $sts ⇲                  \033[m"
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
-echo -e ""
-echo -e " [\e[36m1\e[0m] AutoKill After 5 Minutes"
-echo -e " [\e[36m2\e[0m] AutoKill After 10 Minutes"
-echo -e " [\e[36m3\e[0m] AutoKill After 15 Minutes"
-echo -e " [\e[36m4\e[0m] Turn Off AutoKill/MultiLogin"
-echo -e ""
-echo -e " [\e[31m•0\e[0m] \e[31mBACK TO SSH MENU\033[0m"
-echo -e ""
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
+echo -e "=================================="
+echo -e "       Status Autokill $sts       "
+echo -e "=================================="
+echo -e "[•1] AutoKill After 5 Minutes"
+echo -e "[•2] AutoKill After 10 Minutes"
+echo -e "[•3] AutoKill After 15 Minutes"
+echo -e "[•4] Turn Off AutoKill/MultiLogin"
+echo -e "[•5] Exit"
+echo -e "=================================="                                                                                                          
 echo -e ""
 read -p " Select menu :  " AutoKill
 echo -e ""
@@ -47,14 +43,12 @@ case $AutoKill in
                 echo > /etc/cron.d/tendang
                 echo "# Autokill" >>/etc/cron.d/tendang
                 echo "*/5 * * * *  root /usr/bin/tendang $max" >>/etc/cron.d/tendang
-                echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
-                echo -e "\033[30;5;47m                ⇱ AUTOKILL SSH ⇲                  \033[m"
-                echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
-                echo -e ""
+                echo -e "======================================"
+                
                 echo -e "      Allowed MultiLogin : $max"
                 echo -e "      AutoKill Every     : 5 Minutes"      
-                echo -e ""
-                 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
+                
+                echo -e "======================================"                                                                                                                                 
                 read -n 1 -s -r -p "Press any key to back on ssh menu"
                 m-sshovpn                                                                  
                 ;;
@@ -66,14 +60,12 @@ case $AutoKill in
                 echo > /etc/cron.d/tendang
                 echo "# Autokill" >>/etc/cron.d/tendang
                 echo "*/10 * * * *  root /usr/bin/tendang $max" >>/etc/cron.d/tendang
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e "\E[0;100;33m        • AUTOKILL SSH •           \E[0m"
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e ""
+                echo -e "======================================"
+                
                 echo -e "      Allowed MultiLogin : $max"
                 echo -e "      AutoKill Every     : 10 Minutes"
-                echo -e ""
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+                
+                echo -e "======================================"
                 read -n 1 -s -r -p "Press any key to back on ssh menu"
                 m-sshovpn  
                 ;;
@@ -85,27 +77,23 @@ case $AutoKill in
                 echo > /etc/cron.d/tendang
                 echo "# Autokill" >>/etc/cron.d/tendang
                 echo "*/15 * * * *  root /usr/bin/tendang $max" >>/etc/cron.d/tendang
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e "\E[0;100;33m        • AUTOKILL SSH •           \E[0m"
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e ""
+                echo -e "======================================"
+                
                 echo -e "      Allowed MultiLogin : $max"
                 echo -e "      AutoKill Every     : 15 Minutes"
-                echo -e ""
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+                
+                echo -e "======================================"
                 read -n 1 -s -r -p "Press any key to back on ssh menu"
                 m-sshovpn  
                 ;;
                 4)
                 clear
                 echo > /etc/cron.d/tendang
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e "\E[0;100;33m        • AUTOKILL SSH •           \E[0m"
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e ""
+                echo -e "======================================"
+                
                 echo -e "      AutoKill MultiLogin Turned Off  "
-                echo -e ""
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+                
+                echo -e "======================================"
                 read -n 1 -s -r -p "Press any key to back on ssh menu"
                 m-sshovpn  
                 ;;
