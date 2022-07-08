@@ -323,6 +323,22 @@ cat <<EOF >/etc/rare/xray/conf/09_trojan_xtls_inbounds.json
   ]
 }
 EOF
+cat > /etc/systemd/system/tr-xtls.service << EOF
+[Unit]
+Description=XRay Trojan Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/rare/xray/xray -config /etc/rare/xray/conf/09_trojan_xtls_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
 # // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31299 -j ACCEPT
@@ -330,6 +346,8 @@ iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8443 -j ACCEPT
+
 # // xray
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31299 -j ACCEPT
@@ -337,6 +355,8 @@ iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8443 -j ACCEPT
+
 iptables-save >/etc/iptables.rules.v4
 netfilter-persistent save
 netfilter-persistent reload
@@ -348,6 +368,8 @@ systemctl restart xray
 systemctl enable xray
 systemctl restart xray.service
 systemctl enable xray.service
+systemctl enable tr-xtls
+systemctl restart tr-xtls
 
 # // Download
 cd /usr/bin
