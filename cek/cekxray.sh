@@ -17,7 +17,7 @@ clear
 MYIP=$(wget -qO- ipinfo.io/ip);
 data=($(cat /etc/rare/xray/clients.txt | awk '{print $1}'));
 echo "-------------------------------";
-echo "-----=[ Trojan User Login ]=-----";
+echo "-----=[ Xray User Login ]=-----";
 echo "-------------------------------";
 for akun in "${data[@]}"
 do
@@ -45,6 +45,14 @@ jum2=$(cat /tmp/ipvmess.txt | nl)
 echo "user : $akun";
 echo "$jum2";
 echo "-------------------------------"
+fi
+rm -rf /tmp/ipvmess.txt
 done
+oth=$(cat /tmp/other.txt | sort | uniq | nl)
+echo "other";
+echo "$oth";
+echo "-------------------------------"
+done
+rm -rf /tmp/other.txt
 read -p "Press Enter For Back To Xray Menu/ CTRL+C To Cancel : "
 xray-menu
