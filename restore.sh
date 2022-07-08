@@ -20,7 +20,7 @@ echo "Checking VPS"
 clear
 cd
 NameUser=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $2}')
-cekdata=$(curl -sS https://raw.githubusercontent.com/Iansoftware/user-backupv1/main/$NameUser/$NameUser.zip | grep 404 | awk '{print $1}' | cut -d: -f1)
+cekdata=$(curl -sS https://raw.githubusercontent.com/Manpokr/user-backupv1/main/$NameUser/$NameUser.zip | grep 404 | awk '{print $1}' | cut -d: -f1)
 [[ "$cekdata" = "404" ]] && {
 red "Data not found / you never backup"
 exit 0
@@ -32,7 +32,7 @@ echo -e "[ ${green}INFO${NC} ] • Restore Data..."
 read -rp "Password File: " -e InputPass
 echo -e "[ ${green}INFO${NC} ] • Downloading data.."
 mkdir /root/backup
-wget -q -O /root/backup/backup.zip "https://raw.githubusercontent.com/Iansoftware/user-backupv1/main/$NameUser/$NameUser.zip" &> /dev/null
+wget -q -O /root/backup/backup.zip "https://raw.githubusercontent.com/Manpokr/user-backupv1/main/$NameUser/$NameUser.zip" &> /dev/null
 echo -e "[ ${green}INFO${NC} ] • Getting your data..."
 unzip -P $InputPass /root/backup/backup.zip &> /dev/null
 echo -e "[ ${green}INFO${NC} ] • Starting to restore data..."
@@ -62,14 +62,14 @@ sleep 1
 cp /root/backup/ss.conf /etc/shadowsocks-libev/akun.conf &> /dev/null
 echo -e "[ ${green}INFO${NC} ] • Restoring admin data..."
 sleep 1
-cp -r /root/backup/premium-script /var/lib/ &> /dev/null
-cp -r /root/backup/wireguard /etc/ &> /dev/null
+cp -r /root/backup/manpokr /var/lib/ &> /dev/null
+#cp -r /root/backup/wireguard /etc/ &> /dev/null
 cp -r /root/backup/.acme.sh /root/ &> /dev/null
 #cp -r /root/backup/sstp /home/ &> /dev/null
 #cp -r /root/backup/trojan-go /etc/ &> /dev/null
 cp -r /root/backup/trojan /etc/ &> /dev/null
-cp -r /root/backup/rare /etc/ &> /dev/null
-cp -r /root/backup/shadowsocksr /usr/local/ &> /dev/null
+cp -r /root/backup /etc/ &> /dev/null
+#cp -r /root/backup/shadowsocksr /usr/local/ &> /dev/null
 cp -r /root/backup/html /usr/share/nginx/ &> /dev/null
 cp /root/backup/crontab /etc/ &> /dev/null
 cp -r /root/backup/cron.d /etc/ &> /dev/null
