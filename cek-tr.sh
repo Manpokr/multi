@@ -4,9 +4,9 @@ echo "Checking VPS"
 
 clear
 data=( `cat /var/log/trojan.log | grep -w 'authenticated as' | awk '{print $7}' | sort | uniq`);
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\E[0;100;33m     • TROJAN GFW LOGIN •          \E[0m"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo "-------------------------------";
+echo "-----=[ Trojan User Login ]=-----";
+echo "-------------------------------";
 echo -e ""
 for akun in "${data[@]}"
 do
@@ -25,7 +25,7 @@ jum2=$(cat /tmp/iptrojan.txt | nl)
 echo "user : $akun";
 echo "$jum2";
 done
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo ""
+echo "-------------------------------"
+echo "ScriptMod By Manternet"
 read -n 1 -s -r -p "Press any key to back on menu"
 m-trojan
