@@ -23,32 +23,31 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 
 # // Cek Scripts
-if [ -f "/etc/rare/xray/domain" ]; then
+if [ -f "/etc/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
 
 # // Add Folder
 clear
-mkdir -p /etc/rare
-mkdir -p /etc/rare/xray
-mkdir -p /etc/rare/v2ray
-mkdir -p /etc/rare/tls
-mkdir -p /etc/rare/config-url
-mkdir -p /etc/rare/config-user
-mkdir -p /etc/rare/xray/conf
-mkdir -p /etc/rare/v2ray/conf
+mkdir -p /etc/xray
+mkdir -p /etc/v2ray
+mkdir -p /etc/tls
+mkdir -p /etc/config-url
+mkdir -p /etc/config-user
+mkdir -p /etc/xray/conf
+mkdir -p /etc/v2ray/conf
 mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
 mkdir -p /var/log/v2ray/
-mkdir /var/lib/premium-script;
-touch /etc/rare/xray/clients.txt
-touch /etc/rare/v2ray/clients.txt
+mkdir /var/lib/manpokr;
+touch /etc/xray/clients.txt
+touch /etc/v2ray/clients.txt
 
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
-echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
-echo "$host" >> /etc/rare/xray/domain
+echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
+echo "$host" >> /etc/xray/domain
 echo "$host" >> /root/domain
 echo "2.0 Beta" >> /home/version
 echo "Manternet" >> /home/contact
@@ -92,7 +91,7 @@ rm -f /root/ohp.sh
 cat <<EOF> /etc/systemd/system/autosett.service
 [Unit]
 Description=autosetting
-Documentation=https://ianvpn.xyz
+Documentation=https://github.com/Manpokr
 
 [Service]
 Type=oneshot
