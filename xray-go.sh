@@ -283,7 +283,7 @@ cat <<EOF >/etc/rare/xray/conf/09_trojan_xtls_inbounds.json
 {
   "inbounds": [
     {
-      "port": 443,
+      "port": 8443,
       "protocol": "trojan",
       "tag": "TROJANXTLS",
       "settings": {
