@@ -1,9 +1,9 @@
 #!/bin/bash
 # v2ray Auto Setup 
 # =========================
-red='\e[1;31m'
-green='\e[0;32m'
-NC='\e[0m'
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
@@ -11,7 +11,7 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 # // Detect public IPv4 address and pre-fill for the user
 # // Domain
-domain=$(cat /etc/rare/xray/domain)
+domain=$(cat /etc/xray/domain)
 
 # // Uuid Service
 uuid=$(cat /proc/sys/kernel/random/uuid)
@@ -39,7 +39,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
     		add_header Content-Type text/plain;
-    		alias /etc/rare/config-url/;
+    		alias /etc/config-url/;
     }
 
     location /v2raygrpc {
@@ -72,7 +72,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/rare/config-url/;
+		alias /etc/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
@@ -88,9 +88,9 @@ service nginx restart
 version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
 
 # // INSTALL v2ray
-wget -c -P /etc/rare/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
-unzip -o /etc/rare/v2ray/v2ray-linux-64.zip -d /etc/rare/v2ray
-rm -rf /etc/rare/v2ray/v2ray-linux-64.zip
+wget -c -P /etc/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
+unzip -o /etc/v2ray/v2ray-linux-64.zip -d /etc/rare/v2ray
+rm -rf /etc/v2ray/v2ray-linux-64.zip
 
 # // v2ray boot service
 rm -rf /etc/systemd/system/v2ray.service
@@ -107,7 +107,7 @@ Type=simple
 User=root
 CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW
 NoNewPrivileges=yes
-ExecStart=/etc/rare/v2ray/v2ray -confdir /etc/rare/v2ray/conf
+ExecStart=/etc/v2ray/v2ray -confdir /etc/v2ray/conf
 Restart=on-failure
 RestartPreventExitStatus=23
 
@@ -119,8 +119,8 @@ EOF
 # // Restart V2ray
 systemctl daemon-reload
 systemctl enable v2ray.service
-rm -rf /etc/rare/v2ray/conf/*
-cat <<EOF >/etc/rare/v2ray/conf/00_log.json
+rm -rf /etc/v2ray/conf/*
+cat <<EOF >/etc/v2ray/conf/00_log.json
 {
   "log": {
     "access": "/var/log/v2ray/access.log",
@@ -129,7 +129,7 @@ cat <<EOF >/etc/rare/v2ray/conf/00_log.json
   }
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/10_ipv4_outbounds.json
+cat <<EOF >/etc/v2ray/conf/10_ipv4_outbounds.json
 {
     "outbounds":[
         {
@@ -153,7 +153,7 @@ cat <<EOF >/etc/rare/v2ray/conf/10_ipv4_outbounds.json
     ]
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/11_dns.json
+cat <<EOF >/etc/v2ray/conf/11_dns.json
 {
     "dns": {
         "servers": [
@@ -162,7 +162,7 @@ cat <<EOF >/etc/rare/v2ray/conf/11_dns.json
   }
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/02_VLESS_TCP_inbounds.json
+cat <<EOF >/etc/v2ray/conf/02_VLESS_TCP_inbounds.json
 {
   "inbounds": [
     {
@@ -204,8 +204,8 @@ cat <<EOF >/etc/rare/v2ray/conf/02_VLESS_TCP_inbounds.json
           ],
           "certificates": [
             {
-              "certificateFile": "/etc/rare/xray/xray.crt",
-              "keyFile": "/etc/rare/xray/xray.key"
+              "certificateFile": "/etc/xray/xray.crt",
+              "keyFile": "/etc/xray/xray.key"
             }
           ]
         }
@@ -214,7 +214,7 @@ cat <<EOF >/etc/rare/v2ray/conf/02_VLESS_TCP_inbounds.json
   ]
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/03_VLESS_WS_inbounds.json
+cat <<EOF >/etc/v2ray/conf/03_VLESS_WS_inbounds.json
 {
   "inbounds": [
     {
@@ -238,7 +238,7 @@ cat <<EOF >/etc/rare/v2ray/conf/03_VLESS_WS_inbounds.json
   ]
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/04_trojan_TCP_inbounds.json
+cat <<EOF >/etc/v2ray/conf/04_trojan_TCP_inbounds.json
 {
   "inbounds": [
     {
@@ -265,7 +265,7 @@ cat <<EOF >/etc/rare/v2ray/conf/04_trojan_TCP_inbounds.json
   ]
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/05_VMess_WS_inbounds.json
+cat <<EOF >/etc/v2ray/conf/05_VMess_WS_inbounds.json
 {
   "inbounds": [
     {
@@ -288,7 +288,7 @@ cat <<EOF >/etc/rare/v2ray/conf/05_VMess_WS_inbounds.json
   ]
 }
 EOF
-cat <<EOF >/etc/rare/v2ray/conf/06_VLESS_gRPC_inbounds.json
+cat <<EOF >/etc/v2ray/conf/06_VLESS_gRPC_inbounds.json
 {
     "inbounds":[
     {
