@@ -13,16 +13,11 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
 clear
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
-echo -e "\033[30;5;47m           ⇱ CHANGE DOMAIN VPS ⇲                  \033[m"
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
-echo -e ""  
-echo "Please Input Your Pointing Domain In Cloudflare "
 read -rp "Domain/Host: " -e host
-rm /etc/rare/xray/domain
-echo "$host" >> /etc/rare/xray/domain
-echo "IP=$host" >> /var/lib/premium-script/ipvps.conf
-domain=$(cat /etc/rare/xray/domain)
+rm /etc/xray/domain
+echo "$host" >> /etc/xray/domain
+echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
+domain=$(cat /etc/xray/domain)
 
 # // Update Sertificate SSL
 echo Starting Update SSL Sertificate
@@ -35,10 +30,13 @@ systemctl stop v2ray
 systemctl stop v2ray.service
 systemctl stop trojan
 systemctl stop trojan.service
+
+# // Cert
 sleep 2
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/rare/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/rare/xray/xray.crt --keypath /etc/rare/xray/xray.key --ecc
-cat /etc/rare/tls/$domain.log
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+
+cat /etc/tls/$domain.log
 systemctl daemon-reload
 systemctl restart trojan
 systemctl restart trojan.service
@@ -68,7 +66,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
     		add_header Content-Type text/plain;
-    		alias /etc/rare/config-url/;
+    		alias /etc/config-url/;
     }
 
     location /xraygrpc {
@@ -101,7 +99,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/rare/config-url/;
+		alias /etc/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
@@ -129,7 +127,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
     		add_header Content-Type text/plain;
-    		alias /etc/rare/config-url/;
+    		alias /etc/config-url/;
     }
 
     location /v2raygrpc {
@@ -162,7 +160,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/rare/config-url/;
+		alias /etc/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
@@ -171,8 +169,4 @@ server {
 EOF
 systemctl daemon-reload
 service nginx restart
-echo -e ""
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
-echo ""
-read -n 1 -s -r -p "Press any key to back on menu"
-m-domain
+clear
