@@ -32,11 +32,13 @@ chmod +x /root/.acme.sh/acme.sh
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 sleep 2
+
+# // Acme
 /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
 /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/rare/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/rare/xray/xray.crt --keypath /etc/rare/xray/xray.key --ecc
-cat /etc/rare/tls/$domain.log
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+cat /etc/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 service squid start
@@ -55,8 +57,8 @@ cat <<EOF > /etc/trojan/config.json
     ],
     "log_level": 1,
     "ssl": {
-        "cert": "/etc/rare/xray/xray.crt",
-        "key": "/etc/rare/xray/xray.key",
+        "cert": "/etc/xray/xray.crt",
+        "key": "/etc/xray/xray.key",
         "key_password": "",
         "cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384",
         "cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
