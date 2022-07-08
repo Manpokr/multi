@@ -47,7 +47,7 @@ LIGHT='\033[0;37m'
 
 # // VPS Information
 # // Domain
-domain=$(cat /etc/rare/xray/domain)
+domain=$(cat /etc/xray/domain)
 
 # // Status certificate
 modifyTime=$(stat $HOME/.acme.sh/${domain}_ecc/${domain}.key | sed -n '7,6p' | awk '{print $2" "$3" "$4" "$5}')
