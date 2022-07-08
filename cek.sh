@@ -21,11 +21,9 @@ if [ -e "/var/log/secure" ]; then
 fi
                 
 data=( `ps aux | grep -i dropbear | awk '{print $2}'`);
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-echo -e "\E[0;100;33m     • Dropbear User Login •       \E[0m";
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-echo " ID   |   Username   |   IP Address";
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
+echo "----------=[ Dropbear User Login ]=-----------";
+echo "ID  |  Username  |  IP Address";
+echo "----------------------------------------------";
 cat $LOG | grep -i dropbear | grep -i "Password auth succeeded" > /tmp/login-db.txt;
 for PID in "${data[@]}"
 do
@@ -37,11 +35,9 @@ do
                 echo "$PID - $USER - $IP";
                 fi
 done
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-echo -e "\E[0;100;33m        • SSH User Login •         \E[0m";
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-echo " ID   |   Username   |   IP Address";
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
+echo "----------=[ OpenSSH User Login ]=------------";
+echo "ID  |  Username  |  IP Address";
+echo "----------------------------------------------";
 cat $LOG | grep -i sshd | grep -i "Accepted password for" > /tmp/login-db.txt
 data=( `ps aux | grep "\[priv\]" | sort -k 72 | awk '{print $2}'`);
 
@@ -57,27 +53,25 @@ do
 done
 if [ -f "/etc/openvpn/server/openvpn-tcp.log" ]; then
         echo " "
-        echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-        echo -e "\E[0;100;33m        • OpenVPN TCP User Login •       \E[0m";
-        echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-        echo "Username  |  IP Address  |  Connected Since";
-        echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
+        echo "---------=[ OpenVPN TCP User Login ]=---------";
+        echo "Username  |  IP Address  |  Connected";
+        echo "----------------------------------------------";
+
         cat /etc/openvpn/server/openvpn-tcp.log | grep -w "^CLIENT_LIST" | cut -d ',' -f 2,3,8 | sed -e 's/,/      /g' > /tmp/vpn-login-tcp.txt
         cat /tmp/vpn-login-tcp.txt
 fi
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+        echo "----------------------------------------------";
 
 if [ -f "/etc/openvpn/server/openvpn-udp.log" ]; then
         echo " "
-        echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";
-        echo -e "\E[0;100;33m        • OpenVPN UDP User Login •       \E[0m";
-        echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m";              
-        echo "Username  |  IP Address  |  Connected Since";
-        echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"; 
+        echo "---------=[ OpenVPN UDP User Login ]=---------";
+        echo "Username  |  IP Address  |  Connected";
+        echo "----------------------------------------------";
         cat /etc/openvpn/server/openvpn-udp.log | grep -w "^CLIENT_LIST" | cut -d ',' -f 2,3,8 | sed -e 's/,/      /g' > /tmp/vpn-login-udp.txt
         cat /tmp/vpn-login-udp.txt
 fi
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo "----------------------------------------------";
+echo "ScriptMod By Manternet"
 echo "";
 read -n 1 -s -r -p "Press any key to back on menu"
 m-sshovpn
