@@ -279,6 +279,50 @@ cat <<EOF >/etc/rare/xray/conf/06_VLESS_gRPC_inbounds.json
 ]
 }
 EOF
+cat <<EOF >/etc/rare/xray/conf/09_trojan_xtls_inbounds.json
+{
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "trojan",
+      "tag": "TROJANXTLS",
+      "settings": {
+        "clients": [],
+        "fallbacks": [
+          {
+            "dest": 31296,
+            "xver": 1
+          },
+          {
+            "alpn": "h2",
+            "dest": 31302,
+            "xver": 0       
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "minVersion": "1.2",
+          "alpn": [
+            "http/1.1",
+            "h2"
+          ],
+          "certificates": [
+            {
+              "certificateFile": "/etc/rare/xray/xray.crt",
+              "keyFile": "/etc/rare/xray/xray.key",
+              "ocspStapling": 3600,
+              "usage": "encipherment"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+EOF
 # // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31299 -j ACCEPT
