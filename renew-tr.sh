@@ -1,7 +1,9 @@
 #!/bin/bash
-red='\e[1;31m'
-green='\e[0;32m'
-NC='\e[0m'
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
