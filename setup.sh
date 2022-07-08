@@ -30,8 +30,6 @@ fi
 
 # // Add Folder
 clear
-mkdir -p /etc/xray
-mkdir -p /etc/v2ray
 mkdir -p /etc/tls
 mkdir -p /etc/config-url
 mkdir -p /etc/config-user
