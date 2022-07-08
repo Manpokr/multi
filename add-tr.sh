@@ -1,55 +1,59 @@
 #!/bin/bash
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                                                                                                                 
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
-
 clear
+
+# // Add User
 uuid=$(cat /etc/trojan/uuid.txt)
-source /var/lib/premium-script/ipvps.conf
-domain=$(cat /etc/rare/xray/domain)
+source /var/lib/manpokr/ipvps.conf
+domain=$(cat /etc/xray/domain)
 tr="$(cat ~/log-install.txt | grep -i "Trojan-GFW" | cut -d: -f2|sed 's/ //g')"
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${user_EXISTS} == '0' ]]; do
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-                echo -e "\E[0;100;33m      • ADD TROJAN GFW •          \E[0m"
-                echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 		read -rp "Password: " -e user
 		user_EXISTS=$(grep -w $user /etc/trojan/akun.conf | wc -l)
+
 		if [[ ${user_EXISTS} == '1' ]]; then
-		    echo -e ""
-		    echo -e "User \e[31m$user\e[0m already exist"
-		    echo -e ""
-		    echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-            echo ""
-            read -n 1 -s -r -p "Press any key to back on menu"
-            add-tr
+			echo ""
+			echo "A client with the specified name was already created, please choose another name."
+			exit 1
 		fi
 	done
-read -p "Jumlah Hari : " masaaktif
-read -p "BUG TELCO : " BUG
+read -p "Expired (days): " masaaktif
+read -p "SNI (BUG)     : " sni
+read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " sub
+dom=$sub$domain
+
+# // Cp
 sed -i '/"'""$uuid""'"$/a\,"'""$user""'"' /etc/trojan/config.json
+hariini=`date -d "0 days" +"%Y-%m-%d"`
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 echo -e "### $user $exp" >> /etc/trojan/akun.conf
 systemctl restart trojan
-echo -e "\033[32m[Info]\033[0m Trojan-GFW Start Successfully !"
-sleep 2
-trojanlink1="trojan://${user}@${MYIP}:${tr}?sni=${BUG}#${user}@IanVPN"
-trojanlink2="trojan://${user}@${BUG}.${domain}:${tr}?sni=${BUG}#${user}@IanVPN"
-clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\E[0;100;33m  • Trojan-GFW USER INFORMATION •  \E[0m"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e ""
-echo -e "Remarks        : ${user}"
-echo -e "port           : ${tr}"
-echo -e "Key            : ${user}"
-echo -e "Expired On     : $exp"
-echo -e "Jumlah Hari    : $masaaktif Hari"
-echo -e "Host/IP        : ${domain}"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "Config :"
-echo -e "IP + BUG     : ${trojanlink1}"
-echo -e "DOMAIN + BUG : ${trojanlink2}"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo ""
-read -n 1 -s -r -p "Press any key to back on menu"
-m-trojan
 
+# // Link
+trojanlink="trojan://${user}@${dom}:${tr}?sni=${sni}#${user}"
+
+clear
+echo -e "================================="
+echo -e "           TROJAN  GFW          "
+echo -e "================================="
+echo -e "Remarks   : ${user}"
+echo -e "IP/Host   : ${MYIP}"
+echo -e "Domain    : ${domain}"
+echo -e "Subdomain : $dom"
+echo -e "Sni/Bug   : ${sni}"
+echo -e "Port      : ${tr}"
+echo -e "Key       : ${user}"
+echo -e "================================="
+echo -e "Link TR   : ${trojanlink}"
+echo -e "================================="
+echo -e "Created   : $hariini"
+echo -e "Expired   : $exp"
+echo -e "================================="
+echo -e "ScriptMod By Manternet"
