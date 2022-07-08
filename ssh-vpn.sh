@@ -18,10 +18,10 @@ domain=$(cat /root/domain)
 country=MY
 state=Malaysia
 locality=Malaysia
-organization=www.ianvpn.xyz
-organizationalunit=www.ianvpn.xyz
-commonname=www.ianvpn.xyz
-email=admin@IanVPN.xyz
+organization=Manternet
+organizationalunit=Manternet
+commonname=Manternet.xyz
+email=manternet@mon.xyz
 
 # // simple password minimal
 wget -O /etc/pam.d/common-password "https://raw.githubusercontent.com/Manpokr/multi/main/password"
@@ -94,7 +94,7 @@ fi
 
 mesg n || true
 clear
-menu
+neofetch
 END
 chmod 644 /root/.profile
 
@@ -131,7 +131,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
     		add_header Content-Type text/plain;
-    		alias /etc/rare/config-url/;
+    		alias /etc/config-url/;
     }
 
     location /xraygrpc {
@@ -164,7 +164,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/rare/config-url/;
+		alias /etc/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
@@ -190,8 +190,18 @@ rm -f /usr/share/nginx/html.zip*
 cd
 wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Manpokr/multi/main/badvpn-udpgw64"
 chmod +x /usr/bin/badvpn-udpgw
+sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 500' /etc/rc.local
+sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500' /etc/rc.local
 sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500' /etc/rc.local
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7400 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7500 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7600 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7700 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7800 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7900 --max-clients 500
 
 # // setting port ssh
 sed -i 's/Port 22/Port 22/g' /etc/ssh/sshd_config
