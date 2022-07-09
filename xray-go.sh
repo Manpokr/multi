@@ -24,7 +24,7 @@ version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '
 		
 # // INSTALL XRAY
 wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
-unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/rare/xray 
+unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
 rm -rf /etc/mon/xray/Xray-linux-64.zip
 chmod 655 /etc/mon/xray/xray
 
@@ -139,8 +139,8 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           ],
           "certificates": [
             {
-              "certificateFile": "/etc/mon/xray/xray.crt",
-              "keyFile": "/etc/mon/xray/xray.key",
+              "certificateFile": "/etc/xray/xray.crt",
+              "keyFile": "/etc/xray/xray.key",
               "ocspStapling": 3600,
               "usage": "encipherment"
             }
@@ -277,6 +277,61 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
         }
     }
 ]
+}
+EOF
+cat <<EOF >/etc/mon/xray/conf/07_VLESS_TCP_inbounds.json
+{
+  "inbounds": [
+    {
+      "port": 8443,
+      "protocol": "vless",
+      "tag": "vlessTCP",
+      "settings": {
+        "clients": [],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": 33296,
+            "xver": 1
+          },
+          {
+            "alpn": "h2",
+            "dest": 33302,
+            "xver": 0
+          },
+          {
+            "path": "/xrayws",
+            "dest": 33297,
+            "xver": 1
+          },
+          {
+            "path": "/xrayvws",
+            "dest": 33299,
+            "xver": 1
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "minVersion": "1.2",
+          "alpn": [
+            "http/1.1",
+            "h2"
+          ],
+          "certificates": [
+            {
+              "certificateFile": "/etc/xray/xray.crt",
+              "keyFile": "/etc/xray/xray.key",
+              "ocspStapling": 3600,
+              "usage": "encipherment"
+            }
+          ]
+        }
+      }
+    }
+  ]
 }
 EOF
 
