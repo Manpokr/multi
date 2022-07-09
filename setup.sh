@@ -31,10 +31,10 @@ fi
 # // Add Folder
 clear
 mkdir -p /etc/tls
-mkdir -p /etc/config-url
-mkdir -p /etc/config-user
-mkdir -p /etc/xray/conf
-mkdir -p /etc/v2ray/conf
+mkdir -p /etc/mon/config-url
+mkdir -p /etc/mon/config-user
+mkdir -p /etc/mon/xray/conf
+mkdir -p /etc/mon/v2ray/conf
 mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
 mkdir -p /var/log/v2ray/
