@@ -42,7 +42,7 @@ cat /etc/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 service squid start
-
+H
 # // Cp Json
 uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF > /etc/trojan/config.json
