@@ -13,16 +13,16 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
 clear
+domain=$(cat /etc/xray/domain)
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
 echo -e "\033[30;5;47m         ⇱ CERT / RENEW DOMAIN ⇲                  \033[m"
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e "" 
-echo "Please Input Your Pointing Domain In Cloudflare "
-read -rp "Domain/Host: " -e host
-rm /etc/xray/domain
-echo "$host" >> /etc/xray/domain
-echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
-echo -e "" 
+sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
+clear
+cd .acme.sh
+echo "${RED}starting....,${NC}" 
+echo "Port 80 Akan di Hentikan Saat Proses install Cert"    
 
 # // Update Sertificate SSL
 echo "Automatical Update Your Sertificate SSL"
@@ -36,6 +36,7 @@ systemctl stop xray
 systemctl stop xray.service
 systemctl stop trojan
 systemctl stop trojan.service
+~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
 systemctl daemon-reload
@@ -48,6 +49,6 @@ systemctl restart xray.service
 echo ""
 echo Done
 echo ""
-sleep 1 
+sleep 2
 clear
 neofetch
