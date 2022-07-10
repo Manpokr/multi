@@ -79,12 +79,15 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x 
 # Install OHP
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ohp.sh && chmod +x ohp.sh && screen -S ohp ./ohp.sh
 
+# // Cert
+wget https://raw.githubusercontent.com/Manpokr/multi/main/cert.sh && chmod +x cert.sh && ./cert.sh
 rm -f /root/ssh-vpn.sh
 rm -f /root/ins-vt.sh
 rm -f /root/set-br.sh
 rm -f /root/xray-go.sh
 rm -f /root/v2ray-go.sh
 rm -f /root/ohp.sh
+rm -f /root/cert.sh
 
 cat <<EOF> /etc/systemd/system/autosett.service
 [Unit]
