@@ -96,7 +96,7 @@ cat <<EOF >/etc/mon/xray/conf/11_dns.json
   }
 }
 EOF
-cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
+cat <<EOF >/etc/mon/xray/conf/02_trojan_TCP_inbounds.json
 {
   "inbounds": [
     {
@@ -186,8 +186,8 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
             "settings": {
                 "clients": [
                     {
-                        "password": "9dcc73ba-c90a-4de9-be35-be3da0129768",
-                        "email": "xmy01.vpnshopee.xyz_trojan_gRPC"
+                        "password": "${uuid}",
+                        "email": ""
                     }
                 ],
                 "fallbacks": [
@@ -277,61 +277,6 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
         }
     }
 ]
-}
-EOF
-cat <<EOF >/etc/mon/xray/conf/07_VLESS_TCP_inbounds.json
-{
-  "inbounds": [
-    {
-      "port": 8443,
-      "protocol": "vless",
-      "tag": "vlessTCP",
-      "settings": {
-        "clients": [],
-        "decryption": "none",
-        "fallbacks": [
-          {
-            "dest": 33296,
-            "xver": 1
-          },
-          {
-            "alpn": "h2",
-            "dest": 33302,
-            "xver": 0
-          },
-          {
-            "path": "/xrayws",
-            "dest": 33297,
-            "xver": 1
-          },
-          {
-            "path": "/xrayvws",
-            "dest": 33299,
-            "xver": 1
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "xtls",
-        "xtlsSettings": {
-          "minVersion": "1.2",
-          "alpn": [
-            "http/1.1",
-            "h2"
-          ],
-          "certificates": [
-            {
-              "certificateFile": "/etc/xray/xray.crt",
-              "keyFile": "/etc/xray/xray.key",
-              "ocspStapling": 3600,
-              "usage": "encipherment"
-            }
-          ]
-        }
-      }
-    }
-  ]
 }
 EOF
 
