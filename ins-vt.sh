@@ -123,6 +123,5 @@ cd
 
 clear
 echo -e "Done Install Trojan-GFW
-cp /root/domain /etc/xray
 rm -f ins-vt.sh
 
