@@ -13,11 +13,11 @@ biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
 clear
 # // Add Xtls
 #domain=$(cat /etc/xray/domain)
-domain=$(cat /etc/rare/xray/domain)
+domain=$(cat /etc/xray/domain)
 xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 		read -rp "User: " -e user
-		CLIENT_EXISTS=$(grep -w $user /etc/rare/xray/clients.txt | wc -l)
+		CLIENT_EXISTS=$(grep -w $user /etc/xray/clients.txt | wc -l)
 
 		if [[ ${CLIENT_EXISTS} == '1' ]]; then
 			echo ""
@@ -34,6 +34,47 @@ dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
 
+cat>/etc/rare/xray/tls.json<<EOF
+      {
+       "v": "2",
+       "ps": "${user}",
+       "add": "${dom}",
+       "port": "${xtls}",
+       "id": "${uuid}",
+       "aid": "0",
+       "scy": "auto",
+       "net": "ws",
+       "type": "none",
+       "host": "${sni}",
+       "path": "/xrayvws",
+       "tls": "tls",
+       "sni": "${sni}"
+}
+EOF
+vmess_base641=$( base64 -w 0 <<< $vmess_json1)
+vmesslink1="vmess://$(base64 -w 0 /etc/xray/tls.json)"
+echo -e "${user}\t${exp}" >> /etc/xray/clients.txt
+
+cat /etc/mon/xray/conf/02_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${domain}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/mon/xray/conf/02_trojan_TCP_inbounds_tmp.json
+	mv -f /etc/mon/xray/conf/02_trojan_TCP_inbounds_tmp.json /etc/mon/xray/conf/02_trojan_TCP_inbounds.json
+
+    cat /etc/mon/xray/conf/03_VLESS_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json
+	mv -f /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
+
+    cat /etc/mon/xray/conf/04_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/04_trojan_TCP_inbounds_tmp.json
+	mv -f /etc/mon/xray/conf/04_trojan_TCP_inbounds_tmp.json /etc/mon/xray/conf/04_trojan_TCP_inbounds.json
+
+    cat /etc/mon/xray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json
+	mv -f /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json /etc/mon/xray/conf/05_VMess_WS_inbounds.json
+
+    cat /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json
+	mv -f /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
+
+    cat /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json_tmp.json
+	mv -f /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json_tmp.json /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
+
+    cat <<EOF >>"/etc/mon/config-user/${user}"
+
 # // Add
 echo -e "${user}\t${uuid}\t${exp}" >> /etc/rare/xray/clients.txt
 cat /etc/rare/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${domain}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/rare/xray/conf/02_VLESS_TCP_inbounds_tmp.json
@@ -41,10 +82,15 @@ mv -f /etc/rare/xray/conf/02_VLESS_TCP_inbounds_tmp.json /etc/rare/xray/conf/02_
 
 # // Link Xtls
 IP=$( curl -s ipinfo.io/ip )
-vd="vless://$uuid@$dom:$xtls?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-direct&sni=$sni#$user"
-vu="vless://$uuid@$dom:$xtls?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-direct-udp443&sni=$sni#$user"
-vs="vless://$uuid@$dom:$xtls?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-splice&sni=$sni#$user"
-vsu="vless://$uuid@$dom:$xtls?security=xtls&encryption=none&headerType=none&type=tcp&flow=xtls-rprx-splice-udp443&sni=$sni#$user"
+vl1="vless://$uuid@$domain:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$BUG#$user"
+vl2="vless://$uuid@$domain:$xtls?mode=gun&security=tls&encryption=none&type=grpc&serviceName=xraygrpc&sni=$BUG#$user"
+vl3="vless://$uuid@$domain:$xtls?security=tls&encryption=none&type=tcp&${BUG}#${user}"
+
+tr0=""trojan://$uuid@$domain:$xtls?sni=$BUG#$user"
+tr1="trojan://$uuid@$domain:$xtls?mode=gun&security=tls&type=grpc&serviceName=xraytrojangrpc&sni=${BUG}#$user"
+tr2="trojan://$uuid@$domain:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$BUG&type=tcp&headerType=none&host=$BUG#$user"
+${vmesslink1}
+
 systemctl restart xray.service
 clear
 echo -e "================================="
@@ -55,16 +101,22 @@ echo -e "IP/Host        : ${IP}"
 echo -e "Domain         : ${domain}"
 echo -e "Subdomain      : ${dom}"
 echo -e "Sni            : ${sni}"
-echo -e "port TCP-XTLS  : $xtls"
+echo -e "port           : $xtls"
 echo -e "id             : ${uuid}"
 echo -e "================================="
-echo -e "Direct         : ${vd}"
+echo -e "Vless Ws-TLS   : ${vl1}"
 echo -e "================================="
-echo -e "Direct UDP     : ${vu}"
+echo -e "Vless GRPC     : ${vl2}"
 echo -e "================================="
-echo -e "Splice         : ${vs}"
+echo -e "Vless Tcp-TLS  : ${vl3}"
 echo -e "================================="
-echo -e "Splice         : ${vsu}"
+echo -e "Trojan TCP     : ${tr0}"
+echo -e "================================="
+echo -e "Trojan GRPC    : ${tr1}"
+echo -e "================================="
+echo -e "Trojan Tcp-XTLS: ${tr2}"
+echo -e "================================="
+echo -e "Vmess Ws-TLS   : ${vmesslink1}"
 echo -e "================================="
 echo -e "Created        : $hariini"
 echo -e "Expired On     : $exp"
