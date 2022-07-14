@@ -96,7 +96,7 @@ cat <<EOF >/etc/mon/xray/conf/11_dns.json
   }
 }
 EOF
-cat <<EOF >/etc/mon/xray/conf/02_trojan_TCP_inbounds.json
+cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
 {
   "inbounds": [
     {
@@ -280,7 +280,7 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 }
 EOF
 
-cat > /etc/systemd/system/tr-xtls.service << EOF
+cat > /etc/systemd/system/vl-xtls.service << EOF
 [Unit]
 Description=XRay Trojan Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
@@ -288,7 +288,88 @@ After=network.target nss-lookup.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/09_trojan_xtls_inbounds.json
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vl-wstls.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/tr-grpc.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+cat > /etc/systemd/system/tr-tcp.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_TCP_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vm-ws.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/05_VMess_WS_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vl-grpc.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 RestartPreventExitStatus=23
 LimitNPROC=10000
 LimitNOFILE=1000000
@@ -323,13 +404,34 @@ systemctl restart xray
 systemctl enable xray
 systemctl restart xray.service
 systemctl enable xray.service
-systemctl enable tr-xtls
-systemctl restart tr-xtls
+systemctl enable vl-xtls
+systemctl restart vl-xtls
+systemctl enable vl-wstls
+systemctl restart vl-wstls
+systemctl enable tr-grpc
+systemctl restart tr-grpc
+systemctl enable tr-tcp
+systemctl restart tr-tcp
+systemctl enable vm-ws
+systemctl restart vm-ws
+systemctl enable vl-grpc
+systemctl restart vl-grpc
 
 # // Download
 cd /usr/bin
-wget -O xray-menu "https://raw.githubusercontent.com/Manpokr/multi/main/xray-menu.sh"
-chmod +x xray-menu
+wget -O addxray "https://raw.githubusercontent.com/Manpokr/multi/main/add/addxray.sh"
+wget -O cekxray "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekxray.sh"
+wget -O delxray "https://raw.githubusercontent.com/Manpokr/multi/main/del/delxray.sh"
+wget -O renewxray "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewxray.sh"
+wget -O trialxray "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialxray.sh"
+wget -O menuxray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menuxray.sh"
+
+chmod +x addxray
+chmod +x delxray
+chmod +x cekxray
+chmod +x renewxray
+chmod +x trialxray
+chmod +x menuxray
 cd
 
 systemctl daemon-reload
