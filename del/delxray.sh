@@ -19,7 +19,7 @@ clear
     echo -e ""  
 	read -p "Username : " user
 	echo -e ""
-	if ! grep -qw "$user" /etc/rare/xray/clients.txt; then
+	if ! grep -qw "$user" /etc/xray/clients.txt; then
 		echo -e ""
         echo -e "User \e[31m$user\e[0m does not exist"
         echo ""
@@ -30,7 +30,7 @@ clear
 	fi
 uuid="$(cat /etc/xray/clients.txt | grep -w "$user" | awk '{print $2}')"
 
-	cat /etc/mon/xray/conf/02_trojan_TCP_inbounds.json | jq 'del(.inbounds[0].settings.clients[] | select(.id == "'${uuid}'"))' > /etc/mon/xray/conf/02_trojan_TCP_inbounds_tmp.json
+	cat /etc/mon/xray/conf/02_trojan_TCP_inbounds.json | jq 'del(.inbounds[0].settings.clients[] | select(.password == "'${uuid}'"))' > /etc/mon/xray/conf/02_trojan_TCP_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/02_trojan_TCP_inbounds_tmp.json /etc/mon/xray/conf/02_trojan_TCP_inbounds.json
     cat /etc/mon/xray/conf/03_VLESS_WS_inbounds.json | jq 'del(.inbounds[0].settings.clients[] | select(.id == "'${uuid}'"))' > /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
