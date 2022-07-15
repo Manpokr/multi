@@ -522,13 +522,13 @@ wget -O cekv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekv2
 wget -O delv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/del/delv2ray.sh"
 wget -O renewv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewv2ray.sh"
 wget -O trialv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialv2ray.sh"
-wget -O menuv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menuv2ray.sh"
+wget -O menu-v2ray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menu-v2ray.sh"
 chmod +x addv2ray
 chmod +x delv2ray
 chmod +x cekv2ray
 chmod +x renewv2ray
 chmod +x trialv2ray
-chmod +x menuv2ray
+chmod +x menu-v2ray
 
 wget -O v2ray-menu "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-menu.sh"
 chmod +x v2ray-menu
