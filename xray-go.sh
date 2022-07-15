@@ -17,10 +17,11 @@ clear
 domain=$(cat /etc/xray/domain)
 
 # // Xray Version
-version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[].tag_name | head -1)
+version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+#version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[].tag_name | head -1)
 
 # / / Installation Xray Core
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v$version/xray-linux-64.zip"
 
 # / / Make Main Directory
 mkdir -p /etc/mon/xray
