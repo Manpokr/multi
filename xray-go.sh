@@ -17,13 +17,26 @@ clear
 domain=$(cat /etc/xray/domain)
 
 # // Xray Version
-version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
-	
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[].tag_name | head -1)
+
+# / / Installation Xray Core
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
+
+# / / Make Main Directory
+mkdir -p /etc/mon/xray
+
+# / / Unzip Xray Linux 64
+cd `mktemp -d`
+curl -sL "$xraycore_link" -o xray.zip
+unzip -q xray.zip && rm -rf xray.zip
+mv xray /etc/mon/xray
+chmod +x /etc/mon/xray/xray
+
 # // Folder
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/tag/${version}/xray-linux-64.zip"
-unzip -o /etc/mon/xray/xray-linux-64.zip -d /etc/mon/xray
-rm -rf /etc/mon/xray/xray-linux-64.zip
-chmod 655 /etc/mon/xray/xray
+#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/tag/${version}/xray-linux-64.zip"
+#unzip -o /etc/mon/xray/xray-linux-64.zip -d /etc/mon/xray
+#rm -rf /etc/mon/xray/xray-linux-64.zip
+#chmod 655 /etc/mon/xray/xray
 
 # // XRay boot service
 cat <<EOF >/etc/systemd/system/xray.service
