@@ -14,14 +14,10 @@ echo "Checking VPS"
 
 clear
 domain=$(cat /etc/xray/domain)
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
-echo -e "\033[30;5;47m         ⇱ CERT / RENEW DOMAIN ⇲                  \033[m"
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
-echo -e "" 
 sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
 clear
 cd .acme.sh
-echo "${RED}starting....,${NC}" 
+echo -e "${RED}starting....,${NC}" 
 echo "Port 80 Akan di Hentikan Saat Proses install Cert"    
 
 # // Update Sertificate SSL
