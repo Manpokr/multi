@@ -16,24 +16,14 @@ clear
 # // Domain 
 domain=$(cat /etc/xray/domain)
 
-# // Uuid Service
-uuid=$(cat /proc/sys/kernel/random/uuid)
-
 # // Xray Version
 version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
 	
 # // Folder
-mkdir -p /etc/mon/xray
-	
-# // INSTALL XRAY
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
-
-# / / Unzip Xray Linux 64
-cd `mktemp -d`
-curl -sL "$xraycore_link" -o xray.zip
-unzip -q xray.zip && rm -rf xray.zip
-mv xray /etc/mon/xray/xray
-chmod +x /etc/mon/xray/xray
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/tag/${version}/xray-linux-64.zip"
+unzip -o /etc/mon/xray/xray-linux-64.zip -d /etc/mon/xray
+rm -rf /etc/mon/xray/xray-linux-64.zip
+chmod 655 /etc/mon/xray/xray
 
 # // XRay boot service
 cat <<EOF >/etc/systemd/system/xray.service
@@ -61,6 +51,11 @@ EOF
 systemctl daemon-reload
 systemctl enable xray.service
 rm -rf /etc/mon/xray/conf/*
+
+# // Uuid Service
+uuid=$(cat /proc/sys/kernel/random/uuid)
+
+# // Json File
 cat <<EOF >/etc/mon/xray/conf/00_log.json
 {
   "log": {
@@ -108,8 +103,8 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
   "inbounds": [
     {
       "port": 443,
-      "protocol": "trojan",
-      "tag": "trojanTCPXTLS",
+      "protocol": "vless",
+      "tag": "VLESSTCP",
       "settings": {
         "clients": [],
         "decryption": "none",
@@ -194,7 +189,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
                 "clients": [
                     {
                         "password": "${uuid}",
-                        "email": ""
+                        "email": "man"
                     }
                 ],
                 "fallbacks": [
@@ -289,7 +284,7 @@ EOF
 
 cat > /etc/systemd/system/vl-xtls.service << EOF
 [Unit]
-Description=XRay Trojan Service
+Description=XRay Xtls Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 [Service]
@@ -305,7 +300,7 @@ EOF
 
 cat > /etc/systemd/system/vl-wstls.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
+Description=XRay VLess Ws Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 [Service]
@@ -321,7 +316,7 @@ EOF
 
 cat > /etc/systemd/system/tr-grpc.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
+Description=XRay Trojan Grpc Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 [Service]
@@ -338,7 +333,7 @@ EOF
 
 cat > /etc/systemd/system/tr-tcp.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
+Description=XRay Trojan TCP Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 [Service]
@@ -354,7 +349,7 @@ EOF
 
 cat > /etc/systemd/system/vm-ws.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
+Description=XRay Vmess Ws Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 [Service]
@@ -370,7 +365,7 @@ EOF
 
 cat > /etc/systemd/system/vl-grpc.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
+Description=XRay VLess Grpc Service
 Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 [Service]
