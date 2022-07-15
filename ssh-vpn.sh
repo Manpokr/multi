@@ -74,6 +74,7 @@ apt-get remove --purge exim4 -y
 
 # // install wget and curl
 apt -y install wget curl
+apt -y install neofetch
 
 # // set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
