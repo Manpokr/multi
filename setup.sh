@@ -31,8 +31,8 @@ fi
 # // Add Folder
 clear
 mkdir -p /etc/tls
-mkdir -p /etc/mon/config-url
-mkdir -p /etc/mon/config-user
+mkdir -p /etc/config-url
+mkdir -p /etc/config-user
 mkdir -p /etc/mon/xray/conf
 mkdir -p /etc/mon/v2ray/conf
 mkdir -p /etc/systemd/system/
@@ -43,10 +43,9 @@ touch /etc/xray/clients.txt
 touch /etc/v2ray/clients.txt
 
 # // CloudFlare
+
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
-echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
-echo "$host" >> /etc/xray/domain
-echo "$host" >> /root/domain
+echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
 echo "2.0 Beta" >> /home/version
 echo "Manternet" >> /home/contact
 clear
@@ -88,24 +87,8 @@ rm -f /root/xray-go.sh
 rm -f /root/v2ray-go.sh
 rm -f /root/ohp.sh
 rm -f /root/cert.sh
-
-cat <<EOF> /etc/systemd/system/autosett.service
-[Unit]
-Description=autosetting
-Documentation=https://github.com/Manpokr
-
-[Service]
-Type=oneshot
-ExecStart=/bin/bash /etc/set.sh
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload
-systemctl enable autosett
-wget -O /etc/set.sh "https://raw.githubusercontent.com/Manpokr/multi/main/set.sh"
-chmod +x /etc/set.sh
+rm -f /root/domain
+rm -f /root/cf.sh
 history -c
 clear
 
@@ -126,11 +109,16 @@ echo "   - XRAY VLESS XTLS DIRECT  : 443"  | tee -a log-install.txt
 echo "   - XRAY VLESS WS TLS       : 443"  | tee -a log-install.txt
 echo "   - XRAY TROJAN TLS         : 443"  | tee -a log-install.txt
 echo "   - XRAY VMESS TLS          : 443"  | tee -a log-install.txt
+echo "   - XRAY VLESS GRPC         : 8445"  | tee -a log-install.txt
+echo "   - XRAY TROJAN GRPC TLS    : 8445"  | tee -a log-install.txt
+echo ""  | tee -a log-install.txt
 echo "   - V2RAY VLESS TLS SPLICE  : 8080" | tee -a log-install.txt
 echo "   - V2RAY VLESS TLS DIRECT  : 8080" | tee -a log-install.txt
 echo "   - V2RAY VLESS WS TLS      : 8080" | tee -a log-install.txt
 echo "   - V2RAY TROJAN TLS        : 8080" | tee -a log-install.txt
 echo "   - V2RAY VMESS TLS         : 8080" | tee -a log-install.txt
+echo "   - V2RAY VLESS GRPC        : 8446"  | tee -a log-install.txt
+echo "   - V2RAY TROJAN GRPC TLS   : 8446"  | tee -a log-install.txt
 echo "   - Trojan-GFW              : 2087" | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
 echo "   >>> Server Information & Other Features"  | tee -a log-install.txt
