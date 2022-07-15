@@ -38,6 +38,8 @@ chmod +x /etc/mon/xray/xray
 #unzip -o /etc/mon/xray/xray-linux-64.zip -d /etc/mon/xray
 #rm -rf /etc/mon/xray/xray-linux-64.zip
 #chmod 655 /etc/mon/xray/xray
+rm -rf /var/log/xray/
+mkdir -p /var/log/xray/
 
 # // system
 rm -rf /etc/systemd/system/xray.service
