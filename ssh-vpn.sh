@@ -143,7 +143,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31301;
+		grpc_pass grpc://127.0.0.1:34301;
 	}
 
 	location /xraytrgrpc {
@@ -155,7 +155,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31304;
+		grpc_pass grpc://127.0.0.1:34304;
 	}
 }
 server {
@@ -168,6 +168,39 @@ server {
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
+	}
+}
+
+# // Grpc
+server {
+        listen 80;
+	listen 8448 ssl http2;
+	server_name ${domain};           
+	index index.html;                    
+	root /usr/share/nginx/html;            
+ 
+	ssl_certificate /etc/xray/xray.crt;           
+	ssl_certificate_key /etc/xray/xray.key;    
+	ssl_protocols TLSv1.2 TLSv1.3;
+	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+ 
+	location /vlgrpc {
+		if ($content_type !~ "application/grpc") {
+			return 404;
+		}
+		client_max_body_size 0;
+		client_body_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:31301;
+        }
+        location /trgrpc {
+		if ($content_type !~ "application/grpc") {
+			return 404;
+		}
+		client_max_body_size 0;
+		client_body_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:31304;
 	}
 }
 EOF
