@@ -1,6 +1,22 @@
 #!/bin/bash
-MYIP=$(curl -sS ipv4.icanhazip.com)
+RED='\e[1;31m'
+GREEN='\e[0;32m'
+NC='\e[0m'
+
+# // Getting
+MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
+IZIN=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | awk '{print $4}' | grep $MYIP )
+if [[ $MYIP = $IZIN ]]; then
+echo -e "${NC}${GREEN}Permission Accepted...${NC}"
+else
+echo -e "${NC}${RED}Permission Denied!${NC}";
+echo -e "${NC}${LIGHT}Please Contact Admin!!"
+rm -f menu
+exit 0
+fi
+clear
+
 #########################
 
 #EXPIRED
@@ -18,6 +34,7 @@ do
 done < /root/expired.txt
 rm /root/expired.txt
 Name=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $2}')
+
 # Color Validation
 RED='\033[0;31m'                                                                                          
 GREEN='\033[0;32m'                                                                                        
@@ -27,23 +44,12 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'                                                                                         
 NC='\033[0;37m'
 LIGHT='\033[0;37m'
-
-DF='\e[39m'
-Bold='\e[1m'
-Blink='\e[5m'
 yell='\e[33m'
 red='\e[31m'
-green='\e[32m'
-blue='\e[34m'
-PURPLE='\e[35m'
 cyan='\e[36m'
-Lred='\e[91m'
-Lgreen='\e[92m'
-Lyellow='\e[93m'
-NC='\e[0m'
-GREEN='\033[0;32m'
-ORANGE='\033[0;33m'
-LIGHT='\033[0;37m'
+bl='\e[36;1m'
+
+
 
 # // VPS Information
 # // Domain
@@ -98,28 +104,43 @@ freq=$( awk -F: ' /cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo )
 tram=$( free -m | awk 'NR==2 {print $2}' )
 uram=$( free -m | awk 'NR==2 {print $3}' )
 fram=$( free -m | awk 'NR==2 {print $4}' )
+
+# // Ver Xray & V2ray
+verxray="$(/etc/mon/xray/xray -version | awk 'NR==1 {print $2}')"                                                                                                                                                                                                    
+verv2ray="$(/etc/mon/v2ray/v2ray -version | awk 'NR==1 {print $2}')"   
+
+#Bash
+shellversion+=" ${BASH_VERSION/-*}" 
+versibash=$shellversion
+name=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $2}')
+exp=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | grep $MYIP | awk '{print $3}')
+
+
 clear 
 echo -e "                                                                                         "
-echo -e "\e[33m CPU Model            \e[0m: $cname"
-echo -e "\e[33m CPU Frequency        \e[0m: $freq MHz"
-echo -e "\e[33m Number Of Cores      \e[0m:  $cores"
-echo -e "\e[33m CPU Usage            \e[0m:  $cpu_usage"
-echo -e "\e[33m Operating System     \e[0m:  "`hostnamectl | grep "Operating System" | cut -d ' ' -f5-`	
-echo -e "\e[33m Kernel               \e[0m:  `uname -r`"
-echo -e "\e[33m Total Amount Of RAM  \e[0m:  $tram MB"
-echo -e "\e[33m Used RAM             \e[0m: $red $uram\e[0m MB"
-echo -e "\e[33m Free RAM             \e[0m:  $fram MB"
-echo -e "\e[33m System Uptime        \e[0m:  $uptime "
-echo -e "\e[33m Isp Name             \e[0m:  $ISP"
-echo -e "\e[33m Domain               \e[0m:  $domain"	
-echo -e "\e[33m Ip Vps               \e[0m:  $IPVPS"	
-echo -e "\e[33m City                 \e[0m:  $CITY"
-echo -e "\e[33m Time                 \e[0m:  $WKT"
-echo -e "\e[33m Day                  \e[0m:  $DAY"
-echo -e "\e[33m Date                 \e[0m:  $DATE"
-echo -e "\e[33m Telegram             \e[0m:  $tele"
-echo -e "\e[33m Script Version       \e[0m:  $Sver"
-echo -e "\e[33m Certificate status   \e[0m:  \e[33mExpired in ${tlsStatus} days\e[0m"
+echo -e "\e[5;33m CPU Model               :\033[m $cname"
+echo -e "\e[5;33m CPU Frequency           :\033[m $freq MHz"
+echo -e "\e[5;33m Number Of Cores         :\033[m  $cores"
+echo -e "\e[5;33m CPU Usage               :\033[m  $cpu_usage"
+echo -e "\e[5;33m Operating System        :\033[m  "`hostnamectl | grep "Operating System" | cut -d ' ' -f5-`	
+echo -e "\e[5;33m Kernel                  :\033[m  `uname -r`"
+echo -e "\e[5;33m Total Amount Of RAM     :\033[m  $tram MB"
+echo -e "\e[5;33m Used RAM                :\033[m  $red$uram\e[0m MB"
+echo -e "\e[5;33m Free RAM                :\033[m  $fram MB"
+echo -e "\e[5;33m System Uptime           :\033[m  $uptime "
+echo -e "\e[5;33m Isp Name                :\033[m  $ISP"
+echo -e "\e[5;33m Domain                  :\033[m  $domain"	
+echo -e "\e[5;33m Ip Vps                  :\033[m  $IPVPS"	
+echo -e "\e[5;33m City                    :\033[m  $CITY"
+echo -e "\e[5;33m Time                    :\033[m  $WKT"
+echo -e "\e[5;33m Day                     :\033[m  $DAY"
+echo -e "\e[5;33m Date                    :\033[m  $DATE"
+echo -e "\e[5;33m Telegram                :\033[m  $tele"
+echo -e "\e[5;33m Bash Version            :\033[m ${PURPLE}$versibash${NC}"                                                                                                                                                                                                 
+echo -e "\e[5;33m Xray Version            :\033[m  ${PURPLE}$verxray${NC}"                                                                                                                                                                                                 
+echo -e "\e[5;33m V2ray Version           :\033[m  ${PURPLE}$verv2ray${NC}"                                                                                                                                                                                                
+echo -e "\e[5;33m Script Version          :\033[m  ${BLUE}$Sver${NC}"
+echo -e "\e[5;33m Certificate status      :\033[m  \e[33mExpired in ${tlsStatus} days\e[0m"
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e "\e[33m Traffic\e[0m       \e[33mToday      Yesterday     Month   "
 echo -e "\e[33m Download\e[0m      $dtoday    $dyest       $dmon   \e[0m"
