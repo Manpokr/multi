@@ -51,10 +51,10 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:32301;
+		grpc_pass grpc://127.0.0.1:33301;
 	}
 
-	location /v2raytrojangrpc {
+	location /v2raytrgrpc {
 		client_max_body_size 0;
 		# keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -63,7 +63,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:32304;
+		grpc_pass grpc://127.0.0.1:33304;
 	}
 }
 server {
@@ -78,6 +78,41 @@ server {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
 	}
 }
+# // Grpc
+server {
+        listen 880;
+	listen 8446 ssl http2;
+	server_name ${domain};           
+	index index.html;                    
+	root /usr/share/nginx/html;            
+ 
+	ssl_certificate /etc/xray/xray.crt;           
+	ssl_certificate_key /etc/xray/xray.key;    
+	ssl_protocols TLSv1.2 TLSv1.3;
+	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+ 
+	location /v2vlgrpc {
+		if ($content_type !~ "application/grpc") {
+			return 404;
+		}
+		client_max_body_size 0;
+		client_body_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:32301;
+        }
+        location /v2trgrpc {
+		if ($content_type !~ "application/grpc") {
+			return 404;
+		}
+		client_max_body_size 0;
+		client_body_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:32304;
+
+
+	}
+}
+
 EOF
 
 # // Restart Nginx
@@ -88,13 +123,14 @@ service nginx restart
 version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
 
 # // INSTALL v2ray
-wget -c -P /etc/mon/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
+wget -c -P /etc/mon/v2ray/ "https://github.com/v2fly/v2ray-core/releases/tag/${version}/v2ray-linux-64.zip"
 unzip -o /etc/mon/v2ray/v2ray-linux-64.zip -d /etc/mon/v2ray
 rm -rf /etc/mon/v2ray/v2ray-linux-64.zip
 
 # // v2ray boot service
 rm -rf /etc/systemd/system/v2ray.service
 touch /etc/systemd/system/v2ray.service
+
 cat <<EOF >/etc/systemd/system/v2ray.service
 [Unit]
 Description=V2Ray - A unified platform for anti-censorship
@@ -120,6 +156,8 @@ EOF
 systemctl daemon-reload
 systemctl enable v2ray.service
 rm -rf /etc/mon/v2ray/conf/*
+
+# // Json File
 cat <<EOF >/etc/mon/v2ray/conf/00_log.json
 {
   "log": {
@@ -303,7 +341,7 @@ cat <<EOF >/etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
         "streamSettings": {
             "network": "grpc",
             "grpcSettings": {
-                "serviceName": "v2raygrpc"
+                "serviceName": "v2vlgrpc"
             }
         }
     }
@@ -311,15 +349,48 @@ cat <<EOF >/etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
 }
 EOF
 
-cat > /etc/systemd/system/vl-xtls.service << EOF
+cat <<EOF >/etc/rare/xray/conf/04_trojan_gRPC_inbounds.json
+{
+    "inbounds": [
+        {
+            "port": 31304,
+            "listen": "127.0.0.1",
+            "protocol": "trojan",
+            "tag": "trojangRPCTCP",
+            "settings": {
+                "clients": [
+                    {
+                        "password": "${uuid}",
+                        "email": "man"
+                    }
+                ],
+                "fallbacks": [
+                    {
+                        "dest": "31300"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "grpc",
+                "grpcSettings": {
+                    "serviceName": "v2trgrpc"
+                }
+            }
+        }
+    ]
+}
+EOF
+
+# // System
+cat > /etc/systemd/system/v2-vl-xtls.service << EOF
 [Unit]
-Description=XRay Trojan Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+Description=V2Ray Xtls Service
+Documentation=https://speedtest.net https://v2ray.com
 After=network.target nss-lookup.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
 RestartPreventExitStatus=23
 LimitNPROC=10000
 LimitNOFILE=1000000
@@ -327,15 +398,15 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-cat > /etc/systemd/system/vl-wstls.service << EOF
+cat > /etc/systemd/system/v2-vl-ws.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+Description=V2Ray VLess WS Service
+Documentation=https://speedtest.net https://v2ray.com
 After=network.target nss-lookup.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/03_VLESS_WS_inbounds.json
 RestartPreventExitStatus=23
 LimitNPROC=10000
 LimitNOFILE=1000000
@@ -343,15 +414,15 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-cat > /etc/systemd/system/tr-grpc.service << EOF
+cat > /etc/systemd/system/v2-tr-grpc.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+Description=V2Ray Trojan grpc Service
+Documentation=https://speedtest.net https://v2ray.com
 After=network.target nss-lookup.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
 RestartPreventExitStatus=23
 LimitNPROC=10000
 LimitNOFILE=1000000
@@ -360,15 +431,15 @@ WantedBy=multi-user.target
 EOF
 
 
-cat > /etc/systemd/system/tr-tcp.service << EOF
+cat > /etc/systemd/system/v2-tr-tcp.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+Description=V2Ray Trojan TLS Service
+Documentation=https://speedtest.net https://v2ray.com
 After=network.target nss-lookup.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_TCP_inbounds.json
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
 RestartPreventExitStatus=23
 LimitNPROC=10000
 LimitNOFILE=1000000
@@ -376,15 +447,15 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-cat > /etc/systemd/system/vm-ws.service << EOF
+cat > /etc/systemd/system/v2-vm-ws.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+Description=V2Ray Vmess Ws Service
+Documentation=https://speedtest.net https://v2ray.com
 After=network.target nss-lookup.target
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/05_VMess_WS_inbounds.json
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
 RestartPreventExitStatus=23
 LimitNPROC=10000
 LimitNOFILE=1000000
@@ -392,10 +463,10 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-cat > /etc/systemd/system/vl-grpc.service << EOF
+cat > /etc/systemd/system/v2-vl-grpc.service << EOF
 [Unit]
-Description=XRay VLess TLS Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+Description=V2Ray VLess grpc Service
+Documentation=https://speedtest.net https://v2ray.com
 After=network.target nss-lookup.target
 [Service]
 User=root
@@ -429,6 +500,20 @@ systemctl restart v2ray
 systemctl enable v2ray
 systemctl restart v2ray.service
 systemctl enable v2ray.service
+systemctl enable v2-vl-xtls
+systemctl restart v2-vl-xtls
+systemctl enable v2-vl-ws
+systemctl restart v2-vl-ws
+systemctl enable v2-tr-grpc
+systemctl restart v2-tr-grpc
+systemctl enable v2-tr-tcp
+systemctl restart v2-tr-tcp
+systemctl enable v2-vm-ws
+systemctl restart v2-vm-ws
+systemctl enable v2-vl-grpc
+systemctl restart v2-vl-grpc
+
+
 
 # // Menu V2ray
 cd /usr/bin
