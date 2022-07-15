@@ -1,6 +1,10 @@
 #!/bin/bash
-#!/bin/bash
-#Optimasi Speed By LostServer
+
+RED='\e[1;31m'
+GREEN='\e[0;32m'
+NC='\e[0m'
+
+# // Optimasi Speed By LostServer
 Add_To_New_Line(){
 	if [ "$(tail -n1 $1 | wc -l)" == "0"  ];then
 		echo "" >> "$1"
