@@ -21,12 +21,19 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 
 # // Xray Version
 version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
-		
+	
+# // Folder
+mkdir -p /etc/mon/xray
+	
 # // INSTALL XRAY
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
-unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-rm -rf /etc/mon/xray/Xray-linux-64.zip
-chmod 655 /etc/mon/xray/xray
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+
+# / / Unzip Xray Linux 64
+cd `mktemp -d`
+curl -sL "$xraycore_link" -o xray.zip
+unzip -q xray.zip && rm -rf xray.zip
+mv xray /etc/mon/xray/xray
+chmod +x /etc/mon/xray/xray
 
 # // XRay boot service
 cat <<EOF >/etc/systemd/system/xray.service
@@ -200,7 +207,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
                 "network": "grpc",
                 "security": "none",
                 "grpcSettings": {
-                    "serviceName": "xraytrojangrpc"
+                    "serviceName": "trgrpc"
                 }
             }
         }
@@ -272,7 +279,7 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
         "streamSettings": {
             "network": "grpc",
             "grpcSettings": {
-                "serviceName": "xraygrpc"
+                "serviceName": "vlgrpc"
             }
         }
     }
