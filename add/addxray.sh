@@ -84,7 +84,7 @@ vl1="vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=no
 vl2="vless://$uuid@$dom:$8445?mode=gun&security=tls&encryption=none&type=grpc&serviceName=xraygrpc&sni=$sni#$user"
 vl3="vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=tcp&${sni}#${user}"
 
-tr0=""trojan://$uuid@$dom:$xtls?sni=$sni#$user"
+tr0="trojan://$uuid@$dom:$xtls?sni=$sni#$user"
 tr1="trojan://$uuid@$dom:8445?mode=gun&security=tls&type=grpc&serviceName=trgrpc&sni=${sni}#$user"
 ${vmesslink1}
 
