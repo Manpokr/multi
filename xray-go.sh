@@ -426,14 +426,14 @@ wget -O cekxray "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekxra
 wget -O delxray "https://raw.githubusercontent.com/Manpokr/multi/main/del/delxray.sh"
 wget -O renewxray "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewxray.sh"
 wget -O trialxray "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialxray.sh"
-wget -O menuxray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menuxray.sh"
+wget -O menu-xray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menu-xray.sh"
 
 chmod +x addxray
 chmod +x delxray
 chmod +x cekxray
 chmod +x renewxray
 chmod +x trialxray
-chmod +x menuxray
+chmod +x menu-xray
 cd
 
 systemctl daemon-reload
