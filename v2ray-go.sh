@@ -39,7 +39,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
     		add_header Content-Type text/plain;
-    		alias /etc/mon/config-url/;
+    		alias /etc/config-url/;
     }
 
     location /v2raygrpc {
@@ -72,7 +72,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/mon/config-url/;
+		alias /etc/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
@@ -311,6 +311,103 @@ cat <<EOF >/etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
 }
 EOF
 
+cat > /etc/systemd/system/vl-xtls.service << EOF
+[Unit]
+Description=XRay Trojan Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vl-wstls.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/tr-grpc.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+cat > /etc/systemd/system/tr-tcp.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_TCP_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vm-ws.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/05_VMess_WS_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vl-grpc.service << EOF
+[Unit]
+Description=XRay VLess TLS Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
 # // v2ray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32301 -j ACCEPT
@@ -335,6 +432,19 @@ systemctl enable v2ray.service
 
 # // Menu V2ray
 cd /usr/bin
+wget -O addv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/add/addv2ray.sh"
+wget -O cekv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekv2ray.sh"
+wget -O delv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/del/delv2ray.sh"
+wget -O renewv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewv2ray.sh"
+wget -O trialv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialv2ray.sh"
+wget -O menuv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menuv2ray.sh"
+chmod +x addv2ray
+chmod +x delv2ray
+chmod +x cekv2ray
+chmod +x renewv2ray
+chmod +x trialv2ray
+chmod +x menuv2ray
+
 wget -O v2ray-menu "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-menu.sh"
 chmod +x v2ray-menu
 cd
