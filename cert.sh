@@ -27,8 +27,10 @@ cat /etc/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 service squid start
+systemctl restart xray.service
+systemctl restart v2ray.service
+systemctl restart trojan.service
 
-restart
 echo -e "done"
 sleep 2
 clear
