@@ -24,6 +24,9 @@ mkdir /etc/xray/tls/
 mkdir -p /etc/trojan/
 touch /etc/trojan/akun.conf
 
+# // install Trojan-Gfw
+bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
+
 # // Cp Json
 uuid=$(cat /proc/sys/kernel/random/uuid)
 cat <<EOF > /etc/trojan/config.json
