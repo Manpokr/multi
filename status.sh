@@ -170,24 +170,79 @@ else
    status_stunnel="Not Running [ \e[31m❌\e[0m ]"
 fi
 
+# // Status Service Stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   status_stunnel="Running [ \033[32mok\033[0m ]"
+else
+   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service Stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   status_stunnel="Running [ \033[32mok\033[0m ]"
+else
+   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service Stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   status_stunnel="Running [ \033[32mok\033[0m ]"
+else
+   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service Stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   status_stunnel="Running [ \033[32mok\033[0m ]"
+else
+   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service Stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   status_stunnel="Running [ \033[32mok\033[0m ]"
+else
+   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service Stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   status_stunnel="Running [ \033[32mok\033[0m ]"
+else
+   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+
+
 clear
-echo -e "\033[0;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[0m"
-echo -e "\E[0;100;33m                 Status Service               \E[0m"
-echo -e "\033[0;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[30;5;47m                 ⇱ STATUS-SERVICE ⇲               \033[m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"         
 echo -e "   "
-echo -e "   SSH / Tun      : $status_ssh"
-echo -e "   OpenVPN        : $status_openvpn"
-echo -e "   OHP            : $status_OHPovpn"
-echo -e "   Dropbear       : $status_beruangjatuh"
-echo -e "   Stunnel        : $status_stunnel"
-echo -e "   Squid          : $status_squid"
-echo -e "   Fail2Ban       : $status_fail2ban"
-echo -e "   Crons          : $status_cron"
-echo -e "   Vnstat         : $status_vnstat"
-echo -e "   NGINX          : $status_nginx"
-echo -e "   XRAY CORE      : $status_xtls_xray"
-echo -e "   V2RAY CORE     : $status_tls_v2ray"
-echo -e "   Trojan GFW     : $status_virus_trojan"
-echo -e "\033[0;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[0m"
-echo ""
-echo -e " ScriptMod By Manternet "
+echo -e "   SSH / Tun          : $status_ssh"
+echo -e "   OpenVPN            : $status_openvpn"
+echo -e "   OHP                : $status_OHPovpn"
+echo -e "   Dropbear           : $status_beruangjatuh"
+echo -e "   Stunnel            : $status_stunnel"
+echo -e "   Squid              : $status_squid"
+echo -e "   Fail2Ban           : $status_fail2ban"
+echo -e "   Crons              : $status_cron"
+echo -e "   Vnstat             : $status_vnstat"
+echo -e "   NGINX              : $status_nginx"
+echo -e "   XRAY CORE          : $status_xtls_xray"
+echo -e "   XRAY Vmess-Ws-Tls  : $status_xtls_xray"
+echo -e "   XRAY Vless-Ws-Tls  : $status_xtls_xray"
+echo -e "   XRAY Vless-Xtls    : $status_xtls_xray"
+echo -e "   XRAY Vless-Grpc    : $status_xtls_xray"
+echo -e "   XRAY Trojan-Tcp    : $status_xtls_xray"
+echo -e "   XRAY Trojan-Grpc   : $status_xtls_xray"
+echo -e "   V2RAY CORE         : $status_tls_v2ray"
+echo -e "   V2RAY Vmess-Ws-Tls : $status_tls_v2ray"
+echo -e "   V2RAY Vless-Ws-Tls : $status_tls_v2ray"
+echo -e "   V2RAY Vless-Xtls   : $status_tls_v2ray"
+echo -e "   V2RAY Vless-Grpc   : $status_tls_v2ray"
+echo -e "   V2RAY Trojan-Tcp   : $status_tls_v2ray"
+echo -e "   V2RAY Trojan-Grpc  : $status_tls_v2ray"
+echo -e "   Trojan GFW         : $status_virus_trojan"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "   ScriptMod By Manternet "
