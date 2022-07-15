@@ -1,27 +1,38 @@
 #!/bin/bash
+# Color Validation
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
 clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\E[0;100;33m       • SSH & OVPN MENU •         \E[0m"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[30;5;47m                 ⇱ SSH & OVPN MENU ⇲              \033[m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
-echo -e " [\e[36m•1\e[0m] Create SSH & OpenVPN Account "
-echo -e " [\e[36m•2\e[0m] Trial Account SSH & OpenVPN "
-echo -e " [\e[36m•3\e[0m] Renew SSH & OpenVPN Account "
-echo -e " [\e[36m•4\e[0m] Delete SSH & OpenVPN Account "
-echo -e " [\e[36m•5\e[0m] Check User Login SSH & OpenVPN "
-echo -e " [\e[36m•6\e[0m] List Member SSH & OpenVPN "
-echo -e " [\e[36m•7\e[0m] Delete User Expired SSH & OpenVPN "
-echo -e " [\e[36m•8\e[0m] Set up Autokill SSH "
-echo -e " [\e[36m•9\e[0m] Cek Users Who Do Multi Login SSH "
+echo -e " [${CYAN}•1${NC}] Create SSH & OpenVPN Account "
+echo -e " [${CYAN}•2${NC}] Trial Account SSH & OpenVPN "
+echo -e " [${CYAN}•3${NC}] Renew SSH & OpenVPN Account "
+echo -e " [${CYAN}•4${NC}] Delete SSH & OpenVPN Account "
+echo -e " [${CYAN}•5${NC}] Check User Login SSH & OpenVPN "
+echo -e " [${CYAN}•6${NC}] List Member SSH & OpenVPN "
+echo -e " [${CYAN}•7${NC}] Delete User Expired SSH & OpenVPN "
+echo -e " [${CYAN}•8${NC}] Set up Autokill SSH "
+echo -e " [${CYAN}•9${NC}] Cek Users Who Do Multi Login SSH "
 echo -e ""
-echo -e " [\e[31m•0\e[0m] \e[31mBACK TO MENU\033[0m"
+echo -e " [${RED}12${NC}] ${RED}BACK TO MENU${NC}"
 echo -e ""
 echo -e   "Press x or [ Ctrl+C ] • To-Exit"
 echo ""
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
 read -p " Select menu :  "  opt
 echo -e ""
