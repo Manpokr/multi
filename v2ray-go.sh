@@ -119,13 +119,27 @@ EOF
 systemctl daemon-reload
 service nginx restart
 
-# // Version V2ray
+# // Version V2ray pre
+#version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r .[].tag_name | head -1)
 version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
 
+# / / Installation Xray Core
+v2raycore_link="https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
+
+# / / Make Main Directory
+mkdir -p /etc/mon/v2ray
+
+# / / Unzip Xray Linux 64
+cd `mktemp -d`
+curl -sL "$v2raycore_link" -o v2ray.zip
+unzip -q v2ray.zip && rm -rf v2ray.zip
+mv v2ray /etc/mon/v2ray
+chmod +x /etc/mon/v2ray/v2ray
+
 # // INSTALL v2ray
-wget -c -P /etc/mon/v2ray/ "https://github.com/v2fly/v2ray-core/releases/tag/${version}/v2ray-linux-64.zip"
-unzip -o /etc/mon/v2ray/v2ray-linux-64.zip -d /etc/mon/v2ray
-rm -rf /etc/mon/v2ray/v2ray-linux-64.zip
+#wget -c -P /etc/mon/v2ray/ "https://github.com/v2fly/v2ray-core/releases/tag/${version}/v2ray-linux-64.zip"
+#unzip -o /etc/mon/v2ray/v2ray-linux-64.zip -d /etc/mon/v2ray
+#rm -rf /etc/mon/v2ray/v2ray-linux-64.zip
 
 # // v2ray boot service
 rm -rf /etc/systemd/system/v2ray.service
