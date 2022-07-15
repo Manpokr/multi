@@ -134,7 +134,7 @@ server {
     		alias /etc/config-url/;
     }
 
-    location /xraygrpc {
+    location /xrayvlgrpc {
 		client_max_body_size 0;
 #		keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -146,7 +146,7 @@ server {
 		grpc_pass grpc://127.0.0.1:31301;
 	}
 
-	location /xraytrojangrpc {
+	location /xraytrgrpc {
 		client_max_body_size 0;
 		# keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -424,7 +424,7 @@ chmod +x kernel-updt
 
 echo "0 1 * * * reboot" >> /etc/crontab
 echo "0 0 * * * root /sbin/hwclock -w   # synchronize hardware & system clock each day at 00:00 am" >> /etc/crontab
-echo "0 */10 * * * root /usr/bin/clear-log # clear log every  two hours" >> /etc/crontab
+echo "0 */12 * * * root /usr/bin/clear-log # clear log every  two hours" >> /etc/crontab
 echo "0 */12 * * * root /usr/bin/clearcache  #clear cache every 12hours daily" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/delete # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xp # delete expired user" >> /etc/crontab
