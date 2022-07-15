@@ -39,11 +39,17 @@ chmod +x /etc/mon/xray/xray
 #rm -rf /etc/mon/xray/xray-linux-64.zip
 #chmod 655 /etc/mon/xray/xray
 
+# // system
+rm -rf /etc/systemd/system/xray.service
+#touch /etc/systemd/system/xray.service
+rm -rf /etc/systemd/system/xraycore.service
+touch /etc/systemd/system/xraycore.service
+
 # // XRay boot service
-cat <<EOF >/etc/systemd/system/xray.service
+cat <<EOF >/etc/systemd/system/xraycore.service
 [Unit]
 Description=Xray - A unified platform for anti-censorship
-# Documentation=https://v2ray.com https://guide.v2fly.org
+# Documentation=https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 Wants=network-online.target
 
@@ -56,14 +62,14 @@ ExecStart=/etc/mon/xray/xray run -confdir /etc/mon/xray/conf
 Restart=on-failure
 RestartPreventExitStatus=23
 
-
 [Install]
 WantedBy=multi-user.target
+
 EOF
 
 # // Restart & Add File
 systemctl daemon-reload
-systemctl enable xray.service
+systemctl enable xraycore.service
 rm -rf /etc/mon/xray/conf/*
 
 # // Uuid Service
@@ -416,10 +422,10 @@ systemctl daemon-reload
 
 # // Starting
 systemctl daemon-reload
-systemctl restart xray
-systemctl enable xray
-systemctl restart xray.service
-systemctl enable xray.service
+systemctl restart xraycore
+systemctl enable xraycore
+systemctl restart xraycore.service
+systemctl enable xraycore.service
 systemctl enable vl-xtls
 systemctl restart vl-xtls
 systemctl enable vl-wstls
