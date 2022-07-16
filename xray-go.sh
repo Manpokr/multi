@@ -43,9 +43,7 @@ mkdir -p /var/log/xray/
 
 # // system
 rm -rf /etc/systemd/system/xray.service
-#touch /etc/systemd/system/xray.service
-rm -rf /etc/systemd/system/xraycore.service
-touch /etc/systemd/system/xraycore.service
+touch /etc/systemd/system/xray.service
 
 # // XRay boot service
 cat <<EOF >/etc/systemd/system/xraycore.service
@@ -211,7 +209,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
                 "clients": [
                     {
                         "password": "${uuid}",
-                        "email": "man"
+                        "email": "${domain}"
                     }
                 ],
                 "fallbacks": [
@@ -420,14 +418,11 @@ iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
 iptables-save >/etc/iptables.rules.v4
 netfilter-persistent save
 netfilter-persistent reload
-systemctl daemon-reload
 
 # // Starting
 systemctl daemon-reload
-systemctl restart xraycore
-systemctl enable xraycore
-systemctl restart xraycore.service
-systemctl enable xraycore.service
+systemctl enable xray.service
+systemctl restart xray.service
 systemctl enable vl-xtls
 systemctl restart vl-xtls
 systemctl enable vl-wstls
