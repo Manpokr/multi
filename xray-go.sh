@@ -46,7 +46,7 @@ rm -rf /etc/systemd/system/xray.service
 touch /etc/systemd/system/xray.service
 
 # // XRay boot service
-cat <<EOF >/etc/systemd/system/xraycore.service
+cat <<EOF >/etc/systemd/system/xray.service
 [Unit]
 Description=Xray - A unified platform for anti-censorship
 # Documentation=https://github.com/XTLS/Xray-core
@@ -69,7 +69,7 @@ EOF
 
 # // Restart & Add File
 systemctl daemon-reload
-systemctl enable xraycore.service
+systemctl enable xray.service
 rm -rf /etc/mon/xray/conf/*
 
 # // Uuid Service
