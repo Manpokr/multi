@@ -92,7 +92,7 @@ server {
 	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
  
 	location /v2vlgrpc {
-		if ($content_type !~ "application/grpc") {
+		if (grpc_test !~ "application/grpc") {
 			return 404;
 		}
 		client_max_body_size 0;
@@ -101,7 +101,7 @@ server {
 		grpc_pass grpc://127.0.0.1:32301;
         }
         location /v2trgrpc {
-		if ($content_type !~ "application/grpc") {
+		if (grpc_testt !~ "application/grpc") {
 			return 404;
 		}
 		client_max_body_size 0;
@@ -121,10 +121,11 @@ service nginx restart
 
 # // Version V2ray pre
 #version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r .[].tag_name | head -1)
-version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
+#version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
+version="$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
 
-# / / Installation Xray Core
-v2raycore_link="https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
+# / / Installation V2ray Core
+v2raycore_link="https://github.com/v2fly/v2ray-core/releases/download/v${version}/v2ray-linux-64.zip"
 
 # / / Make Main Directory
 mkdir -p /etc/mon/v2ray
