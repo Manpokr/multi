@@ -20,6 +20,8 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
+nan='$content_type'
+nam='$content_typee'
 rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
@@ -94,7 +96,7 @@ server {
 	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
  
 	location /v2vlgrpc {
-		if (grpc_test !~ "application/grpc") {
+		if ($nan !~ "application/grpc") {
 			return 404;
 		}
 		client_max_body_size 0;
@@ -103,7 +105,7 @@ server {
 		grpc_pass grpc://127.0.0.1:32301;
         }
         location /v2trgrpc {
-		if (grpc_mon !~ "application/grpc") {
+		if ($nam !~ "application/grpc") {
 			return 404;
 		}
 		client_max_body_size 0;
@@ -547,11 +549,14 @@ chmod +x renewv2ray
 chmod +x trialv2ray
 chmod +x menu-v2ray
 
-wget -O v2ray-menu "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-menu.sh"
-chmod +x v2ray-menu
 cd
+
 systemctl daemon-reload
 systemctl restart nginx
 systemctl restart v2ray
-
 clear
+echo -e " ${RED}V2RAY INSTALL DONE ${NC}"
+sleep 2
+clear
+
+rm -f v2ray-go.sh
