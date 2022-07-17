@@ -1,8 +1,8 @@
 #!/bin/bash
-# Xray Cek
+# // Xray Cek
 # ======================
 
-# Color
+# // Color
 RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[0;32m'
@@ -19,9 +19,9 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 
 echo -n > /tmp/other.txt
 data=($(cat /etc/xray/clients.txt | awk '{print $1}'));
-echo "-----------------------------------";
-echo "-------=[ Xray User Login ]=-------";
-echo "-----------------------------------";
+echo "---------------------------------------";
+echo "---------=[ Xray User Login ]=---------";
+echo "---------------------------------------";
 for akun in "${data[@]}"
 do
 if [[ -z "$akun" ]]; then
@@ -47,14 +47,15 @@ else
 jum2=$(cat /tmp/ipvmess.txt | nl)
 echo "user : $akun";
 echo "$jum2";
-echo "-----------------------------------";
+echo "---------------------------------------";
 fi
 rm -rf /tmp/ipvmess.txt
 done
 oth=$(cat /tmp/other.txt | sort | uniq | nl)
 echo "other";
 echo "$oth";
-echo "-----------------------------------";
+echo "---------------------------------------";
+echo -e "ScriptMod By Manternet\e[37m"
 rm -rf /tmp/other.txt
 read -p "Press Enter For Back To Xray Menu/ CTRL+C To Exit : "
 menu-xray
