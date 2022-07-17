@@ -13,13 +13,11 @@ biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
 #########################
 MYIP=$(curl -sS ipv4.icanhazip.com)
 clear
-echo -n > /tmp/other.txt
-data=($(cat /etc/rare/v2ray/clients.txt | awk '{print $1}'));
 
 echo -n > /tmp/other.txt
-data=( `cat /etc/xray/trojan.json | grep '^#&#' | cut -d ' ' -f 2`);
+data=($(cat /etc/v2ray/clients.txt | awk '{print $1}'));
 echo "-----------------------------------------";
-echo "-------=[ XRay Trojan User Login ]=------";
+echo "----------=[ V2ray User Login ]=---------";
 echo "-----------------------------------------";
 for akun in "${data[@]}"
 do
@@ -55,5 +53,5 @@ echo "other";
 echo "$oth";
 echo "-----------------------------------------"
 rm -rf /tmp/other.txt
-read -p "Press Enter For Back To V2ay Menu / CTRL+C To Cancel : "
-v2ray-menu
+read -p "Press Enter For Back To V2ay Menu / CTRL+C To Exit : "
+menu-v2ray
