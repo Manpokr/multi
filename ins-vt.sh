@@ -126,7 +126,8 @@ chmod +x menu-trojan
 cd
 
 clear
-echo -e "Done Install Trojan-GFW
+echo -e " ${RED}TROJAN-GFW INSTALL DONE ${NC}"
 sleep 2
+clear
 rm -f ins-vt.sh
 
