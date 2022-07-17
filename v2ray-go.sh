@@ -380,7 +380,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
                 "clients": [
                     {
                         "password": "${uuid}",
-                        "email": "man"
+                        "email": "${domain}"
                     }
                 ],
                 "fallbacks": [
