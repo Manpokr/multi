@@ -152,7 +152,7 @@ echo -e "\033[30;5;47m                 ⇱ SCRIPT MENU ⇲                  \033
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e " [${CYAN}•1${NC}] SSH & OpenVPN Menu  [${CYAN}•6${NC}] STATUS Service"                                                                                                                                                                                         
 echo -e " [${CYAN}•2${NC}] XRAY Menu           [${CYAN}•7${NC}] VPS Information"                                                                                                                                                                                      
-echo -e " [${CYAN}•3${NC}] V2XRAY Menu         [${CYAN}•8${NC}] SCRIPTS Info"                                                                                                                                                                                     
+echo -e " [${CYAN}•3${NC}] V2RAY Menu          [${CYAN}•8${NC}] SCRIPTS Info"                                                                                                                                                                                     
 echo -e " [${CYAN}•4${NC}] Trojan GFW Menu     [${CYAN}•9${NC}] CLEAR RAM Cache"                                                                                                                                                                                         
 echo -e " [${CYAN}•5${NC}] SYSTEM Menu         [${RED}10${NC}] ${RED}REBOOT${NC}"                                                                                                                                                                                     
 echo -e   ""
@@ -167,9 +167,9 @@ read -p " Select menu :  "  opt
 echo -e   ""
 case $opt in
 1) clear ; m-sshovpn ;;
-2) clear ; xray-menu ;;
-3) clear ; v2ray-menu ;;
-4) clear ; m-trojan ;;
+2) clear ; menu-xray ;;
+3) clear ; menu-v2ray ;;
+4) clear ; menu-trojan ;;
 5) clear ; m-system ;;
 6) clear ; status ;;
 7) clear ; vpsinfo ;;
