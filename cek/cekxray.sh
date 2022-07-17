@@ -1,24 +1,27 @@
 #!/bin/bash
-# Trojan Cek
+# Xray Cek
 # ======================
 
 # Color
-RED="\e[1;31m"
-GREEN="\e[0;32m"
-NC="\e[0m"
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+LIGHT='\e[37m'
 
 ###################
 dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
 ###################
 
-# Validate Your IP Address
+# // Validate Your IP Address
 clear
 MYIP=$(wget -qO- ipinfo.io/ip);
+
+echo -n > /tmp/other.txt
 data=($(cat /etc/xray/clients.txt | awk '{print $1}'));
-echo "-------------------------------";
-echo "-----=[ Xray User Login ]=-----";
-echo "-------------------------------";
+echo "-----------------------------------";
+echo "-------=[ Xray User Login ]=-------";
+echo "-----------------------------------";
 for akun in "${data[@]}"
 do
 if [[ -z "$akun" ]]; then
@@ -44,14 +47,14 @@ else
 jum2=$(cat /tmp/ipvmess.txt | nl)
 echo "user : $akun";
 echo "$jum2";
-echo "-------------------------------"
+echo "-----------------------------------";
 fi
 rm -rf /tmp/ipvmess.txt
 done
 oth=$(cat /tmp/other.txt | sort | uniq | nl)
 echo "other";
 echo "$oth";
-echo "-------------------------------"
+echo "-----------------------------------";
 rm -rf /tmp/other.txt
 read -p "Press Enter For Back To Xray Menu/ CTRL+C To Exit : "
 menu-xray
