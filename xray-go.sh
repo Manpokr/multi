@@ -456,4 +456,10 @@ cd
 systemctl daemon-reload
 systemctl restart nginx
 systemctl restart xray
+
 clear
+echo -e " ${RED}XRAY INSTALL DONE ${NC}"
+sleep 2
+clear
+
+rm -f xray-go.sh
