@@ -108,6 +108,8 @@ curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
 sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
 
 # // Install Nginx
+nan='$content_type'
+nam='$content_typee'
 sudo apt update 
 apt -y install nginx 
 systemctl daemon-reload
@@ -175,7 +177,7 @@ server {
 # // Grpc
 server {
         listen 80;
-	listen 8448 ssl http2;
+	listen 8445 ssl http2;
 	server_name ${domain};           
 	index index.html;                    
 	root /usr/share/nginx/html;            
@@ -186,7 +188,7 @@ server {
 	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
  
 	location /vlgrpc {
-		if ($content_type !~ "application/grpc") {
+		if ($nan !~ "application/grpc") {
 			return 404;
 		}
 		client_max_body_size 0;
@@ -195,7 +197,7 @@ server {
 		grpc_pass grpc://127.0.0.1:31301;
         }
         location /trgrpc {
-		if ($content_type !~ "application/grpc") {
+		if ($nam !~ "application/grpc") {
 			return 404;
 		}
 		client_max_body_size 0;
@@ -371,9 +373,6 @@ wget -O autokill "https://raw.githubusercontent.com/Manpokr/multi/main/autokill.
 wget -O ceklim "https://raw.githubusercontent.com/Manpokr/multi/main/ceklim.sh"
 wget -O tendang "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/tendang.sh"
 
-# // menu trojan
-wget -O m-trojan "https://raw.githubusercontent.com/Manpokr/multi/main/m-trojan.sh"
-
 # // menu system
 wget -O m-system "https://raw.githubusercontent.com/Manpokr/multi/main/m-system.sh"
 wget -O m-domain "https://raw.githubusercontent.com/Manpokr/multi/main/m-domain.sh"
@@ -394,11 +393,9 @@ wget -O port-squid "https://raw.githubusercontent.com/Manpokr/multi/main/port-sq
 wget -O m-webmin "https://raw.githubusercontent.com/Manpokr/multi/main/m-webmin.sh"
 wget -O ram "https://raw.githubusercontent.com/Manpokr/multi/main/ram.sh"
 wget -O speedtest "https://raw.githubusercontent.com/Manpokr/multi/main/speedtest_cli.py"
-wget -O info-menu "https://raw.githubusercontent.com/Manpokr/multi/main/info-menu.sh"
 wget -O vpsinfo "https://raw.githubusercontent.com/Manpokr/multi/main/vpsinfo.sh"
 wget -O status "https://raw.githubusercontent.com/Manpokr/multi/main/status.sh"
 wget -O about "https://raw.githubusercontent.com/Manpokr/multi/main/about.sh"
-wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
 wget -O auto-reboot "https://raw.githubusercontent.com/Manpokr/multi/main/auto-reboot.sh"
 wget -O clear-log "https://raw.githubusercontent.com/Manpokr/multi/main/clear-log.sh"
 wget -O clearcache "https://raw.githubusercontent.com/Manpokr/multi/main/clearcache.sh"
@@ -411,6 +408,7 @@ wget -O kernel-updt "https://raw.githubusercontent.com/Manpokr/multi/main/kernel
 wget -O xp "https://raw.githubusercontent.com/Manpokr/multi/main/xp.sh"
 wget -O xray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/xray-xp.sh"
 wget -O v2ray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-xp.sh"
+wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
 
 chmod +x menu
 chmod +x m-sshovpn
