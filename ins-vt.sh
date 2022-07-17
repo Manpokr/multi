@@ -5,7 +5,7 @@ NC='\033[0;37m'
 LIGHT='\033[0;37m'
 
 # // Getting
-domain=$(cat /root/domain)
+domain=$(cat /etc/v2ray/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
@@ -108,23 +108,25 @@ iptables-restore -t < /etc/iptables.up.rules
 netfilter-persistent save
 netfilter-persistent reload
 systemctl daemon-reload
-systemctl restart trojan
 systemctl enable trojan
+systemctl restart trojan
 
 cd /usr/bin
-wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
 wget -O add-tr "https://raw.githubusercontent.com/Manpokr/multi/main/add-tr.sh"
 wget -O del-tr "https://raw.githubusercontent.com/Manpokr/multi/main/del-tr.sh"
 wget -O cek-tr "https://raw.githubusercontent.com/Manpokr/multi/main/cek-tr.sh"
 wget -O renew-tr "https://raw.githubusercontent.com/Manpokr/multi/main/renew-tr.sh"
+wget -O menu-trojan "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menu-trojan.sh"
+
 chmod +x add-tr
 chmod +x cek-tr
 chmod +x del-tr
 chmod +x renew-tr
-chmod +x bbr
+chmod +x menu-trojan
 cd
 
 clear
 echo -e "Done Install Trojan-GFW
+sleep 2
 rm -f ins-vt.sh
 
