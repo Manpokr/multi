@@ -1,17 +1,17 @@
 #!/bin/bash
-RED="\e[1;31m"
-GREEN="\e[0;32m"
-NC="\e[0m"
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+LIGHT='\033[0;37m'
 
 # // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
-echo "Checking VPS"
-
 clear
+
 data=( `cat /var/log/trojan.log | grep -w 'authenticated as' | awk '{print $7}' | sort | uniq`);
-echo "-------------------------------";
+echo "---------------------------------";
 echo "-----=[ Trojan User Login ]=-----";
-echo "-------------------------------";
+echo "---------------------------------";
 echo -e ""
 for akun in "${data[@]}"
 do
