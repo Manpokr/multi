@@ -46,7 +46,7 @@ server {
     		alias /etc/config-url/;
     }
 
-    location /v2raygrpc {
+    location /v2vlgrpc {
 		client_max_body_size 0;
 #		keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -55,10 +55,10 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:33301;
+		grpc_pass grpc://127.0.0.1:32301;
 	}
 
-	location /v2raytrgrpc {
+	location /v2trgrpc {
 		client_max_body_size 0;
 		# keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -67,7 +67,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:33304;
+		grpc_pass grpc://127.0.0.1:32304;
 	}
 }
 server {
@@ -80,40 +80,6 @@ server {
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
-	}
-}
-# // Grpc
-server {
-        listen 880;
-	listen 8446 ssl http2;
-	server_name ${domain};           
-	index index.html;                    
-	root /usr/share/nginx/html;            
- 
-	ssl_certificate /etc/xray/xray.crt;           
-	ssl_certificate_key /etc/xray/xray.key;    
-	ssl_protocols TLSv1.2 TLSv1.3;
-	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
- 
-	location /v2vlgrpc {
-		if ($nan !~ "application/grpc") {
-			return 404;
-		}
-		client_max_body_size 0;
-		client_body_timeout 1071906480m;
-		grpc_read_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:32301;
-        }
-        location /v2trgrpc {
-		if ($nam !~ "application/grpc") {
-			return 404;
-		}
-		client_max_body_size 0;
-		client_body_timeout 1071906480m;
-		grpc_read_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:32304;
-
-
 	}
 }
 
@@ -496,6 +462,10 @@ LimitNPROC=10000
 LimitNOFILE=1000000
 [Install]
 WantedBy=multi-user.target
+EOF
+
+cat <<EOF > /etc/v2ray/clients.txt
+# user v2ray
 EOF
 
 # // v2ray
