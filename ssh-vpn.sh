@@ -206,10 +206,11 @@ service nginx restart
 cd
 
 # // Web
+randomNum=$((RANDOM % 6 + 1))
 rm -rf /usr/share/nginx/html
-wget -q -P /usr/share/nginx https://raw.githubusercontent.com/racunzx/hijk.art/main/html.zip 
-unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
-rm -f /usr/share/nginx/html.zip*
+wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html${randomNum}.zip 
+unzip -o /usr/share/nginx/html${randomNum}.zip -d /usr/share/nginx/html 
+rm -f /usr/share/nginx/html${randomNum}.zip*
 
 # // install badvpn
 cd
