@@ -42,9 +42,6 @@ mkdir /var/lib/manpokr;
 touch /etc/xray/clients.txt
 touch /etc/v2ray/clients.txt
 
-echo "### User v2ray" >> /etc/v2ray/clients.txt
-echo "### User xray" >> /etc/xray/clients.txt
-
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
 echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
