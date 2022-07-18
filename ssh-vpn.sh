@@ -78,6 +78,7 @@ apt -y install neofetch
 
 # // set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+date
 
 # // set locale
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
@@ -99,22 +100,37 @@ neofetch
 END
 chmod 644 /root/.profile
 
-# // install NGINX webserver
-sudo apt install gnupg2 ca-certificates lsb-release -y 
-echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+# // Version
+source /etc/os-release
+OS=$ID
+ver=$VERSION_ID
+
+# // Install nginx Debian / Ubuntu
+if [[ $OS == 'debian' ]]; then
+         sudo apt install gnupg2 ca-certificates lsb-release -y 
+         echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+         echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+         curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+         # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+         sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+         sudo apt update
+elif [[ $OS == 'ubuntu' ]]; then
+         sudo apt install gnupg2 ca-certificates lsb-release -y 
+	 echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+	 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+	 curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+	 # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+	 sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+	 sudo apt update
+fi
 
 # // Install Nginx
-nan='$content_type'
-nam='$content_typee'
 sudo apt update 
 apt -y install nginx 
 systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
+
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
 server {
 	listen 81;
@@ -137,7 +153,7 @@ server {
     		alias /etc/config-url/;
     }
 
-    location /xrayvlgrpc {
+    location /vlgrpc {
 		client_max_body_size 0;
 #		keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -146,10 +162,10 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:34301;
+		grpc_pass grpc://127.0.0.1:31301;
 	}
 
-	location /xraytrgrpc {
+	location /trgrpc {
 		client_max_body_size 0;
 		# keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -158,7 +174,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:34304;
+		grpc_pass grpc://127.0.0.1:31304;
 	}
 }
 server {
@@ -174,38 +190,6 @@ server {
 	}
 }
 
-# // Grpc
-server {
-        listen 80;
-	listen 8445 ssl http2;
-	server_name ${domain};           
-	index index.html;                    
-	root /usr/share/nginx/html;            
- 
-	ssl_certificate /etc/xray/xray.crt;           
-	ssl_certificate_key /etc/xray/xray.key;    
-	ssl_protocols TLSv1.2 TLSv1.3;
-	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
- 
-	location /vlgrpc {
-		if ($nan !~ "application/grpc") {
-			return 404;
-		}
-		client_max_body_size 0;
-		client_body_timeout 1071906480m;
-		grpc_read_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31301;
-        }
-        location /trgrpc {
-		if ($nam !~ "application/grpc") {
-			return 404;
-		}
-		client_max_body_size 0;
-		client_body_timeout 1071906480m;
-		grpc_read_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31304;
-	}
-}
 EOF
 
 # // System Nginx
