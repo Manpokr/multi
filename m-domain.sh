@@ -23,11 +23,9 @@ echo -e " [${CYAN}•3${NC}] ADD SUB DOMAIN CLOUDFLARE"
 echo -e " [${CYAN}•4${NC}] Pointing BUG"
 echo -e " [${CYAN}•5${NC}] Renew Certificate DOMAIN"
 echo -e ""
-echo -e " [${RED}•0${NC}] ${RED}BACK TO MENU${NC}"
+echo -e " [${RED}•x${NC}] ${RED}MENU${NC}"
 echo -e   ""
-echo -e   "Press x or [ Ctrl+C ] • To-Exit"
-echo -e   ""
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[37m"
 echo -e ""
 read -p " Select menu : " opt
 echo -e ""
@@ -37,7 +35,6 @@ case $opt in
 3) clear ; cfd ;;
 4) clear ; cfh ;;
 5) clear ; certv2ray ;;
-0) clear ; menu ;;
-x) exit ;;
+x) clear ; menu ;;
 *) echo "Boh salah tekan " ; sleep 1 ; m-domain ;;
 esac
