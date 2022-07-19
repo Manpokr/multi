@@ -201,6 +201,10 @@ service nginx restart
 cd
 
 # // Web
+rm -rf /usr/share/nginx/html
+wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
+unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
+rm -f /usr/share/nginx/html.zip*
 wget https://raw.githubusercontent.com/Manpokr/multi/main/html/web.sh && chmod +x web.sh && ./web.sh
 
 # // install badvpn
