@@ -351,7 +351,7 @@ wget -O member "https://raw.githubusercontent.com/Manpokr/multi/main/member.sh"
 wget -O delete "https://raw.githubusercontent.com/Manpokr/multi/main/delete.sh"
 wget -O autokill "https://raw.githubusercontent.com/Manpokr/multi/main/autokill.sh"
 wget -O ceklim "https://raw.githubusercontent.com/Manpokr/multi/main/ceklim.sh"
-wget -O tendang "https://raw.githubusercontent.com/Iansoftware/Script-IANVPN/main/tendang.sh"
+wget -O tendang "https://raw.githubusercontent.com/Manpokr/multi/main/tendang.sh"
 
 # // menu system
 wget -O m-system "https://raw.githubusercontent.com/Manpokr/multi/main/m-system.sh"
@@ -402,7 +402,6 @@ chmod +x delete
 chmod +x autokill
 chmod +x ceklim
 chmod +x tendang
-chmod +x m-trojan
 chmod +x m-system
 chmod +x m-domain
 chmod +x add-host
@@ -418,7 +417,6 @@ chmod +x port-squid
 chmod +x m-webmin
 chmod +x ram
 chmod +x speedtest
-chmod +x info-menu
 chmod +x vpsinfo
 chmod +x status
 chmod +x about
