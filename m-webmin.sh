@@ -97,7 +97,7 @@ sts="${Error}"
 fi
 clear 
 echo -e "================================"
-echo -e "      Webmin Menu $sts        "
+echo -e "    Webmin Menu $sts        "
 echo -e "================================"
 echo -e "   [•1] Install Webmin"
 echo -e "   [•2] Restart Webmin"
