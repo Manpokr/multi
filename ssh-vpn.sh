@@ -75,11 +75,6 @@ apt-get remove --purge exim4 -y
 # // install wget and curl
 apt -y install wget curl
 apt -y install neofetch
-apt install dnsutils jq -y
-apt-get install net-tools -y
-apt-get install tcpdump -y
-apt-get install dsniff -y
-apt install grepcidr -y
 
 # // set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
@@ -294,6 +289,11 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/vpn.sh &&  chmod +x vp
 
 # // install fail2ban
 apt -y install fail2ban
+apt install dnsutils jq -y
+apt-get install net-tools -y
+apt-get install tcpdump -y
+apt-get install dsniff -y
+apt install grepcidr -y
 
 # // Instal DDOS Flate
 if [ -d '/usr/local/ddos' ]; then
