@@ -55,10 +55,6 @@ secs_to_human() {
 }
 start=$(date +%s)
 
-# // Update
-apt-get update && apt-get upgrade -y && update-grub -y
-clear
-
 # // Install ssh ovpn
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
