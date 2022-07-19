@@ -28,11 +28,9 @@ echo -e " [${CYAN}•7${NC}] Delete User Expired SSH & OpenVPN "
 echo -e " [${CYAN}•8${NC}] Set up Autokill SSH "
 echo -e " [${CYAN}•9${NC}] Cek Users Who Do Multi Login SSH "
 echo -e ""
-echo -e " [${RED}12${NC}] ${RED}BACK TO MENU${NC}"
+echo -e " [${RED}•x${NC}] ${RED}MENU${NC}"
 echo -e ""
-echo -e   "Press x or [ Ctrl+C ] • To-Exit"
-echo ""
-echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[37m"
 echo -e ""
 read -p " Select menu :  "  opt
 echo -e ""
@@ -46,7 +44,6 @@ case $opt in
 7) clear ; delete ; exit ;;
 8) clear ; autokill ; exit ;;
 9) clear ; ceklim ; exit ;;
-0) clear ; menu ; exit ;;
-x) exit ;;
-*) echo "Boh salah tekan, Sayang kedak Babi" ; sleep 1 ; m-sshovpn ;;
+x) clear ; menu ; exit ;;
+*) echo "Boh salah tekan" ; sleep 1 ; m-sshovpn ;;
 esac
