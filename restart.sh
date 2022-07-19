@@ -13,27 +13,27 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 echo "Checking VPS"
 
 clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\E[0;100;33m         • RESTART MENU •          \E[0m"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
+echo -e "\033[30;5;47m                 ⇱ RESTART MENU ⇲                 \033[m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
-echo -e " [\e[36m•1\e[0m] Restart All Services"
-echo -e " [\e[36m•2\e[0m] Restart OpenSSH"
-echo -e " [\e[36m•3\e[0m] Restart Dropbear"
-echo -e " [\e[36m•4\e[0m] Restart Stunnel4"
-echo -e " [\e[36m•5\e[0m] Restart OpenVPN"
-echo -e " [\e[36m•6\e[0m] Restart Squid"
-echo -e " [\e[36m•7\e[0m] Restart Nginx"
-echo -e " [\e[36m•8\e[0m] Restart Badvpn"
-echo -e " [\e[36m•9\e[0m] Restart XRAY"
-echo -e " [\e[36m10\e[0m] Restart V2RAY"
-echo -e " [\e[36m11\e[0m] Restart TROJAN"
+echo -e " [${CYAN}•1${NC}] Restart All Services"
+echo -e " [${CYAN}•2${NC}] Restart OpenSSH"
+echo -e " [${CYAN}•3${NC}] Restart Dropbear"
+echo -e " [${CYAN}•4${NC}] Restart Stunnel4"
+echo -e " [${CYAN}•5${NC}] Restart OpenVPN"
+echo -e " [${CYAN}•6${NC}] Restart Squid"
+echo -e " [${CYAN}•7${NC}] Restart Nginx"
+echo -e " [${CYAN}•8${NC}] Restart Badvpn"
+echo -e " [${CYAN}•9${NC}] Restart XRAY"
+echo -e " [${CYAN}10${NC}] Restart V2RAY"
+echo -e " [${CYAN}11${NC}] Restart TROJAN"
 echo -e ""
-echo -e " [\e[31m•0\e[0m] \e[31mBACK TO MENU\033[0m"
+echo -e " [${RED}•x${NC}] ${RED}Menu${NC"
 echo -e   ""
-echo -e   "Press x or [ Ctrl+C ] • To-Exit"
+echo -e   "Press [ Ctrl+C ] • To-Exit"
 echo -e   ""
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
 read -p " Select menu : " Restart
 echo -e ""
@@ -264,5 +264,5 @@ case $Restart in
                 clear
                 exit
                 ;;
-                *) echo -e "" ; echo "Boh salah tekan, Sayang kedak Babi" ; sleep 1 ; restart ;;               
+                *) echo -e "" ; echo "Boh salah tekan" ; sleep 1 ; restart ;;               
         esac
