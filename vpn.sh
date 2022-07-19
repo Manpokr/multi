@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# By IanVPN
+# By manternet
 # ==================================================
 
 # initialisasi var
@@ -8,7 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 OS=`uname -m`;
 MYIP=$(wget -qO- ipinfo.io/ip);
 MYIP2="s/xxxxxxxxx/$MYIP/g";
-domain=$(cat /etc/xray/domain)
+domain=$(cat /root/domain)
 ANU=$(ip -o $ANU -4 route show to default | awk '{print $5}');
 NAMAISP=$( curl -s ipinfo.io/org | cut -d " " -f 2-10  )
 tele=$(cat /home/contact)
