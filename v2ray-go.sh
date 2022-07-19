@@ -20,8 +20,6 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
-nan='$content_type'
-nam='$content_typee'
 rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
