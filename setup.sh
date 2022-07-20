@@ -34,13 +34,13 @@ mkdir -p /etc/tls
 mkdir -p /etc/config-url
 mkdir -p /etc/config-user
 mkdir -p /etc/mon/xray/conf
-mkdir -p /etc/mon/v2ray/conf
+#mkdir -p /etc/mon/v2ray/conf
 mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
-mkdir -p /var/log/v2ray/
+#mkdir -p /var/log/v2ray/
 mkdir /var/lib/manpokr;
 touch /etc/xray/clients.txt
-touch /etc/v2ray/clients.txt
+#touch /etc/v2ray/clients.txt
 
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
@@ -65,7 +65,7 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-vt.sh && chmod +x 
 wget https://raw.githubusercontent.com/Manpokr/multi/main/xray-go.sh && chmod +x xray-go.sh && screen -S xray-go ./xray-go.sh
 
 # // Instal V2ray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-go.sh && chmod +x v2ray-go.sh && screen -S v2ray-go ./v2ray-go.sh
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-go.sh && chmod +x v2ray-go.sh && screen -S v2ray-go ./v2ray-go.sh
 
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
@@ -80,7 +80,7 @@ rm -f /root/ssh-vpn.sh
 rm -f /root/ins-vt.sh
 rm -f /root/set-br.sh
 rm -f /root/xray-go.sh
-rm -f /root/v2ray-go.sh
+#rm -f /root/v2ray-go.sh
 rm -f /root/ohp.sh
 rm -f /root/cert.sh
 rm -f /root/domain
