@@ -154,17 +154,13 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
         "network": "tcp",
         "security": "xtls",
         "xtlsSettings": {
-          "minVersion": "1.2",
           "alpn": [
             "http/1.1",
-            "h2"
           ],
           "certificates": [
             {
               "certificateFile": "/etc/xray/xray.crt",
-              "keyFile": "/etc/xray/xray.key",
-              "ocspStapling": 3600,
-              "usage": "encipherment"
+              "keyFile": "/etc/xray/xray.key"
             }
           ]
         }
