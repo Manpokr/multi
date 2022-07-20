@@ -36,7 +36,7 @@ server {
 		return 403;
 }
 server {
-	listen 127.0.0.1:31402 http2;
+	listen 127.0.0.1:32302 http2;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
