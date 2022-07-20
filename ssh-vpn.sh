@@ -129,7 +129,7 @@ fi
 
 # // Install Nginx
 sudo apt update 
-apt install nginx -y
+apt get install nginx-full
 systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
@@ -143,12 +143,12 @@ server {
 	return 301 https://${domain};
 }
 server {
-		listen 127.0.0.1:31300;
+		listen 127.0.0.1:2000;
 		server_name _;
 		return 403;
 }
 server {
-	listen 127.0.0.1:31302 http2;
+	listen 127.0.0.1:2001 http2;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
@@ -165,7 +165,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31301;
+		grpc_pass grpc://127.0.0.1:2002;
 	}
 
 	location /trgrpc {
@@ -177,11 +177,11 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31304;
+		grpc_pass grpc://127.0.0.1:2003;
 	}
 }
 server {
-	listen 127.0.0.1:31300;
+	listen 127.0.0.1:2000;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
