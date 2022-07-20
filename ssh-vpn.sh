@@ -129,7 +129,7 @@ fi
 
 # // Install Nginx
 sudo apt update 
-apt install -y nginx 
+apt install nginx -y
 systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
