@@ -142,22 +142,22 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 31296,
+            "dest": 2004,
             "xver": 1
           },
           {
             "alpn": "h2",
-            "dest": 31302,
+            "dest": 2001,
             "xver": 0
           },
           {
             "path": "/xrayws",
-            "dest": 31297,
+            "dest": 2005,
             "xver": 1
           },
           {
             "path": "/xrayvws",
-            "dest": 31299,
+            "dest": 2007,
             "xver": 1
           }
         ]
@@ -185,7 +185,7 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
 {
   "inbounds": [
     {
-      "port": 31297,
+      "port": 2005,
       "listen": "127.0.0.1",
       "protocol": "vless",
       "tag": "VLESSWS",
@@ -209,7 +209,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 {
     "inbounds": [
         {
-            "port": 31304,
+            "port": 2003,
             "listen": "127.0.0.1",
             "protocol": "trojan",
             "tag": "trojangRPCTCP",
@@ -222,7 +222,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
                 ],
                 "fallbacks": [
                     {
-                        "dest": "31300"
+                        "dest": "2000"
                     }
                 ]
             },
@@ -241,7 +241,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
 {
   "inbounds": [
     {
-      "port": 31296,
+      "port": 2004,
       "listen": "127.0.0.1",
       "protocol": "trojan",
       "tag": "trojanTCP",
@@ -249,7 +249,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
         "clients": [],
         "fallbacks": [
           {
-            "dest": "31300"
+            "dest": "2000"
           }
         ]
       },
@@ -269,7 +269,7 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
   "inbounds": [
     {
       "listen": "127.0.0.1",
-      "port": 31299,
+      "port": 2007,
       "protocol": "vmess",
       "tag": "VMessWS",
       "settings": {
@@ -291,7 +291,7 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 {
     "inbounds":[
     {
-        "port": 31301,
+        "port": 2002,
         "listen": "127.0.0.1",
         "protocol": "vless",
         "tag":"VLESSGRPC",
