@@ -85,6 +85,18 @@ cat <<EOF >/etc/mon/xray/conf/00_log.json
   }
 }
 EOF
+
+cat <<EOF >/etc/mon/v2ray/conf/10_ipv6_outbounds.json
+{
+    "outbounds": [
+        {
+          "protocol": "freedom",
+          "settings": {},
+          "tag": "direct"
+        }
+    ]
+}
+EOF
 cat <<EOF >/etc/mon/xray/conf/10_ipv4_outbounds.json
 {
     "outbounds":[
