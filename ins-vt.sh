@@ -33,9 +33,9 @@ cat <<EOF > /etc/trojan/config.json
 {
     "run_type": "server",
     "local_addr": "0.0.0.0",
-    "local_port": 2087,
+    "local_port": 31296,
     "remote_addr": "127.0.0.1",
-    "remote_port": 2603,
+    "remote_port": 31300,
     "password": [
         "$uuid"
     ],
@@ -101,6 +101,8 @@ $uuid
 EOF
 
 # // IpTables
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31296 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 2087 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 2087 -j ACCEPT
 iptables-save > /etc/iptables.up.rules
