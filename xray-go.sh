@@ -86,7 +86,7 @@ cat <<EOF >/etc/mon/xray/conf/00_log.json
 }
 EOF
 
-cat <<EOF >/etc/mon/v2ray/conf/10_ipv6_outbounds.json
+cat <<EOF >/etc/mon/xray/conf/10_ipv6_outbounds.json
 {
     "outbounds": [
         {
@@ -167,7 +167,7 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
         "security": "xtls",
         "xtlsSettings": {
           "alpn": [
-            "http/1.1",
+            "http/1.1"
           ],
           "certificates": [
             {
