@@ -75,8 +75,60 @@ apt dist-upgrade -y
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 
+# // update
+apt update -y
+apt upgrade -y
+apt dist-upgrade -y
+apt-get remove --purge ufw firewalld -y
+apt-get remove --purge exim4 -y
+apt-get purge apache2* -y
+rm -rf /etc/apache2
+
 # // install wget and curl
 apt -y install wget curl
+
+# // Install Requirements Tools
+apt install ruby -y
+apt install python -y
+apt install make -y
+apt install cowsay -y
+apt install figlet -y
+apt install lolcat -y
+apt install cmake -y
+apt install ncurses-utils -y
+apt install coreutils -y
+apt install rsyslog -y
+apt install net-tools -y
+apt install zip -y
+apt install unzip -y
+apt install nano -y
+apt install sed -y
+apt install gnupg -y
+apt install gnupg1 -y
+apt install bc -y
+apt install jq -y
+apt install apt-transport-https -y
+apt install build-essential -y
+apt install dirmngr -y
+apt install libxml-parser-perl -y
+apt install neofetch -y
+apt install git -y
+apt install lsof -y
+apt install libsqlite3-dev -y
+apt install libz-dev -y
+apt install gcc -y
+apt install g++ -y
+apt install libreadline-dev -y
+apt install zlib1g-dev -y
+apt install libssl-dev -y
+apt install libssl1.0-dev -y
+gem install lolcat
+apt install jq curl -y
+apt install dnsutils jq -y
+apt-get install net-tools -y
+apt-get install tcpdump -y
+apt-get install dsniff -y
+apt install grepcidr -y
 apt -y install neofetch
 
 # // set time GMT +7
@@ -152,12 +204,12 @@ server {
 	return 301 https://${domain};
 }
 server {
-		listen 127.0.0.1:2000;
+		listen 127.0.0.1:31300;
 		server_name _;
 		return 403;
 }
 server {
-	listen 127.0.0.1:2001 http2;
+	listen 127.0.0.1:31302 http2;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
@@ -174,7 +226,7 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:2002;
+		grpc_pass grpc://127.0.0.1:31301;
 	}
 
 	location /trgrpc {
@@ -186,11 +238,11 @@ server {
  		lingering_close always;
  		grpc_read_timeout 1071906480m;
  		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:2003;
+		grpc_pass grpc://127.0.0.1:31304;
 	}
 }
 server {
-	listen 127.0.0.1:2000;
+	listen 127.0.0.1:31300;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
@@ -220,8 +272,19 @@ rm -f /usr/share/nginx/html.zip*
 cd
 wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Manpokr/multi/main/badvpn-udpgw64"
 chmod +x /usr/bin/badvpn-udpgw
+sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 500' /etc/rc.local
+sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500' /etc/rc.local
 sed -i '$ i\screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500' /etc/rc.local
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7400 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7500 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7600 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7700 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7800 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7900 --max-clients 500
+
 
 # // setting port ssh
 sed -i 's/Port 22/Port 22/g' /etc/ssh/sshd_config
@@ -260,6 +323,7 @@ rm -rf /root/vnstat-2.6
 
 # // install stunnel
 apt install stunnel4 -y
+
 cat > /etc/stunnel/stunnel.conf <<-END
 cert = /etc/stunnel/stunnel.pem
 client = no
@@ -292,11 +356,6 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/vpn.sh &&  chmod +x vp
 
 # // install fail2ban
 apt -y install fail2ban
-apt install dnsutils jq -y
-apt-get install net-tools -y
-apt-get install tcpdump -y
-apt-get install dsniff -y
-apt install grepcidr -y
 
 # // Instal DDOS Flate
 if [ -d '/usr/local/ddos' ]; then
@@ -308,18 +367,23 @@ fi
 clear
 echo; echo 'Installing DOS-Deflate 0.6'; echo
 echo; echo -n 'Downloading source files...'
-apt install -y dnsutils tcpdump dsniff grepcidr
-wget -qO ddos.zip "https://raw.githubusercontent.com/Manpokr/multi/main/ddos-deflate.zip"
-unzip ddos.zip
-cd ddos-deflate
-chmod +x install.sh
-./install.sh
-cd
-rm -rf ddos.zip ddos-deflate
+wget -q -O /usr/local/ddos/ddos.conf http://www.inetbase.com/scripts/ddos/ddos.conf
+echo -n '.'
+wget -q -O /usr/local/ddos/LICENSE http://www.inetbase.com/scripts/ddos/LICENSE
+echo -n '.'
+wget -q -O /usr/local/ddos/ignore.ip.list http://www.inetbase.com/scripts/ddos/ignore.ip.list
+echo -n '.'
+wget -q -O /usr/local/ddos/ddos.sh http://www.inetbase.com/scripts/ddos/ddos.sh
+chmod 0755 /usr/local/ddos/ddos.sh
+cp -s /usr/local/ddos/ddos.sh /usr/local/sbin/ddos
 echo '...done'
+echo; echo -n 'Creating cron to run script every minute.....(Default setting)'
+/usr/local/ddos/ddos.sh --cron > /dev/null 2>&1
+echo '.....done'
 echo; echo 'Installation has completed.'
 echo 'Config file is at /usr/local/ddos/ddos.conf'
 echo 'Please send in your comments and/or suggestions to zaf@vsnl.com'
+
 
 # // banner /etc/issue.net
 wget -O /etc/issue.net "https://raw.githubusercontent.com/Manpokr/multi/main/banner.conf"
@@ -472,7 +536,16 @@ chown -R www-data:www-data /usr/share/nginx/html
 /etc/init.d/stunnel4 restart
 /etc/init.d/vnstat restart
 /etc/init.d/squid restart
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7100 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7200 --max-clients 500
 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7400 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7500 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7600 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7700 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7800 --max-clients 500
+screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7900 --max-clients 500
+
 history -c
 echo "unset HISTFILE" >> /etc/profile
 
