@@ -74,13 +74,6 @@ apt upgrade -y
 apt dist-upgrade -y
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
-
-# // update
-apt update -y
-apt upgrade -y
-apt dist-upgrade -y
-apt-get remove --purge ufw firewalld -y
-apt-get remove --purge exim4 -y
 apt-get purge apache2* -y
 rm -rf /etc/apache2
 
