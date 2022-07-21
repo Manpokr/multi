@@ -117,6 +117,10 @@ if [[ $OS == 'debian' ]]; then
          # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
          sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
          sudo apt update
+         sudo apt update 
+         apt -y install nginx 
+         systemctl daemon-reload
+         systemctl enable nginx
 elif [[ $OS == 'ubuntu' ]]; then
          sudo apt install gnupg2 ca-certificates lsb-release -y 
 	 echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
@@ -125,11 +129,16 @@ elif [[ $OS == 'ubuntu' ]]; then
 	 # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
 	 sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
 	 sudo apt update
+         apt -y install nginx 
+         systemctl daemon-reload
+         systemctl enable nginx
 fi
 
 # // Install Nginx
-sudo apt update 
-apt get install nginx-full
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
+sudo apt install gnupg2 ca-certificates lsb-release -y
+apt -y install nginx 
 systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
