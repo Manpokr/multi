@@ -55,14 +55,14 @@ secs_to_human() {
 }
 start=$(date +%s)
 
-# // Install ssh ovpn
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
+# // Instal Xray
+wget https://raw.githubusercontent.com/Manpokr/multi/main/xray-go.sh && chmod +x xray-go.sh && screen -S xray-go ./xray-go.sh
 
 # // Install v2ray Trojan
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-vt.sh && chmod +x ins-vt.sh && screen -S v2ray ./ins-vt.sh
 
-# // Instal Xray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/xray-go.sh && chmod +x xray-go.sh && screen -S xray-go ./xray-go.sh
+# // Install ssh ovpn
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 # // Instal V2ray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-go.sh && chmod +x v2ray-go.sh && screen -S v2ray-go ./v2ray-go.sh
@@ -72,9 +72,6 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x 
 
 # Install OHP
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ohp.sh && chmod +x ohp.sh && screen -S ohp ./ohp.sh
-
-# // Cert
-wget https://raw.githubusercontent.com/Manpokr/multi/main/cert.sh && chmod +x cert.sh && ./cert.sh
 
 rm -f /root/ssh-vpn.sh
 rm -f /root/ins-vt.sh
