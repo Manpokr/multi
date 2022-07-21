@@ -142,22 +142,27 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 2004,
+            "dest": 31296,
             "xver": 1
           },
-          {
+          { 
+            "alpn": "h1",
+            "dest": 31305,
+            "xver": 0
+           },
+           {
             "alpn": "h2",
-            "dest": 2001,
+            "dest": 31302,
             "xver": 0
           },
           {
             "path": "/xrayws",
-            "dest": 2005,
+            "dest": 31297,
             "xver": 1
           },
           {
             "path": "/xrayvws",
-            "dest": 2007,
+            "dest": 31299,
             "xver": 1
           }
         ]
@@ -167,13 +172,16 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
         "security": "xtls",
         "xtlsSettings": {
           "alpn": [
-            "http/1.1"
+            "http/1.1",
+            "h2"
           ],
           "certificates": [
             {
               "certificateFile": "/etc/xray/xray.crt",
               "keyFile": "/etc/xray/xray.key"
-            }
+              "ocspStapling": 3600,
+              "usage": "encipherment"
+           }
           ]
         }
       }
@@ -185,7 +193,7 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
 {
   "inbounds": [
     {
-      "port": 2005,
+      "port": 31297,
       "listen": "127.0.0.1",
       "protocol": "vless",
       "tag": "VLESSWS",
@@ -209,7 +217,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 {
     "inbounds": [
         {
-            "port": 2003,
+            "port": 31304,
             "listen": "127.0.0.1",
             "protocol": "trojan",
             "tag": "trojangRPCTCP",
@@ -222,7 +230,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
                 ],
                 "fallbacks": [
                     {
-                        "dest": "2000"
+                        "dest": "31300"
                     }
                 ]
             },
@@ -241,7 +249,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
 {
   "inbounds": [
     {
-      "port": 2004,
+      "port": 31296,
       "listen": "127.0.0.1",
       "protocol": "trojan",
       "tag": "trojanTCP",
@@ -249,7 +257,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
         "clients": [],
         "fallbacks": [
           {
-            "dest": "2000"
+            "dest": "31300"
           }
         ]
       },
@@ -269,7 +277,7 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
   "inbounds": [
     {
       "listen": "127.0.0.1",
-      "port": 2007,
+      "port": 31299,
       "protocol": "vmess",
       "tag": "VMessWS",
       "settings": {
@@ -291,7 +299,7 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 {
     "inbounds":[
     {
-        "port": 2002,
+        "port": 31301,
         "listen": "127.0.0.1",
         "protocol": "vless",
         "tag":"VLESSGRPC",
@@ -309,6 +317,41 @@ cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 ]
 }
 EOF
+cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
+
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 31230,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "tag": "trojanXTLS",
+      "settings": {
+        "clients": [],
+        "fallbacks": [
+          {
+            "dest": "31300"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+             "alpn": [
+            "http/1.1",
+            "h1"
+          ]
+        }
+      }
+    }
+  ]
+}
 
 cat > /etc/systemd/system/vl-xtls.service << EOF
 [Unit]
@@ -407,11 +450,28 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF > /etc/xray/clients.txt
-# user xray
+cat > /etc/systemd/system/tr-xtls.service << EOF
+[Unit]
+Description=XRay Trojan xtls Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/07_trojan_TCP_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
 EOF
 
+#cat <<EOF > /etc/xray/clients.txt
+# user xray
+#EOF
+
 # // xray
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31230 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31296 -j ACCEPT
@@ -420,6 +480,7 @@ iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 
 # // xray
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31230 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31296 -j ACCEPT
@@ -447,6 +508,8 @@ systemctl enable vm-ws
 systemctl restart vm-ws
 systemctl enable vl-grpc
 systemctl restart vl-grpc
+systemctl enable tr-xtls
+systemctl restart tr-xtls
 
 # // Download
 cd /usr/bin
