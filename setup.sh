@@ -48,14 +48,14 @@ start=$(date +%s)
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
+# // Instal V2ray
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2.sh && chmod +x ins-v2.sh && screen -S v2rayv2 ./ins-v2.sh
+
 # // Install v2ray Trojan
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-vt.sh && chmod +x ins-vt.sh && screen -S v2ray ./ins-vt.sh
 
 # // Install ssh ovpn
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
-
-# // Instal V2ray
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2.sh && chmod +x ins-v2.sh && screen -S v2rayv2 ./ins-v2.sh
 
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
