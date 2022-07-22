@@ -627,9 +627,9 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-#cat <<EOF > /etc/xray/clients.txt
-# user xray
-#EOF
+cat <<EOF > /etc/xray/clients.txt
+                  user xray
+EOF
 
 # // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31230 -j ACCEPT
