@@ -13,6 +13,8 @@ mkdir /etc/xray/tls/
 mkdir -p /etc/trojan/
 touch /etc/trojan/akun.conf
 
+apt install iptables iptables-persistent -y
+
 # // install Trojan-Gfw
 bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
 
@@ -22,9 +24,9 @@ cat <<EOF > /etc/trojan/config.json
 {
     "run_type": "server",
     "local_addr": "0.0.0.0",
-    "local_port": 31296,
+    "local_port": 2087,
     "remote_addr": "127.0.0.1",
-    "remote_port": 31300,
+    "remote_port": 2603,
     "password": [
         "$uuid"
     ],
