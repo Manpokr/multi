@@ -9,6 +9,7 @@ Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_p
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 
 clear
+domain=$(cat /root/domain)
 domain=$(cat /etc/xray/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
