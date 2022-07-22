@@ -2,10 +2,14 @@
 # My Telegram : https://t.me/Manternet
 # ==========================================
 # Color
-RED='\033[0;31m'
-NC='\033[0m'
-GREEN='\033[0;32m'
-LIGHT='\e[37m'
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
 
 # ==========================================
 # Getting
@@ -54,7 +58,7 @@ oth=$(cat /tmp/other.txt | sort | uniq | nl)
 echo "other";
 echo "$oth";
 echo "-----------------------------------------"
-echo -e "Script By Manternet\e[37m"
+echo -e "Script By Manternet"
 rm -rf /tmp/other.txt
 read -p "Press Enter For Back To V2ay Menu / CTRL+C To Exit : "
 menu-v2ray
