@@ -34,6 +34,9 @@ do
 		mv -f /etc/mon/xray/conf/04_trojan_gRPC_inbounds_tmp.json /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
                 cat /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json | jq 'del(.inbounds[0].settings.clients[] | select(.id == "'${uuid}'"))' > /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json
 		mv -f /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
+                cat /etc/mon/xray/conf/07_trojan_xtls_inbounds.json | jq 'del(.inbounds[0].settings.clients[] | select(.password == "'${uuid}'"))' > /etc/mon/xray/conf/07_trojan_xtls_inbounds_tmp.json
+		mv -f /etc/mon/xray/conf/07_trojan_xtls_inbounds_tmp.json /etc/mon/xray/conf/07_trojan_xtls_inbounds.json
+
 
                 sed -i "/\b$user\b/d" /etc/xray/clients.txt
 		rm /etc/config-user/${user}
