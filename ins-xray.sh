@@ -88,6 +88,11 @@ sudo pkill -f nginx & wait $!
 systemctl stop nginx
 sudo apt install gnupg2 ca-certificates lsb-release -y
 apt -y install nginx 
+
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+mkdir -p /home/vps/public_html
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+
 systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
@@ -153,33 +158,13 @@ EOF
 # // System Nginx
 mkdir /etc/systemd/system/nginx.service.d
 printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+
 rm /etc/nginx/conf.d/default.conf
-
-curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-sed -i 's/listen = \/var\/run\/php\/php7.4-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/7.4/fpm/pool.d/www.conf
-useradd -m vps;
-
 systemctl daemon-reload
 service nginx restart
 cd
-mkdir -p /home/vps/public_html
-echo "<?php phpinfo() ?>" > /home/vps/public_html/info.php
-chown -R www-data:www-data /home/vps/public_html
-chmod -R g+rw /home/vps/public_html
-cd /home/vps/public_html
-wget -O /home/vps/public_html/index.html "https://raw.githubusercontent.com/Manpokr/mon/main/addon/index.html"
-wget -O /home/vps/public_html/index.html "https://${akbarvpn}/index.html1"
-/etc/init.d/nginx restart
 
-useradd -m vps;
-mkdir -p /home/vps/public_html
-echo "<?php phpinfo() ?>" > /home/vps/public_html/info.php
-chown -R www-data:www-data /home/vps/public_html
-chmod -R g+rw /home/vps/public_html
-cd /home/vps/public_html
-wget -O /home/vps/public_html/index.html "https://raw.githubusercontent.com/Manpokr/mon/main/addon/index.html"
-
+# // Html
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
@@ -311,6 +296,11 @@ cat <<EOF >/etc/mon/xray/conf/11_dns.json
 EOF
 cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 443,
@@ -357,7 +347,7 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           "certificates": [
             {
               "certificateFile": "/etc/xray/xray.crt",
-              "keyFile": "/etc/xray/xray.key"
+              "keyFile": "/etc/xray/xray.key",
               "ocspStapling": 3600,
               "usage": "encipherment"
            }
@@ -370,6 +360,11 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
 EOF
 cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 31297,
@@ -394,6 +389,11 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
 EOF
 cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
     "inbounds": [
         {
             "port": 31304,
@@ -426,6 +426,11 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 EOF
 cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 31296,
@@ -453,6 +458,11 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
 EOF
 cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "listen": "127.0.0.1",
@@ -476,6 +486,11 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
 EOF
 cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
     "inbounds":[
     {
         "port": 31301,
