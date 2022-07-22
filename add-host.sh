@@ -14,8 +14,12 @@ echo "Checking VPS"
 
 clear
 read -rp "Domain/Host: " -e host
+
 rm /etc/xray/domain
+rm /etc/v2ray/domain
+
 echo "$host" >> /etc/xray/domain
+echo "$host" >> /etc/v2ray/domain
 echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
 domain=$(cat /etc/xray/domain)
 
@@ -33,8 +37,10 @@ systemctl stop trojan.service
 
 # // Cert
 sleep 2
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+sudo bash acme.sh --upgrade --auto-upgrade
+sudo bash acme.sh --set-default-ca --server letsencrypt
+sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
+sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
 
 cat /etc/tls/$domain.log
 systemctl daemon-reload
@@ -45,8 +51,10 @@ systemctl restart xray.service
 systemctl restart v2ray
 systemctl restart v2ray.service
 systemctl stop nginx
+
 rm /etc/nginx/conf.d/alone.conf
 touch /etc/nginx/conf.d/alone.conf
+
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
 server {
 	listen 81;
@@ -69,7 +77,7 @@ server {
     		alias /etc/config-url/;
     }
 
-    location /xraygrpc {
+    location /vlgrpc {
 		client_max_body_size 0;
 #		keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -81,7 +89,7 @@ server {
 		grpc_pass grpc://127.0.0.1:31301;
 	}
 
-	location /xraytrojangrpc {
+	location /trgrpc {
 		client_max_body_size 0;
 		# keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -106,8 +114,10 @@ server {
 	}
 }
 EOF
+
 rm /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
+
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
 server {
 	listen 82;
@@ -130,7 +140,7 @@ server {
     		alias /etc/config-url/;
     }
 
-    location /v2raygrpc {
+    location /v2vlgrpc {
 		client_max_body_size 0;
 #		keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -142,7 +152,7 @@ server {
 		grpc_pass grpc://127.0.0.1:32301;
 	}
 
-	location /v2raytrojangrpc {
+	location /v2trgrpc {
 		client_max_body_size 0;
 		# keepalive_time 1071906480m;
 		keepalive_requests 4294967296;
@@ -169,4 +179,7 @@ server {
 EOF
 systemctl daemon-reload
 service nginx restart
+
+echo -e "{$RED}DONE${NC}"
+sleep 2
 clear
