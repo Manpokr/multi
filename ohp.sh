@@ -67,7 +67,7 @@ sed -i $MYIP2 /etc/openvpn/tcp-ohp.ovpn;
 echo '<ca>' >> /etc/openvpn/tcp-ohp.ovpn
 cat /etc/openvpn/server/ca.crt >> /etc/openvpn/tcp-ohp.ovpn
 echo '</ca>' >> /etc/openvpn/tcp-ohp.ovpn
-cp /etc/openvpn/tcp-ohp.ovpn /usr/share/nginx/html/tcp-ohp.ovpn
+cp /etc/openvpn/tcp-ohp.ovpn /home/vps/public_html/tcp-ohp.ovpn
 clear
 cd 
 
