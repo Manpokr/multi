@@ -30,9 +30,9 @@ echo -e " [${CYAN}10${NC}] Restart V2RAY"
 echo -e " [${CYAN}11${NC}] Restart TROJAN"
 echo -e ""
 echo -e " [${RED}•x${NC}] ${RED}Menu${NC"
-echo -e   ""
+echo -e ""
 echo -e   "Press [ Ctrl+C ] • To-Exit"
-echo -e   ""
+echo -e ""
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
 echo -e ""
 read -p " Select menu : " Restart
@@ -46,7 +46,7 @@ case $Restart in
                 echo -e "\E[0;100;33m         • RESTART MENU •          \E[0m"
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo -e ""
-                echo -e "[ \033[32mInfo\033[0m ] Restart Begin"
+                echo -e "[ \033[35mInfo\033[0m ] Restart Begin"
                 sleep 1
                 /etc/init.d/ssh restart
                 /etc/init.d/dropbear restart
@@ -56,26 +56,26 @@ case $Restart in
                 /etc/init.d/cron restart
                 /etc/init.d/nginx restart
                 /etc/init.d/squid restart
-                echo -e "[ \033[32mok\033[0m ] Restarting xray Service (via systemctl) "
+                echo -e "[ \033[35info\033[0m ] Restarting xray Service (via systemctl) "
                 sleep 0.5
                 systemctl restart xray
                 systemctl restart xray.service
-                echo -e "[ \033[32mok\033[0m ] Restarting v2ray Service (via systemctl) "
+                echo -e "[ \033[35info\033[0m ] Restarting v2ray Service (via systemctl) "
                 sleep 0.5
                 systemctl restart v2ray
                 systemctl restart v2ray.service
-                echo -e "[ \033[32mok\033[0m ] Restarting trojan Service (via systemctl) "
+                echo -e "[ \033[35info\033[0m ] Restarting trojan Service (via systemctl) "
                 sleep 0.5
                 systemctl restart trojan
-                echo -e "[ \033[32mok\033[0m ] Restarting badvpn Service (via systemctl) "
+                echo -e "[ \033[35info\033[0m ] Restarting badvpn Service (via systemctl) "
                 sleep 0.5
                 screen -dmS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 1000
                 sleep 0.5
-                echo -e "[ \033[32mInfo\033[0m ] ALL Service Restarted"
+                echo -e "[ \033[35mInfo\033[0m ] ALL Service Restarted"
                 echo ""
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo ""
-                read -n 1 -s -r -p "Press any key to back on system menu"
+                read -p "Press any key to back on system menu"
                 restart
                 ;;
                 2)
@@ -84,15 +84,15 @@ case $Restart in
                 echo -e "\E[0;100;33m         • RESTART MENU •          \E[0m"
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo -e ""
-                echo -e "[ \033[32mInfo\033[0m ] Restart Begin"
+                echo -e "[ \033[35mInfo\033[0m ] Restart Begin"
                 sleep 1
                 /etc/init.d/ssh restart
                 sleep 0.5
-                echo -e "[ \033[32mInfo\033[0m ] SSH Service Restarted"
+                echo -e "[ \033[35mInfo\033[0m ] SSH Service Restarted"
                 echo ""
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo ""
-                read -n 1 -s -r -p "Press any key to back on system menu"
+                read -p "Press any key to back on system menu"
                 restart
                 ;;
                 3)
@@ -101,15 +101,15 @@ case $Restart in
                 echo -e "\E[0;100;33m         • RESTART MENU •          \E[0m"
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo -e ""
-                echo -e "[ \033[32mInfo\033[0m ] Restart Begin"
+                echo -e "[ \033[35mInfo\033[0m ] Restart Begin"
                 sleep 1
                 /etc/init.d/dropbear restart
                 sleep 0.5
-                echo -e "[ \033[32mInfo\033[0m ] Dropbear Service Restarted"
+                echo -e "[ \033[35mInfo\033[0m ] Dropbear Service Restarted"
                 echo ""
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo ""
-                read -n 1 -s -r -p "Press any key to back on system menu"
+                read -p "Press any key to back on system menu"
                 restart
                 ;;
                 4)
@@ -118,15 +118,15 @@ case $Restart in
                 echo -e "\E[0;100;33m         • RESTART MENU •          \E[0m"
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo -e ""
-                echo -e "[ \033[32mInfo\033[0m ] Restart Begin"
+                echo -e "[ \033[35mInfo\033[0m ] Restart Begin"
                 sleep 1
                 /etc/init.d/stunnel4 restart
                 sleep 0.5
-                echo -e "[ \033[32mInfo\033[0m ] Stunnel4 Service Restarted"
+                echo -e "[ \033[35mInfo\033[0m ] Stunnel4 Service Restarted"
                 echo ""
                 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
                 echo ""
-                read -n 1 -s -r -p "Press any key to back on system menu"
+                read -p "Press any key to back on system menu"
                 restart
                 ;;
                 5)
@@ -265,4 +265,4 @@ case $Restart in
                 exit
                 ;;
                 *) echo -e "" ; echo "Boh salah tekan" ; sleep 1 ; restart ;;               
-        esac
+                esac
