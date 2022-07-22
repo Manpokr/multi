@@ -30,17 +30,7 @@ fi
 
 # // Add Folder
 clear
-mkdir -p /etc/tls
-mkdir -p /etc/config-url
-mkdir -p /etc/config-user
-mkdir -p /etc/mon/xray/conf
-#mkdir -p /etc/mon/v2ray/conf
-mkdir -p /etc/systemd/system/
-mkdir -p /var/log/xray/
-#mkdir -p /var/log/v2ray/
 mkdir /var/lib/manpokr;
-touch /etc/xray/clients.txt
-#touch /etc/v2ray/clients.txt
 
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
@@ -56,7 +46,7 @@ secs_to_human() {
 start=$(date +%s)
 
 # // Instal Xray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/xray-go.sh && chmod +x xray-go.sh && screen -S xray-go ./xray-go.sh
+wget https://raw.githubusercontent.com/Manpokr/multi/main/xray-go.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
 # // Install v2ray Trojan
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-vt.sh && chmod +x ins-vt.sh && screen -S v2ray ./ins-vt.sh
@@ -65,7 +55,7 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-vt.sh && chmod +x 
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 # // Instal V2ray
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-go.sh && chmod +x v2ray-go.sh && screen -S v2ray-go ./v2ray-go.sh
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-go.sh && chmod +x ins-v2.sh && screen -S v2rayv2 ./ins-v2.sh
 
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
