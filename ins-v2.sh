@@ -88,8 +88,6 @@ systemctl daemon-reload
 service nginx restart
 
 # // Version V2ray pre
-#version="$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-#version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r .[].tag_name | head -1)
 version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
 
 # / / Installation V2ray Core
@@ -104,11 +102,6 @@ curl -sL "$v2raycore_link" -o v2ray.zip
 unzip -q v2ray.zip && rm -rf v2ray.zip
 mv v2ray /etc/mon/v2ray
 chmod +x /etc/mon/v2ray/v2ray
-
-# // INSTALL v2ray
-#wget -c -P /etc/mon/v2ray/ "https://github.com/v2fly/v2ray-core/releases/tag/${version}/v2ray-linux-64.zip"
-#unzip -o /etc/mon/v2ray/v2ray-linux-64.zip -d /etc/mon/v2ray
-#rm -rf /etc/mon/v2ray/v2ray-linux-64.zip
 
 # // v2ray boot service
 rm -rf /etc/systemd/system/v2ray.service
@@ -199,6 +192,11 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
             "xver": 1
           },
           {
+            "alpn": "h1",
+            "dest": 32305,
+            "xver": 0
+          },
+          {
             "alpn": "h2",
             "dest": 32302,
             "xver": 0
@@ -217,7 +215,7 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
       },
       "streamSettings": {
         "network": "tcp",
-        "security": "tls",
+        "security": "xtls",
         "tlsSettings": {
           "alpn": [
             "http/1.1",
@@ -226,7 +224,9 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
           "certificates": [
             {
               "certificateFile": "/etc/xray/xray.crt",
-              "keyFile": "/etc/xray/xray.key"
+              "keyFile": "/etc/xray/xray.key",
+              "ocspStapling": 3600,
+              "usage": "encipherment"
             }
           ]
         }
@@ -336,7 +336,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
 {
     "inbounds": [
         {
-            "port": 31304,
+            "port": 32304,
             "listen": "127.0.0.1",
             "protocol": "trojan",
             "tag": "trojangRPCTCP",
@@ -361,6 +361,42 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
             }
         }
     ]
+}
+EOF
+
+cat <<EOF >/etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 32306,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "tag": "trojanXTLS",
+      "settings": {
+        "clients": [],
+        "fallbacks": [
+          {
+            "dest": "31300"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+             "alpn": [
+            "http/1.1",
+            "h1"
+          ]
+        }
+      }
+    }
+  ]
 }
 EOF
 
@@ -462,6 +498,22 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
+cat > /etc/systemd/system/v2-vl-grpc.service << EOF
+[Unit]
+Description=V2Ray Trojan Xtls Service
+Documentation=https://speedtest.net https://v2ray.com
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat <<EOF > /etc/v2ray/clients.txt
 # user v2ray
 EOF
@@ -472,12 +524,16 @@ iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32297 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 32306 -j ACCEPT
+
 # // v2ray
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8080 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32299 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32297 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 32306 -j ACCEPT
+
 iptables-save > /etc/iptables.up.rules
 iptables-restore -t < /etc/iptables.up.rules
 netfilter-persistent save
@@ -527,4 +583,4 @@ echo -e " ${RED}V2RAY INSTALL DONE ${NC}"
 sleep 2
 clear
 
-rm -f v2ray-go.sh
+rm -f ins-v2.sh
