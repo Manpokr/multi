@@ -698,4 +698,4 @@ echo -e " ${RED}XRAY INSTALL DONE ${NC}"
 sleep 2
 clear
 cp /root/domain /etc/xray
-rm -f xray-go.sh
+rm -f ins-xray.sh
