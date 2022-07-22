@@ -1,8 +1,12 @@
 #!/bin/bash
-
-RED='\e[1;31m'
-GREEN='\e[0;32m'
-NC='\e[0m'
+RED='\033[0;31m'                                                                                          
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
+NC='\033[0;37m'
+LIGHT='\033[0;37m'
 
 # // Optimasi Speed By LostServer
 Add_To_New_Line(){
@@ -66,7 +70,7 @@ Check_And_Add_Line "/etc/sysctl.conf" "net.ipv4.tcp_wmem = 4096 65536 67108864"
 Check_And_Add_Line "/etc/sysctl.conf" "net.ipv4.tcp_mtu_probing = 1"
 Check_And_Add_Line "/etc/sysctl.conf" "net.ipv4.tcp_low_latency = 1"
 
-echo "Optimasi Parameters Selesai."
+echo -e "Optimasi Parameters ${CYAN}Selesai...${NC}"
 echo "#####################################"
 }
 Install_BBR
