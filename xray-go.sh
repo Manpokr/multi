@@ -38,6 +38,20 @@ neofetch
 END
 chmod 644 /root/.profile
 
+# // Make Folder
+clear
+mkdir -p /etc/tls
+mkdir -p /etc/config-url
+mkdir -p /etc/config-user
+mkdir -p /etc/mon/xray/conf
+#mkdir -p /etc/mon/v2ray/conf
+mkdir -p /etc/systemd/system/
+mkdir -p /var/log/xray/
+mkdir -p /var/log/v2ray/
+touch /etc/xray/clients.txt
+touch /etc/v2ray/clients.txt
+
+
 # // Version
 source /etc/os-release
 OS=$ID
@@ -143,6 +157,7 @@ rm /etc/nginx/conf.d/default.conf
 
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+sed -i 's/listen = \/var\/run\/php\/php7.4-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php/7.4/fpm/pool.d/www.conf
 
 systemctl daemon-reload
 service nginx restart
@@ -151,6 +166,7 @@ rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
 rm -f /usr/share/nginx/html.zip*
+chown -R www-data:www-data /usr/share/nginx/html
 
 # // Xray Version
 version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
@@ -159,6 +175,8 @@ version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep t
 xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v$version/xray-linux-64.zip"
 
 # / / Make Main Directory
+mkdir -p /etc/xray
+mkdir -p /etc/xray/conf
 mkdir -p /etc/mon/xray
 
 # / / Unzip Xray Linux 64
@@ -169,7 +187,6 @@ mv xray /etc/mon/xray
 chmod +x /etc/mon/xray/xray
 
 # // Make Folder XRay
-rm -rf /var/log/xray/
 mkdir -p /var/log/xray/
 
 sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
