@@ -156,8 +156,8 @@ echo -e " [${CYAN}•3${NC}] V2RAY Menu          [${CYAN}•8${NC}] SCRIPTS Info
 echo -e " [${CYAN}•4${NC}] Trojan GFW Menu     [${CYAN}•9${NC}] CLEAR RAM Cache"                                                                                                                                                                                         
 echo -e " [${CYAN}•5${NC}] SYSTEM Menu         [${RED}10${NC}] ${RED}REBOOT${NC}"                                                                                                                                                                                     
 echo -e   ""
-echo -e " [${CYAN}11${NC}] TRIAL Xray
-echo -e " [${CYAN}22${NC}] TRIAL V2ray
+echo -e " [${CYAN}11${NC}] TRIAL Xray"
+echo -e " [${CYAN}22${NC}] TRIAL V2ray"
 echo -e ""
 echo -e   " Press x or [ Ctrl+C ] • To-Exit-Script"
 echo -e   ""
