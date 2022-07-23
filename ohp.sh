@@ -12,6 +12,7 @@ MYIP2="s/xxxxxxxxx/$MYIP/g";
 clear
 apt update 
 apt-get -y upgrade
+domain=$(cat /root/domain)
 
 # // Port Server
 # // Jika Ingiin Mengubah Port Silahkan Sesuaikan Dengan Port Yang Ada Di VPS Mu
@@ -67,7 +68,7 @@ sed -i $MYIP2 /etc/openvpn/tcp-ohp.ovpn;
 echo '<ca>' >> /etc/openvpn/tcp-ohp.ovpn
 cat /etc/openvpn/server/ca.crt >> /etc/openvpn/tcp-ohp.ovpn
 echo '</ca>' >> /etc/openvpn/tcp-ohp.ovpn
-cp /etc/openvpn/tcp-ohp.ovpn /home/vps/public_html/tcp-ohp.ovpn
+cp /etc/openvpn/tcp-ohp.ovpn /usr/share/nginx/html/tcp-ohp.ovpn
 clear
 cd 
 
@@ -93,7 +94,7 @@ systemctl daemon-reload
 systemctl enable ohp
 systemctl restart ohp
 echo ""
-echo -e "${GREEN}Done Installing OHP Server${NC}"
+echo -e "${RED}Done Installing OHP Server${NC}"
 echo -e "Port OVPN OHP TCP: $ohpp"
 echo -e "Link Download OVPN OHP: http://$MYIP/tcp-ohp.ovpn"
 echo -e "Script By Manternet"
