@@ -81,47 +81,6 @@ rm -rf /etc/apache2
 apt -y install wget curl
 
 # // Install Requirements Tools
-apt install ruby -y
-apt install python -y
-apt install make -y
-apt install cowsay -y
-apt install figlet -y
-apt install lolcat -y
-apt install cmake -y
-apt install ncurses-utils -y
-apt install coreutils -y
-apt install rsyslog -y
-apt install net-tools -y
-apt install zip -y
-apt install unzip -y
-apt install nano -y
-apt install sed -y
-apt install gnupg -y
-apt install gnupg1 -y
-apt install bc -y
-apt install jq -y
-apt install apt-transport-https -y
-apt install build-essential -y
-apt install dirmngr -y
-apt install libxml-parser-perl -y
-apt install neofetch -y
-apt install git -y
-apt install lsof -y
-apt install libsqlite3-dev -y
-apt install libz-dev -y
-apt install gcc -y
-apt install g++ -y
-apt install libreadline-dev -y
-apt install zlib1g-dev -y
-apt install libssl-dev -y
-apt install libssl1.0-dev -y
-gem install lolcat
-apt install jq curl -y
-apt install dnsutils jq -y
-apt-get install net-tools -y
-apt-get install tcpdump -y
-apt-get install dsniff -y
-apt install grepcidr -y
 apt -y install neofetch
 
 # // set time GMT +7
@@ -132,7 +91,141 @@ date
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 
 # // install
-apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl neofetch git lsof
+# install
+apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
+cat> /root/.profile << END
+# ~/.profile: executed by Bourne-compatible login shells.
+
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+
+mesg n || true
+clear
+neofetch
+END
+chmod 644 /root/.profile
+
+# // Version
+source /etc/os-release
+OS=$ID
+ver=$VERSION_ID
+
+# // Install nginx Debian / Ubuntu
+if [[ $OS == 'debian' ]]; then
+         sudo apt install gnupg2 ca-certificates lsb-release -y 
+         echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+         echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+         curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+         # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+         sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+         sudo apt update
+         sudo apt update 
+         apt -y install nginx 
+         systemctl daemon-reload
+         systemctl enable nginx
+elif [[ $OS == 'ubuntu' ]]; then
+         sudo apt install gnupg2 ca-certificates lsb-release -y 
+	 echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+	 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+	 curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+	 # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+	 sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+	 sudo apt update
+         apt -y install nginx 
+         systemctl daemon-reload
+         systemctl enable nginx
+fi
+
+# // Install Nginx
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
+sudo apt install gnupg2 ca-certificates lsb-release -y
+apt -y install nginx 
+
+#curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+#mkdir -p /home/vps/public_html
+#curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+
+systemctl daemon-reload
+systemctl enable nginx
+touch /etc/nginx/conf.d/alone.conf
+
+cat <<EOF >>/etc/nginx/conf.d/alone.conf
+server {
+	listen 81;
+	listen [::]:81;
+	server_name ${domain};
+	# shellcheck disable=SC2154
+	return 301 https://${domain};
+}
+server {
+		listen 127.0.0.1:31300;
+		server_name _;
+		return 403;
+}
+server {
+	listen 127.0.0.1:31302 http2;
+	server_name ${domain};
+	root /usr/share/nginx/html;
+	location /s/ {
+    		add_header Content-Type text/plain;
+    		alias /etc/config-url/;
+    }
+    location /vlgrpc {
+		client_max_body_size 0;
+#		keepalive_time 1071906480m;
+		keepalive_requests 4294967296;
+		client_body_timeout 1071906480m;
+ 		send_timeout 1071906480m;
+ 		lingering_close always;
+ 		grpc_read_timeout 1071906480m;
+ 		grpc_send_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:31301;
+	}
+	location /trgrpc {
+		client_max_body_size 0;
+		# keepalive_time 1071906480m;
+		keepalive_requests 4294967296;
+		client_body_timeout 1071906480m;
+ 		send_timeout 1071906480m;
+ 		lingering_close always;
+ 		grpc_read_timeout 1071906480m;
+ 		grpc_send_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:31304;
+	}
+}
+server {
+	listen 127.0.0.1:31300;
+	server_name ${domain};
+	root /usr/share/nginx/html;
+	location /s/ {
+		add_header Content-Type text/plain;
+		alias /etc/config-url/;
+	}
+	location / {
+		add_header Strict-Transport-Security "max-age=15552000; preload" always;
+	}
+}
+EOF
+
+# // System Nginx
+mkdir /etc/systemd/system/nginx.service.d
+printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+
+rm /etc/nginx/conf.d/default.conf
+systemctl daemon-reload
+service nginx restart
+cd
+
+# // Html
+rm -rf /usr/share/nginx/html
+wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
+unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
+rm -f /usr/share/nginx/html.zip*
+chown -R www-data:www-data /usr/share/nginx/html
 
 # // install badvpn
 cd
