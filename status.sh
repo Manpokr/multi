@@ -62,7 +62,6 @@ trxtls_v2ray=$(systemctl status v2-tr-xtls | grep Active | awk '{print $3}' | cu
 
 #wg="$(systemctl show wg-quick@wg0.service --no-page)"
 #swg=$(echo "${wg}" | grep 'ActiveState=' | cut -f2 -d=)                                     
-
 #strgo=$(echo "${trgo}" | grep 'ActiveState=' | cut -f2 -d=)  
 #sswg=$(systemctl status wg-quick@wg0 | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 
@@ -235,13 +234,6 @@ else
    v2ray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service vlgrpc_xray
-if [[ $vlgrpc_xray == "running" ]]; then 
-   vlgrpc_xray_status="Running [ \033[32mok\033[0m ]"
-else
-   vlgrpc_xray_status="Not Running [ \e[31m❌\e[0m ]"
-fi
-
 # // Status Service xtls_v2ray
 if [[ $xtls_v2ray == "running" ]]; then 
    xtls_v2ray_status="Running [ \033[32mok\033[0m ]"
@@ -309,7 +301,7 @@ echo -e "   SSH / Tun          : $status_ssh"
 echo -e "   OpenVPN            : $status_openvpn"
 echo -e "   OHP                : $status_OHPovpn"
 echo -e "   Dropbear           : $status_beruangjatuh"
-echo -e "   Stunnel            : $status_stunnel"
+echo -e "   Stunnel            : $stunnel_service_status"
 echo -e "   Squid              : $status_squid"
 echo -e "   Fail2Ban           : $status_fail2ban"
 echo -e "   Crons              : $status_cron"
@@ -317,9 +309,9 @@ echo -e "   Vnstat             : $status_vnstat"
 echo -e "   NGINX              : $status_nginx"
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"         
 echo -e "   XRAY CORE          : $xray_core"
-echo -e "   XRAY Vmess-Ws-Tls  : $status_xtls_xray"
-echo -e "   XRAY Vless-Ws-Tls  : $vmws_xray_status"
-echo -e "   XRAY Vless-Xtls    : $xtls_xray"
+echo -e "   XRAY Vmess-Ws-Tls  : $vmws_xray_status"
+echo -e "   XRAY Vless-Ws-Tls  : $vlws_xray_status"
+echo -e "   XRAY Vless-Xtls    : $xtls_xray_status"
 echo -e "   XRAY Vless-Grpc    : $vlgrpc_xray_status"
 echo -e "   XRAY Trojan-Tcp    : $trtcp_xray_status"
 echo -e "   XRAY Trojan-Grpc   : $trgrpc_xray_status"
