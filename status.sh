@@ -13,10 +13,6 @@ MYIP=$(wget -qO- icanhazip.com);
 echo "Checking VPS"
 
 # // Chek Status 
-ohp_service="$(systemctl show ohp.service --no-page)"
-ohpovpn=$(echo "${ohp_service}" | grep 'ActiveState=' | cut -f2 -d=)
-openvpn_service="$(systemctl show openvpn.service --no-page)"
-oovpn=$(echo "${openvpn_service}" | grep 'ActiveState=' | cut -f2 -d=)
 #status_openvp=$(/etc/init.d/openvpn status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 #status_ss_tls="$(systemctl show shadowsocks-libev-server@tls.service --no-page)"
 #ss_tls=$(echo "${status_ss_tls}" | grep 'ActiveState=' | cut -f2 -d=)
@@ -27,7 +23,18 @@ oovpn=$(echo "${openvpn_service}" | grep 'ActiveState=' | cut -f2 -d=)
 #status="$(systemctl show shadowsocks-libev.service --no-page)"
 #status_text=$(echo "${status}" | grep 'ActiveState=' | cut -f2 -d=)
 #ssr_status=$(systemctl status ssrmu | grep Active | awk '{print $2}' | cut -d "(" -f2 | cut -d ")" -f1)
+#wg="$(systemctl show wg-quick@wg0.service --no-page)"
+#swg=$(echo "${wg}" | grep 'ActiveState=' | cut -f2 -d=)                                     
+#strgo=$(echo "${trgo}" | grep 'ActiveState=' | cut -f2 -d=)  
+#sswg=$(systemctl status wg-quick@wg0 | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 
+# // Ovpn
+ohp_service="$(systemctl show ohp.service --no-page)"
+ohpovpn=$(echo "${ohp_service}" | grep 'ActiveState=' | cut -f2 -d=)
+openvpn_service="$(systemctl show openvpn.service --no-page)"
+oovpn=$(echo "${openvpn_service}" | grep 'ActiveState=' | cut -f2 -d=)
+
+# // Lain²
 dropbear_status=$(/etc/init.d/dropbear status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 stunnel_service=$(/etc/init.d/stunnel4 status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 squid_service=$(/etc/init.d/squid status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
@@ -59,11 +66,6 @@ trtcp_v2ray=$(systemctl status v2-tr-tcp | grep Active | awk '{print $3}' | cut 
 vmws_v2ray=$(systemctl status v2-vm-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 vlgrpc_v2ray=$(systemctl status v2-vl-grpc | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 trxtls_v2ray=$(systemctl status v2-tr-xtls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
-
-#wg="$(systemctl show wg-quick@wg0.service --no-page)"
-#swg=$(echo "${wg}" | grep 'ActiveState=' | cut -f2 -d=)                                     
-#strgo=$(echo "${trgo}" | grep 'ActiveState=' | cut -f2 -d=)  
-#sswg=$(systemctl status wg-quick@wg0 | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 
 # // Color Validation
 yell='\e[33m'
