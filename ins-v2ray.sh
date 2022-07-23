@@ -15,9 +15,6 @@ clear
 date
 domain=$(cat /etc/v2ray/domain)
 
-# // Uuid Service
-uuid=$(cat /proc/sys/kernel/random/uuid)
-
 # // NGINX V2RAY CONF
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
@@ -106,7 +103,11 @@ mv v2ray /etc/mon/v2ray
 chmod +x /etc/mon/v2ray/v2ray
 
 # // Log
-mkdir /var/log/v2ray/
+mkdir -p /etc/mon/v2ray
+mkdir -p /etc/v2ray
+mkdir -p /var/log/v2ray/
+mkdir -p /etc/mon/v2ray/conf
+touch /etc/v2ray/clients.txt
 
 # // v2ray boot service
 touch /etc/systemd/system/v2ray.service
@@ -136,6 +137,9 @@ EOF
 systemctl daemon-reload
 systemctl enable v2ray.service
 rm -rf /etc/mon/v2ray/conf/*
+
+# // Uuid Service
+uuid=$(cat /proc/sys/kernel/random/uuid)
 
 # // Json File
 cat <<EOF >/etc/mon/v2ray/conf/00_log.json
