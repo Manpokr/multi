@@ -495,7 +495,7 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 EOF
 
-cat > /etc/systemd/system/v2-vl-grpc.service << EOF
+cat > /etc/systemd/system/v2-tr-xtls.service << EOF
 [Unit]
 Description=V2Ray Trojan Xtls Service
 Documentation=https://speedtest.net https://v2ray.com
@@ -552,8 +552,8 @@ systemctl enable v2-vm-ws
 systemctl restart v2-vm-ws
 systemctl enable v2-vl-grpc
 systemctl restart v2-vl-grpc
-
-
+systemctl enable v2-tr-xtls
+systemctl restart v2-tr-xtls
 
 # // Menu V2ray
 cd /usr/bin
