@@ -28,8 +28,6 @@ oovpn=$(echo "${openvpn_service}" | grep 'ActiveState=' | cut -f2 -d=)
 #status_text=$(echo "${status}" | grep 'ActiveState=' | cut -f2 -d=)
 #ssr_status=$(systemctl status ssrmu | grep Active | awk '{print $2}' | cut -d "(" -f2 | cut -d ")" -f1)
 
-xtls_xray_status=$(systemctl status xray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
-trojan_server=$(systemctl status trojan | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 dropbear_status=$(/etc/init.d/dropbear status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 stunnel_service=$(/etc/init.d/stunnel4 status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 squid_service=$(/etc/init.d/squid status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
@@ -38,6 +36,9 @@ vnstat_service=$(/etc/init.d/vnstat status | grep Active | awk '{print $3}' | cu
 nginx_status=$(systemctl status nginx | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 cron_service=$(/etc/init.d/cron status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 fail2ban_service=$(/etc/init.d/fail2ban status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+
+# // Trojan
+trojan_server=$(systemctl status trojan | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 
 # // xray
 xtls_xray_status=$(systemctl status xray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
@@ -182,55 +183,135 @@ else
    status_beruangjatuh="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+
+# // xray
+# // Status Service xray 
+if [[ $xtls_xray_status == "running" ]]; then 
+   xray_core="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   xray_core="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+# // Status Service xtls
+if [[ $xtls_xray == "running" ]]; then 
+   xtls_xray="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   xtls_xray="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+# // Status Service vlws_xray
+if [[ $vlws_xray == "running" ]]; then 
+   vlws_xray_status="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   vlws_xray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+# // Status Service trgrpc_xray
+if [[ $trgrpc_xray == "running" ]]; then 
+   trgrpc_xray_status="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   trgrpc_xray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+# // Status Service trtcp_xray
+if [[ $trtcp_xray == "running" ]]; then 
+   trtcp_xray_status="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   trtcp_xray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+# // Status Service vmws_xray
+if [[ $vmws_xray == "running" ]]; then 
+   vmws_xray_status="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   vmws_xray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service Stunnel
-if [[ $stunnel_service == "running" ]]; then 
-   status_stunnel="Running [ \033[32mok\033[0m ]"
+# // Status Service vlgrpc_xray
+if [[ $vlgrpc_xray == "running" ]]; then 
+   vlgrpc_xray_status="Running [ \033[32mok\033[0m ]"
 else
-   status_stunnel="Not Running [ \e[31m❌\e[0m ]"
+   vlgrpc_xray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
+# // Status Service trxtls_xray
+if [[ $trxtls_xray == "running" ]]; then 
+   trxtls_xray_status="Running [ \033[32mok\033[0m ]"
+else
+   trxtls_xray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // V2ray Core
+# // Status Service tls_v2ray_status
+if [[ $tls_v2ray_status == "running" ]]; then 
+   v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service vlgrpc_xray
+if [[ $vlgrpc_xray == "running" ]]; then 
+   vlgrpc_xray_status="Running [ \033[32mok\033[0m ]"
+else
+   vlgrpc_xray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service xtls_v2ray
+if [[ $xtls_v2ray == "running" ]]; then 
+   xtls_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   xtls_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service vlws_v2ray
+if [[ $vlws_v2ray == "running" ]]; then 
+   vlws_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   vlws_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service trgrpc_v2ray
+if [[ $trgrpc_v2ray == "running" ]]; then 
+   trgrpc_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   trgrpc_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service trtcp_v2ray
+if [[ $trtcp_v2ray == "running" ]]; then 
+   trtcp_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   trtcp_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service vmws_v2ray
+if [[ $vmws_v2ray == "running" ]]; then 
+   vmws_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   vmws_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service vlgrpc_v2ray
+if [[ $vlgrpc_v2ray == "running" ]]; then 
+   vlgrpc_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   vlgrpc_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Status Service trxtls_v2ray
+if [[ $trxtls_v2ray == "running" ]]; then 
+   trxtls_v2ray_status="Running [ \033[32mok\033[0m ]"
+else
+   trxtls_v2ray_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
+# // Trojan
+# // Status Service trojan_server
+if [[ $trojan_server == "running" ]]; then 
+   trojan_server_status="Running [ \033[32mok\033[0m ]"
+else
+   trojan_server_status="Not Running [ \e[31m❌\e[0m ]"
+fi
 
 
 clear
