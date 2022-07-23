@@ -35,7 +35,7 @@ server {
 		return 403;
 }
 server {
-	listen 127.0.0.1:31402 http2;
+	listen 127.0.0.1:32302 http2;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
@@ -197,7 +197,13 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
       "protocol": "vless",
       "tag": "V2VLESSTCP",
       "settings": {
-        "clients": [],
+        "clients": [
+             {
+                "id": "${uuid}",
+                "add":"www.cloudflare.com",
+                "email": "${domain}_VLESS_TLS-direct_TCP"
+             }
+        ],
         "decryption": "none",
         "fallbacks": [
           {
@@ -225,6 +231,7 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
         "network": "tcp",
         "security": "xtls",
         "tlsSettings": {
+        "minVersion": "1.2",
           "alpn": [
             "http/1.1",
             "h2"
@@ -257,7 +264,12 @@ cat <<EOF >/etc/mon/v2ray/conf/03_VLESS_WS_inbounds.json
       "protocol": "vless",
       "tag": "V2VLESSWS",
       "settings": {
-        "clients": [],
+        "clients": [
+           {
+		 "id": "${uuid}",
+                 "email": "${domain}_VLESS_WS"
+              }
+         ],
         "decryption": "none"
       },
       "streamSettings": {
@@ -286,11 +298,15 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
       "protocol": "trojan",
       "tag": "V2trojanTCP",
       "settings": {
-        "clients": [],
+        "clients": [
+           {
+                   "password": "${uuid}",
+		   "email": "${domain}_trojan_tcp"
+            }
+        ],
         "fallbacks": [
           {
-            "dest": "32300"
-          }
+            {"dest":"32300"}
         ]
       },
       "streamSettings": {
@@ -318,7 +334,14 @@ cat <<EOF >/etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
       "protocol": "vmess",
       "tag": "V2VMessWS",
       "settings": {
-        "clients": []
+        "clients": [
+            {
+                "id": "${uuid}",
+                "alterId": 0,
+                "add": "www.cloudflare.com",
+                "email": "${domain}_vmess_ws"
+              }
+          ]
       },
       "streamSettings": {
         "network": "ws",
