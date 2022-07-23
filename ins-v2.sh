@@ -11,17 +11,7 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 # // Detect public IPv4 address and pre-fill for the user
 # // Domain
-apt install iptables iptables-persistent -y
-apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install socat cron bash-completion ntpdate -y
-ntpdate pool.ntp.org
-apt -y install chrony
-timedatectl set-ntp true
-systemctl enable chronyd && systemctl restart chronyd
-systemctl enable chrony && systemctl restart chrony
-timedatectl set-timezone Asia/Jakarta
-chronyc sourcestats -v
-chronyc tracking -v
+
 date
 domain=$(cat /etc/v2ray/domain)
 
@@ -32,7 +22,7 @@ uuid=$(cat /proc/sys/kernel/random/uuid)
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
-rm -rf /etc/nginx/conf.d/alone2.conf
+#rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
 server {
@@ -48,7 +38,7 @@ server {
 		return 403;
 }
 server {
-	listen 127.0.0.1:32302 http2;
+	listen 127.0.0.1:31402 http2;
 	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
@@ -202,11 +192,6 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
           {
             "dest": 32296,
             "xver": 1
-          },
-          {
-            "alpn": "h1",
-            "dest": 32305,
-            "xver": 0
           },
           {
             "alpn": "h2",
