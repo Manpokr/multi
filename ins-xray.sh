@@ -24,33 +24,14 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
-# // install
-apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
-cat> /root/.profile << END
-# ~/.profile: executed by Bourne-compatible login shells.
-if [ "$BASH" ]; then
-  if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-  fi
-fi
-mesg n || true
-clear
-neofetch
-END
-chmod 644 /root/.profile
-
 # // Make Folder
-clear
 mkdir -p /etc/tls
 mkdir -p /etc/config-url
 mkdir -p /etc/config-user
 mkdir -p /etc/mon/xray/conf
-mkdir -p /etc/mon/v2ray/conf
 mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
-mkdir -p /var/log/v2ray/
 touch /etc/xray/clients.txt
-touch /etc/v2ray/clients.txt
 
 # // Xray Version
 version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
