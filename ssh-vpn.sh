@@ -374,7 +374,7 @@ wget -O menu "https://raw.githubusercontent.com/Manpokr/multi/main/menu.sh"
 
 # // menu ssh-ovpn
 wget -O m-sshovpn "https://raw.githubusercontent.com/Manpokr/multi/main/m-sshovpn.sh"
-wget -O usernew "https://raw.githubusercontent.com/Manpokr/multi/main/usernew.sh"
+wget -O addssh "https://raw.githubusercontent.com/Manpokr/multi/main/addssh.sh"
 wget -O trial "https://raw.githubusercontent.com/Manpokr/multi/main/trial.sh"
 wget -O renew "https://raw.githubusercontent.com/Manpokr/multi/main/renew.sh"
 wget -O hapus "https://raw.githubusercontent.com/Manpokr/multi/main/hapus.sh"
@@ -424,7 +424,7 @@ wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
 
 chmod +x menu
 chmod +x m-sshovpn
-chmod +x usernew
+chmod +x addssh
 chmod +x trial
 chmod +x renew
 chmod +x hapus
