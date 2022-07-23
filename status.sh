@@ -53,7 +53,7 @@ trxtls_xray=$(systemctl status tr-xtls | grep Active | awk '{print $3}' | cut -d
 # // V2ray
 tls_v2ray_status=$(systemctl status v2ray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 xtls_v2ray=$(systemctl status v2-vl-xtls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
-vlws_ v2ray=$(systemctl status v2-vl-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vlws_v2ray=$(systemctl status v2-vl-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 trgrpc_v2ray=$(systemctl status v2-tr-grpc | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 trtcp_v2ray=$(systemctl status v2-tr-tcp | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 vmws_v2ray=$(systemctl status v2-vm-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
@@ -134,20 +134,6 @@ else
    status_fail2ban="Not Running [ \e[31m❌\e[0m ]"
 fi
 
-# // Status Service XTLS XRAY
-if [[ $xtls_xray_status == "running" ]]; then 
-   status_xtls_xray="Running [ \033[32mok\033[0m ]"
-else
-   status_xtls_xray="Not Running [ \e[31m❌\e[0m ]"
-fi
-
-# // Status Service TLS V2RAY
-if [[ $tls_v2ray_status == "running" ]]; then 
-   status_tls_v2ray="Running [ \033[32mok\033[0m ]"
-else
-   status_tls_v2ray="Not Running [ \e[31m❌\e[0m ]"
-fi
-
 # // ShadowsocksR Status
 #if [[ $ssr_status == "active" ]] ; then
 #  status_ssr="Running [ \033[32mok\033[0m ]"
@@ -161,13 +147,6 @@ fi
 #else
 #  status_sodosok="Not Running [ \e[31m❌\e[0m ]"
 #fi
-
-# // Status Service Trojan
-if [[ $trojan_server == "running" ]]; then 
-   status_virus_trojan="Running [ \033[32mok\033[0m ]"
-else
-   status_virus_trojan="Not Running [ \e[31m❌\e[0m ]"
-fi
 
 # // Status Service Wireguard
 #if [[ $swg == "active" ]]; then
@@ -183,6 +162,13 @@ else
    status_beruangjatuh="Not Running [ \e[31m❌\e[0m ]"
 fi
 
+# // Status Service stunnel
+if [[ $stunnel_service == "running" ]]; then 
+   stunnel_service_status="Running [ \033[32mok\033[0m ]"
+else
+   stunnel_service_status="Not Running [ \e[31m❌\e[0m ]"
+fi
+
 
 # // xray
 # // Status Service xray 
@@ -194,9 +180,9 @@ fi
 
 # // Status Service xtls
 if [[ $xtls_xray == "running" ]]; then 
-   xtls_xray="Running [ \033[32mok\033[0m ]"
+   xtls_xray_status="Running [ \033[32mok\033[0m ]"
 else
-   xtls_xray="Not Running [ \e[31m❌\e[0m ]"
+   xtls_xray_status="Not Running [ \e[31m❌\e[0m ]"
 fi
 
 # // Status Service vlws_xray
@@ -329,20 +315,25 @@ echo -e "   Fail2Ban           : $status_fail2ban"
 echo -e "   Crons              : $status_cron"
 echo -e "   Vnstat             : $status_vnstat"
 echo -e "   NGINX              : $status_nginx"
-echo -e "   XRAY CORE          : $status_xtls_xray"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"         
+echo -e "   XRAY CORE          : $xray_core"
 echo -e "   XRAY Vmess-Ws-Tls  : $status_xtls_xray"
-echo -e "   XRAY Vless-Ws-Tls  : $status_xtls_xray"
-echo -e "   XRAY Vless-Xtls    : $status_xtls_xray"
-echo -e "   XRAY Vless-Grpc    : $status_xtls_xray"
-echo -e "   XRAY Trojan-Tcp    : $status_xtls_xray"
-echo -e "   XRAY Trojan-Grpc   : $status_xtls_xray"
-echo -e "   V2RAY CORE         : $status_tls_v2ray"
-echo -e "   V2RAY Vmess-Ws-Tls : $status_tls_v2ray"
-echo -e "   V2RAY Vless-Ws-Tls : $status_tls_v2ray"
-echo -e "   V2RAY Vless-Xtls   : $status_tls_v2ray"
-echo -e "   V2RAY Vless-Grpc   : $status_tls_v2ray"
-echo -e "   V2RAY Trojan-Tcp   : $status_tls_v2ray"
-echo -e "   V2RAY Trojan-Grpc  : $status_tls_v2ray"
-echo -e "   Trojan GFW         : $status_virus_trojan"
+echo -e "   XRAY Vless-Ws-Tls  : $vmws_xray_status"
+echo -e "   XRAY Vless-Xtls    : $xtls_xray"
+echo -e "   XRAY Vless-Grpc    : $vlgrpc_xray_status"
+echo -e "   XRAY Trojan-Tcp    : $trtcp_xray_status"
+echo -e "   XRAY Trojan-Grpc   : $trgrpc_xray_status"
+echo -e "   XRAY Trojan-Xtls   : $trxtls_xray_status"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"         
+echo -e "   V2RAY CORE         : $v2ray_status"
+echo -e "   V2RAY Vmess-Ws-Tls : $vmws_v2ray_status"
+echo -e "   V2RAY Vless-Ws-Tls : $vlws_v2ray_status"
+echo -e "   V2RAY Vless-Xtls   : $xtls_v2ray_status"
+echo -e "   V2RAY Vless-Grpc   : $vlgrpc_v2ray_status"
+echo -e "   V2RAY Trojan-Tcp   : $trtcp_v2ray_status"
+echo -e "   V2RAY Trojan-Grpc  : $trgrpc_v2ray_status"
+echo -e "   V2RAY Trojan-Xtls  : $trxtls_v2ray_status"
+echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"         
+echo -e "   Trojan GFW         : $trojan_server_status"
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[m"
 echo -e "   ScriptMod By Manternet "
