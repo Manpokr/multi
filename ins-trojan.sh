@@ -108,11 +108,14 @@ wget -O del-tr "https://raw.githubusercontent.com/Manpokr/multi/main/del-tr.sh"
 wget -O cek-tr "https://raw.githubusercontent.com/Manpokr/multi/main/cek-tr.sh"
 wget -O renew-tr "https://raw.githubusercontent.com/Manpokr/multi/main/renew-tr.sh"
 wget -O menu-trojan "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menu-trojan.sh"
+wget -O trialtr "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialtr.sh"
 
 chmod +x add-tr
 chmod +x cek-tr
 chmod +x del-tr
 chmod +x renew-tr
+chmod +x trialtr
+
 chmod +x menu-trojan
 cd
 
