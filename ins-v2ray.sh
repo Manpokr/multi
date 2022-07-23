@@ -105,8 +105,10 @@ unzip -q v2ray.zip && rm -rf v2ray.zip
 mv v2ray /etc/mon/v2ray
 chmod +x /etc/mon/v2ray/v2ray
 
+# // Log
+mkdir /var/log/v2ray/
+
 # // v2ray boot service
-rm -rf /etc/systemd/system/v2ray.service
 touch /etc/systemd/system/v2ray.service
 
 cat <<EOF >/etc/systemd/system/v2ray.service
@@ -180,6 +182,11 @@ cat <<EOF >/etc/mon/v2ray/conf/11_dns.json
 EOF
 cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 8080,
@@ -234,6 +241,11 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
 EOF
 cat <<EOF >/etc/mon/v2ray/conf/03_VLESS_WS_inbounds.json
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 32297,
@@ -258,6 +270,11 @@ cat <<EOF >/etc/mon/v2ray/conf/03_VLESS_WS_inbounds.json
 EOF
 cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 32296,
@@ -285,6 +302,11 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
 EOF
 cat <<EOF >/etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "listen": "127.0.0.1",
@@ -308,6 +330,11 @@ cat <<EOF >/etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
 EOF
 cat <<EOF >/etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
     "inbounds":[
     {
         "port": 32301,
@@ -331,6 +358,11 @@ EOF
 
 cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
 {
+  "log": {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
+  },
     "inbounds": [
         {
             "port": 32304,
@@ -364,8 +396,8 @@ EOF
 cat <<EOF >/etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
 {
   "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
     "loglevel": "info"
   },
   "inbounds": [
@@ -580,4 +612,4 @@ echo -e " ${RED}V2RAY INSTALL DONE ${NC}"
 sleep 2
 clear
 
-rm -f ins-v2.sh
+rm -f ins-v2ray.sh
