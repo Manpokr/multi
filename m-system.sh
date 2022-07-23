@@ -35,6 +35,7 @@ echo -e " [${CYAN}15${NC}] Change Banner"
 echo -e " [${CYAN}16${NC}] Cek Bandwith"
 echo -e " [${CYAN}17${NC}] Reset Server"
 echo -e " [${CYAN}18${NC}] Kernel Update"
+echo -e " [${CYAN}19${NC}] Bbr "
 echo -e ""
 echo -e " [${RED}•0${NC}] ${RED}BACK TO MENU${NC}"
 echo -e   ""
@@ -63,6 +64,7 @@ case $opt in
 16) clear ; bw ; exit ;;
 17) clear ; resett ; exit ;;
 18) clear ; kernel-updt ; exit ;;
+19) clear ; bbr ; exit ;;
 0) clear ; menu ; exit ;;
 x) exit ;;
 *) echo -e "" ; echo "Boh salah tekan" ; sleep 1 ; m-system ;;
