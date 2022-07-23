@@ -306,7 +306,8 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
         ],
         "fallbacks": [
           {
-            {"dest":"32300"}
+            "dest":"32300"
+           }
         ]
       },
       "streamSettings": {
