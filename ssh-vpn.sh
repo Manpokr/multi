@@ -327,7 +327,7 @@ wget -O kernel-updt "https://raw.githubusercontent.com/Manpokr/multi/main/kernel
 wget -O xp "https://raw.githubusercontent.com/Manpokr/multi/main/xp.sh"
 wget -O xray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/xray-xp.sh"
 wget -O v2ray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-xp.sh"
-wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
 
 chmod +x menu
 chmod +x m-sshovpn
