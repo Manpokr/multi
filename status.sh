@@ -29,7 +29,6 @@ oovpn=$(echo "${openvpn_service}" | grep 'ActiveState=' | cut -f2 -d=)
 #ssr_status=$(systemctl status ssrmu | grep Active | awk '{print $2}' | cut -d "(" -f2 | cut -d ")" -f1)
 
 xtls_xray_status=$(systemctl status xray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
-tls_v2ray_status=$(systemctl status v2ray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 trojan_server=$(systemctl status trojan | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 dropbear_status=$(/etc/init.d/dropbear status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 stunnel_service=$(/etc/init.d/stunnel4 status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
@@ -39,6 +38,26 @@ vnstat_service=$(/etc/init.d/vnstat status | grep Active | awk '{print $3}' | cu
 nginx_status=$(systemctl status nginx | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 cron_service=$(/etc/init.d/cron status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 fail2ban_service=$(/etc/init.d/fail2ban status | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+
+# // xray
+xtls_xray_status=$(systemctl status xray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+xtls_xray=$(systemctl status vl-xtls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vlws_xray=$(systemctl status vl-wstls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+trgrpc_xray=$(systemctl status tr-grpc | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+trtcp_xray=$(systemctl status tr-tcp | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vmws_xray=$(systemctl status vm-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vlgrpc_xray=$(systemctl status vl-grpc | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+trxtls_xray=$(systemctl status tr-xtls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+
+# // V2ray
+tls_v2ray_status=$(systemctl status v2ray | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+xtls_v2ray=$(systemctl status v2-vl-xtls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vlws_ v2ray=$(systemctl status v2-vl-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+trgrpc_v2ray=$(systemctl status v2-tr-grpc | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+trtcp_v2ray=$(systemctl status v2-tr-tcp | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vmws_v2ray=$(systemctl status v2-vm-ws | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+vlgrpc_v2ray=$(systemctl status v2-vl-grpc | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
+trxtls_v2ray=$(systemctl status v2-tr-xtls | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1)
 
 #wg="$(systemctl show wg-quick@wg0.service --no-page)"
 #swg=$(echo "${wg}" | grep 'ActiveState=' | cut -f2 -d=)                                     
