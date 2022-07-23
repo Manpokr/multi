@@ -122,5 +122,5 @@ clear
 echo -e " ${RED}TROJAN-GFW INSTALL DONE ${NC}"
 sleep 2
 clear
-rm -f ins-vt.sh
+rm -f ins-trojan.sh
 
