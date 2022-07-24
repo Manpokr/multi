@@ -197,13 +197,7 @@ cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
       "protocol": "vless",
       "tag": "V2VLESSTCP",
       "settings": {
-        "clients": [
-             {
-                "id": "${uuid}",
-                "add":"www.cloudflare.com",
-                "email": "${domain}_VLESS_TLS-direct_TCP"
-             }
-        ],
+        "clients": [],
         "decryption": "none",
         "fallbacks": [
           {
@@ -264,12 +258,7 @@ cat <<EOF >/etc/mon/v2ray/conf/03_VLESS_WS_inbounds.json
       "protocol": "vless",
       "tag": "V2VLESSWS",
       "settings": {
-        "clients": [
-           {
-		 "id": "${uuid}",
-                 "email": "${domain}_VLESS_WS"
-              }
-         ],
+        "clients": [],
         "decryption": "none"
       },
       "streamSettings": {
@@ -298,12 +287,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
       "protocol": "trojan",
       "tag": "V2trojanTCP",
       "settings": {
-        "clients": [
-           {
-                   "password": "${uuid}",
-		   "email": "${domain}_trojan_tcp"
-            }
-        ],
+        "clients": [],
         "fallbacks": [
           {
             "dest":"32300"
@@ -335,14 +319,7 @@ cat <<EOF >/etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
       "protocol": "vmess",
       "tag": "V2VMessWS",
       "settings": {
-        "clients": [
-            {
-                "id": "${uuid}",
-                "alterId": 0,
-                "add": "www.cloudflare.com",
-                "email": "${domain}_vmess_ws"
-              }
-          ]
+        "clients": [],
       },
       "streamSettings": {
         "network": "ws",
@@ -398,12 +375,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
             "protocol": "trojan",
             "tag": "trojangRPCTCP",
             "settings": {
-                "clients": [
-                    {
-                        "password": "${uuid}",
-                        "email": "${domain}"
-                    }
-                ],
+                "clients": [],
                 "fallbacks": [
                     {
                         "dest": "31300"
