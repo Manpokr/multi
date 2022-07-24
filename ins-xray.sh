@@ -112,17 +112,6 @@ cat <<EOF >/etc/mon/xray/conf/00_log.json
 }
 EOF
 
-cat <<EOF >/etc/mon/xray/conf/10_ipv6_outbounds.json
-{
-    "outbounds": [
-        {
-          "protocol": "freedom",
-          "settings": {},
-          "tag": "direct"
-        }
-    ]
-}
-EOF
 cat <<EOF >/etc/mon/xray/conf/10_ipv4_outbounds.json
 {
     "outbounds":[
@@ -156,6 +145,7 @@ cat <<EOF >/etc/mon/xray/conf/11_dns.json
   }
 }
 EOF
+
 cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
 {
   "log": {
@@ -175,11 +165,6 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           {
             "dest": 31296,
             "xver": 1
-          },
-          { 
-            "alpn": "h1",
-            "dest": 31305,
-            "xver": 0
            },
            {
             "alpn": "h2",
@@ -202,6 +187,7 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
         "network": "tcp",
         "security": "xtls",
         "xtlsSettings": {
+        "minVersion": "1.2",
           "alpn": [
             "http/1.1",
             "h2"
@@ -263,12 +249,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
             "protocol": "trojan",
             "tag": "trojangRPCTCP",
             "settings": {
-                "clients": [
-                    {
-                        "password": "${uuid}",
-                        "email": "${domain}"
-                    }
-                ],
+                "clients": [],
                 "fallbacks": [
                     {
                         "dest": "31300"
