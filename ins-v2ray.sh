@@ -19,7 +19,7 @@ domain=$(cat /etc/v2ray/domain)
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
-#rm -rf /etc/nginx/conf.d/alone2.conf
+rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
 server {
@@ -92,9 +92,6 @@ version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r
 # / / Installation V2ray Core
 v2raycore_link="https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
 
-# / / Make Main Directory
-mkdir -p /etc/mon/v2ray
-
 # / / Unzip Xray Linux 64
 cd `mktemp -d`
 curl -sL "$v2raycore_link" -o v2ray.zip
@@ -103,13 +100,11 @@ mv v2ray /etc/mon/v2ray
 chmod +x /etc/mon/v2ray/v2ray
 
 # // Log
-mkdir -p /etc/mon/v2ray
-mkdir -p /etc/v2ray
 mkdir -p /var/log/v2ray/
-mkdir -p /etc/mon/v2ray/conf
 touch /etc/v2ray/clients.txt
 
 # // v2ray boot service
+rm -f touch /etc/systemd/system/v2ray.service
 touch /etc/systemd/system/v2ray.service
 
 cat <<EOF >/etc/systemd/system/v2ray.service
