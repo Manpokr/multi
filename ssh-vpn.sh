@@ -81,7 +81,12 @@ rm -rf /etc/apache2
 apt -y install wget curl
 
 # // Install Requirements Tools
-apt -y install neofetch
+apt install zip -y
+apt install unzip -y
+apt install jq -y
+apt install lsof -y
+apt install lsb_release -y
+apt install neofetch -y
 
 # // set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
@@ -151,51 +156,66 @@ apt -y install nginx
 
 systemctl daemon-reload
 systemctl enable nginx
+
+man="${request_uri}"
+mann="$content_type"
+mannn="$proxy_add_x_forwarded_for"
 touch /etc/nginx/conf.d/alone.conf
 
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
+		server {
+				listen 81;
+				server_name _;
+				return 403;
+        }
+		server {
+				listen 127.0.0.1:31300;
+				server_name _;
+				return 403;
+		}
+        server {
+        	listen 81;
+        	listen [::]:81;
+        	server_name ${domain};
+        	return 302 https://${domain}${man};
+        }
 server {
-	listen 81;
-	listen [::]:81;
-	server_name ${domain};
-	# shellcheck disable=SC2154
-	return 301 https://${domain};
-}
-server {
-		listen 127.0.0.1:31300;
-		server_name _;
-		return 403;
-}
-server {
-	listen 127.0.0.1:31302 http2;
+	listen 127.0.0.1:31302 http2 so_keepalive=on;
 	server_name ${domain};
 	root /usr/share/nginx/html;
+
+	client_header_timeout 1071906480m;
+    keepalive_timeout 1071906480m;
+
 	location /s/ {
-    		add_header Content-Type text/plain;
-    		alias /etc/config-url/;
+    	add_header Content-Type text/plain;
+    	alias /etc/config-url/;
     }
+
     location /vlgrpc {
-		client_max_body_size 0;
-#		keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
+    	if (${mann} !~ "application/grpc") {
+    		return 404;
+    	}
+ 		client_max_body_size 0;
+		grpc_set_header X-Real-IP ${mannn};
 		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31301;
 	}
+
 	location /trgrpc {
-		client_max_body_size 0;
-		# keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
+		if (${mann} !~ "application/grpc") {
+            		return 404;
+		}
+ 		client_max_body_size 0;
+		grpc_set_header X-Real-IP ${mannn};
 		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31304;
 	}
+	location / {
+        	add_header Strict-Transport-Security "max-age=15552000; preload" always;
+    }
 }
 server {
 	listen 127.0.0.1:31300;
