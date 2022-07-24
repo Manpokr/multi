@@ -16,7 +16,7 @@ if [[ $MYIP = $IZIN ]]; then
 echo -e "${GREEN}Permission Accepted...${NC}" 
 else 
 echo -e "${RED}Permission Denied!${NC}"; 
-echo -e "${LIGHT}Please Contact Admin!!" 
+echo -e "${LIGHT}Please Contact Admin!!!\e[37m" 
 rm -f addv2ray 
 exit 0 
 fi
@@ -91,14 +91,14 @@ cat /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.c
     cat /etc/mon/v2ray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${dom}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/05_VMess_WS_inbounds_tmp.json
 	mv -f /etc/mon/v2ray/conf/05_VMess_WS_inbounds_tmp.json /etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
 
-    cat /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${dom}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds_tmp.json
-	mv -f /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
+ #   cat /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${dom}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds_tmp.json
+#	mv -f /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
 
-    cat /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json_tmp.json
- 	mv -f /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json_tmp.json /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
+  #  cat /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json_tmp.json
+ #	mv -f /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json_tmp.json /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
 
-     cat /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json_tmp.json
-        mv -f /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json_tmp.json /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
+  #   cat /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json_tmp.json
+     #   mv -f /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json_tmp.json /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
 
 # // Link Xtls
 IP=$( curl -s ipinfo.io/ip )
