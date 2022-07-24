@@ -372,6 +372,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
                 "fallbacks": [
                     {
                         "dest": "32300"
+                    }
                 ]
             },
             "streamSettings": {
