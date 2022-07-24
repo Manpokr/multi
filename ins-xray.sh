@@ -26,7 +26,6 @@ date
 
 # // Make Folder
 mkdir -p /etc/systemd/system/
-mkdir -p /var/log/xray/
 touch /etc/xray/clients.txt
 
 # // Xray Version
