@@ -5,7 +5,19 @@ NC='\033[0;37m'
 LIGHT='\033[0;37m'
 
 # // Getting
-domain=$(cat /etc/v2ray/domain)
+domain=$(cat /root/domain)
+
+apt install iptables iptables-persistent -y
+apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
+apt install socat cron bash-completion ntpdate -y
+ntpdate pool.ntp.org
+apt -y install chrony
+timedatectl set-ntp true
+systemctl enable chronyd && systemctl restart chronyd
+systemctl enable chrony && systemctl restart chrony
+timedatectl set-timezone Asia/Kuala_Lumpur
+chronyc sourcestats -v
+chronyc tracking -v
 date
 
 # // Add Folder
@@ -13,10 +25,30 @@ mkdir /etc/xray/tls/
 mkdir -p /etc/trojan/
 touch /etc/trojan/akun.conf
 
-apt install iptables iptables-persistent -y
-
 # // install Trojan-Gfw
 bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
+
+# // Install Cert
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
+sleep 2
+
+cd /root/
+wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+bash acme.sh --install
+rm acme.sh
+
+cd .acme.sh
+sudo bash acme.sh --upgrade --auto-upgrade
+sudo bash acme.sh --set-default-ca --server letsencrypt
+sudo bash acme.sh --register-account -m anjang614@gmail.com
+sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
+sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+
+cat /etc/tls/$domain.log
+systemctl daemon-reload
+systemctl restart nginx
+service squid start
 
 # // Cp Json
 uuid=$(cat /proc/sys/kernel/random/uuid)
@@ -123,5 +155,6 @@ clear
 echo -e " ${RED}TROJAN-GFW INSTALL DONE ${NC}"
 sleep 2
 clear
+cp /root/domain /etc/xray
 rm -f ins-trojan.sh
 
