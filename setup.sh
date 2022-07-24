@@ -30,6 +30,14 @@ fi
 
 # // Add Folder
 clear
+mkdir -p /etc/mon
+mkdir -p /etc/mon/xray
+mkdir -p /etc/mon/v2ray
+mkdir -p /etc/tls
+mkdir -p /etc/config-url
+mkdir -p /etc/config-user
+mkdir -p /etc/mon/xray/conf
+mkdir -p /etc/mon/v2ray/conf
 mkdir /var/lib/manpokr;
 
 # // CloudFlare
@@ -48,20 +56,20 @@ start=$(date +%s)
 # // Install ssh ovpn
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
+# // Install v2ray Trojan
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
+
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
 # // Instal V2ray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
 
-# // Install v2ray Trojan
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
-
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
 
-# Install OHP
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ohp.sh && chmod +x ohp.sh && screen -S ohp ./ohp.sh
+# // Install OHP
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ohp.sh && chmod +x ohp.sh && screen -S ohp ./ohp.sh 
 
 rm -f /root/ssh-vpn.sh
 rm -f /root/ins-trojan.sh
