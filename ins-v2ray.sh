@@ -40,7 +40,7 @@ cat <<EOF >>/etc/nginx/conf.d/alone2.conf
         	listen 82;
         	listen [::]:82;
         	server_name ${domain};
-        	return 302 https://${domain}${man};
+        	return 302 https://${domain}aaa;
         }
 server {
 	listen 127.0.0.1:32302 http2 so_keepalive=on;
@@ -53,21 +53,21 @@ server {
     	alias /etc/config-url/;
     }
     location /v2vlgrpc {
-    	if (${mann} !~ "application/grpc") {
+    	if (bbb !~ "application/grpc") {
     		return 404;
     	}
  		client_max_body_size 0;
-		grpc_set_header X-Real-IP ${mannn};
+		grpc_set_header X-Real-IP ccc;
 		client_body_timeout 1071906480m;
 		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:32301;
 	}
 	location /trgrpc {
-		if (${mann} !~ "application/grpc") {
+		if (bbb !~ "application/grpc") {
             		return 404;
 		}
  		client_max_body_size 0;
-		grpc_set_header X-Real-IP ${mannn};
+		grpc_set_header X-Real-IP ccc;
 		client_body_timeout 1071906480m;
 		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:32304;
@@ -89,6 +89,11 @@ server {
 	}
 }
 EOF
+
+# // Move
+sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone2.conf
+sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone2.conf
+sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone2.conf
 
 # // Restart Nginx
 systemctl daemon-reload
@@ -293,7 +298,6 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
         "fallbacks": [
           {
             "dest":"32300"
-           }
         ]
       },
       "streamSettings": {
@@ -381,7 +385,6 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
                 "fallbacks": [
                     {
                         "dest": "32300"
-                    }
                 ]
             },
             "streamSettings": {
