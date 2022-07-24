@@ -38,22 +38,23 @@ touch /etc/systemd/system/xray.service
 
 # // XRay boot service
 cat <<EOF >/etc/systemd/system/xray.service
-[Unit]
-Description=Xray Service
-Documentation=https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-Wants=network-online.target
-[Service]
-Type=simple
-User=root
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW
-NoNewPrivileges=yes
-ExecStart=/etc/mon/xray/xray run -confdir /etc/mon/xray/conf
-Restart=on-failure
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
+[Unit]                                                                    
+Description=Xray - A unified platform for anti-censorship                 
+# Documentation=https://xraynt.com https://guide.v2fly.org                
+After=network.target nss-lookup.target                                    
+Wants=network-online.target                                               
+                                                                          
+[Service]                                                                 
+Type=simple                                                               
+User=root                                                                 
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW                    
+NoNewPrivileges=yes                                                       
+ExecStart=/etc/mon/xray/xray run -confdir /etc/mon/xray/conf        
+Restart=on-failure                                                        
+RestartPreventExitStatus=23                                               
+                                                                          
+                                                                          
+[Install]                                                                 
 WantedBy=multi-user.target
 EOF
 
