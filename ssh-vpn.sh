@@ -148,9 +148,9 @@ systemctl stop nginx
 sudo apt install gnupg2 ca-certificates lsb-release -y
 apt -y install nginx 
 
-#curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 #mkdir -p /home/vps/public_html
-#curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
 
 systemctl daemon-reload
 systemctl enable nginx
@@ -235,7 +235,7 @@ sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
 mkdir /etc/systemd/system/nginx.service.d
 printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 
-#rm /etc/nginx/conf.d/default.conf
+rm /etc/nginx/conf.d/default.conf
 systemctl daemon-reload
 service nginx restart
 cd
