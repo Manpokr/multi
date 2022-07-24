@@ -21,7 +21,7 @@ if [[ $MYIP = $IZIN ]]; then
 echo -e "${GREEN}Permission Accepted...${NC}" 
 else 
 echo -e "${RED}Permission Denied!${NC}"; 
-echo -e "${LIGHT}Please Contact Admin!!" 
+echo -e "${LIGHT}Please Contact Admin!!!\e[37m" 
 rm -f addxray
 exit 0
 fi
@@ -56,9 +56,9 @@ read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " 
 dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
-email=${user}
+email=${user}@${domain}
 
-cat>/etc/xray/$user-tls.json<<EOF
+cat>/etc/xray/tls.json<<EOF
 {
        "v": "2",
        "ps": "${user}",
@@ -76,7 +76,7 @@ cat>/etc/xray/$user-tls.json<<EOF
 }
 EOF
 vmess_base641=$( base64 -w 0 <<< $vmess_json1)
-vmesslink1="vmess://$(base64 -w 0 /etc/xray/$user-tls.json)"
+vmesslink1="vmess://$(base64 -w 0 /etc/xray/tls.json)"
 echo -e "${user} ${exp} ${uuid}" >> /etc/xray/clients.txt
 
 cat /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${dom}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/mon/xray/conf/02_VLESS_TCP_inbounds_tmp.json
@@ -91,21 +91,19 @@ cat /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.cl
     cat /etc/mon/xray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${dom}'","email": "'${email}'"}]' > /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json /etc/mon/xray/conf/05_VMess_WS_inbounds.json
 
-    cat /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${dom}'","email": "'${email}'"}]' > /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json
-	mv -f /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
+  #  cat /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${dom}'","email": "'${email}'"}]' > /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json
+	#mv -f /etc/mon/xray/conf/06_VLESS_gRPC_inbounds_tmp.json /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 
-    cat /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json_tmp.json
-	mv -f /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json_tmp.json /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
+  #  cat /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json_tmp.json
+	#mv -f /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json_tmp.json /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 
-   cat /etc/mon/xray/conf/07_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/07_trojan_TCP_inbounds.json_tmp.json
-        mv -f /etc/mon/xray/conf/07_trojan_TCP_inbounds.json_tmp.json /etc/mon/xray/conf/07_trojan_TCP_inbounds.json
+ #  cat /etc/mon/xray/conf/07_trojan_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"password": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/07_trojan_TCP_inbounds.json_tmp.json
+     #   mv -f /etc/mon/xray/conf/07_trojan_TCP_inbounds.json_tmp.json /etc/mon/xray/conf/07_trojan_TCP_inbounds.json
 
 # // Link Xtls
 IP=$( curl -s ipinfo.io/ip )
 cat <<EOF >>"/etc/config-user/${user}"
 vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$sni#$user
-vless://$uuid@$dom:$8445?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vlgrpc&sni=$sni#$user
-vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=tcp&${sni}#${user}
 trojan://$uuid@$dom:$xtls?sni=$sni#$user
 vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user
 $vmesslink1
