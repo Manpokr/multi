@@ -21,6 +21,9 @@ systemctl stop nginx
 
 rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
+man="${request_uri}"
+mann="$content_type"
+mannn="$proxy_add_x_forwarded_for"
 
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
 		server {
