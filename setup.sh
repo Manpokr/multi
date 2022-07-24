@@ -71,8 +71,8 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
-# // Instal V2ray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
+$# // Instal V2ray
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
 
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
