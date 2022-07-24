@@ -38,7 +38,16 @@ mkdir -p /etc/config-url
 mkdir -p /etc/config-user
 mkdir -p /etc/mon/xray/conf
 mkdir -p /etc/mon/v2ray/conf
+mkdir -p /etc/systemd/system/
+mkdir -p /var/log/xray/
+mkdir -p /var/log/v2ray/
 mkdir /var/lib/manpokr;
+touch /etc/xray/clients.txt
+touch /etc/v2ray/clients.txt
+
+# // Update
+apt-get update && apt-get upgrade -y && update-grub -y
+clear
 
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
