@@ -12,25 +12,15 @@ clear
 domain=$(cat /etc/xray/domain)
 
 # // Make Folder
-mkdir -p /etc/systemd/system/
-touch /etc/xray/clients.txt
 
 # // Xray Version
 #version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
 version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
 
-# / / Installation Xray Core
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
-
-# / / Unzip Xray Linux 64
-cd `mktemp -d`
-curl -sL "$xraycore_link" -o xray.zip
-unzip -q xray.zip && rm -rf xray.zip
-mv xray /etc/mon/xray
-chmod +x /etc/mon/xray/xray
-
-# // Make Folder XRay
-mkdir -p /var/log/xray/
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+rm -rf /etc/mon/xray/Xray-linux-64.zip
+chmod 655 /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
@@ -354,6 +344,7 @@ cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
     }
   ]
 }
+EOF
 
 cat > /etc/systemd/system/vl-xtls.service << EOF
 [Unit]
