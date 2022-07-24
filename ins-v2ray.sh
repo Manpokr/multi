@@ -118,7 +118,6 @@ Description=V2Ray - A unified platform for anti-censorship
 Documentation=https://v2ray.com https://guide.v2fly.org
 After=network.target nss-lookup.target
 Wants=network-online.target
-
 [Service]
 Type=simple
 User=root
@@ -127,8 +126,8 @@ NoNewPrivileges=yes
 ExecStart=/etc/mon/v2ray/v2ray -confdir /etc/mon/v2ray/conf
 Restart=on-failure
 RestartPreventExitStatus=23
-
-
+LimitNPROC=10000
+LimitNOFILE=1000000
 [Install]
 WantedBy=multi-user.target
 EOF
