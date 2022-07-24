@@ -34,10 +34,11 @@ mkdir -p /var/log/xray/
 touch /etc/xray/clients.txt
 
 # // Xray Version
-version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+#version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
 
 # / / Installation Xray Core
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v$version/xray-linux-64.zip"
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
 
 # / / Make Main Directory
 mkdir -p /etc/xray
@@ -74,11 +75,10 @@ touch /etc/systemd/system/xray.service
 # // XRay boot service
 cat <<EOF >/etc/systemd/system/xray.service
 [Unit]
-Description=Xray - A unified platform for anti-censorship
-# Documentation=https://github.com/XTLS/Xray-core
+Description=Xray Service
+Documentation=https://github.com/XTLS/Xray-core
 After=network.target nss-lookup.target
 Wants=network-online.target
-
 [Service]
 Type=simple
 User=root
@@ -87,10 +87,10 @@ NoNewPrivileges=yes
 ExecStart=/etc/mon/xray/xray run -confdir /etc/mon/xray/conf
 Restart=on-failure
 RestartPreventExitStatus=23
-
+LimitNPROC=10000
+LimitNOFILE=1000000
 [Install]
 WantedBy=multi-user.target
-
 EOF
 
 # // Restart & Add File
