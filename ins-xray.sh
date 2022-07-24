@@ -25,10 +25,6 @@ chronyc tracking -v
 date
 
 # // Make Folder
-mkdir -p /etc/tls
-mkdir -p /etc/config-url
-mkdir -p /etc/config-user
-mkdir -p /etc/mon/xray/conf
 mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
 touch /etc/xray/clients.txt
@@ -40,11 +36,6 @@ version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r 
 # / / Installation Xray Core
 xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
 
-# / / Make Main Directory
-mkdir -p /etc/xray
-mkdir -p /etc/xray/conf
-mkdir -p /etc/mon/xray
-
 # / / Unzip Xray Linux 64
 cd `mktemp -d`
 curl -sL "$xraycore_link" -o xray.zip
@@ -54,19 +45,6 @@ chmod +x /etc/mon/xray/xray
 
 # // Make Folder XRay
 mkdir -p /var/log/xray/
-
-sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
-cd /root/
-wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
-bash acme.sh --install
-rm acme.sh
-
-cd .acme.sh
-sudo bash acme.sh --upgrade --auto-upgrade
-sudo bash acme.sh --set-default-ca --server letsencrypt
-sudo bash acme.sh --register-account -m anjang614@gmail.com
-sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
-sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
 
 # // system
 rm -rf /etc/systemd/system/xray.service
