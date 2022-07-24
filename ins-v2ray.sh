@@ -4,8 +4,7 @@
 RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[0;32m'
-Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
-Info="${Green_font_prefix}[information]${Font_color_suffix}"
+
 MYIP=$(wget -qO- ipinfo.io/ip);
 
 clear
@@ -21,9 +20,6 @@ systemctl stop nginx
 
 rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
-man="${request_uri}"
-mann="$content_type"
-mannn="$proxy_add_x_forwarded_for"
 
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
 		server {
@@ -102,19 +98,9 @@ service nginx restart
 # // Version V2ray pre
 version=$(curl -s https://api.github.com/repos/v2fly/v2ray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)
 
-# / / Installation V2ray Core
-v2raycore_link="https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
-
-# / / Unzip Xray Linux 64
-cd `mktemp -d`
-curl -sL "$v2raycore_link" -o v2ray.zip
-unzip -q v2ray.zip && rm -rf v2ray.zip
-mv v2ray /etc/mon/v2ray
-chmod +x /etc/mon/v2ray/v2ray
-
-# // Log
-mkdir -p /var/log/v2ray/
-touch /etc/v2ray/clients.txt
+wget -c -P /etc/mon/v2ray/ "https://github.com/v2fly/v2ray-core/releases/download/${version}/v2ray-linux-64.zip"
+unzip -o /etc/mon/v2ray/v2ray-linux-64.zip -d /etc/rare/v2ray
+rm -rf /etc/mon/v2ray/v2ray-linux-64.zip
 
 # // v2ray boot service
 rm -f touch /etc/systemd/system/v2ray.service
@@ -298,6 +284,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
         "fallbacks": [
           {
             "dest":"32300"
+           }
         ]
       },
       "streamSettings": {
@@ -325,7 +312,7 @@ cat <<EOF >/etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
       "protocol": "vmess",
       "tag": "V2VMessWS",
       "settings": {
-        "clients": [],
+        "clients": []
       },
       "streamSettings": {
         "network": "ws",
