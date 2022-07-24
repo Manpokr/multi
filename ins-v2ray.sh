@@ -21,51 +21,57 @@ systemctl stop nginx
 
 rm -rf /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
+
 cat <<EOF >>/etc/nginx/conf.d/alone2.conf
+		server {
+				listen 82;
+				server_name _;
+				return 403;
+        }
+		server {
+				listen 127.0.0.1:32300;
+				server_name _;
+				return 403;
+		}
+        server {
+        	listen 82;
+        	listen [::]:82;
+        	server_name ${domain};
+        	return 302 https://${domain}${man};
+        }
 server {
-	listen 82;
-	listen [::]:82;
-	server_name ${domain};
-	# shellcheck disable=SC2154
-	return 301 https://${domain};
-}
-server {
-		listen 127.0.0.1:32300;
-		server_name _;
-		return 403;
-}
-server {
-	listen 127.0.0.1:32302 http2;
+	listen 127.0.0.1:32302 http2 so_keepalive=on;
 	server_name ${domain};
 	root /usr/share/nginx/html;
+	client_header_timeout 1071906480m;
+    keepalive_timeout 1071906480m;
 	location /s/ {
-    		add_header Content-Type text/plain;
-    		alias /etc/config-url/;
+    	add_header Content-Type text/plain;
+    	alias /etc/config-url/;
     }
-
     location /v2vlgrpc {
-		client_max_body_size 0;
-#		keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
+    	if (${mann} !~ "application/grpc") {
+    		return 404;
+    	}
+ 		client_max_body_size 0;
+		grpc_set_header X-Real-IP ${mannn};
 		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:32301;
 	}
-
-	location /v2trgrpc {
-		client_max_body_size 0;
-		# keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
+	location /trgrpc {
+		if (${mann} !~ "application/grpc") {
+            		return 404;
+		}
+ 		client_max_body_size 0;
+		grpc_set_header X-Real-IP ${mannn};
 		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:32304;
 	}
+	location / {
+        	add_header Strict-Transport-Security "max-age=15552000; preload" always;
+    }
 }
 server {
 	listen 127.0.0.1:32300;
@@ -79,7 +85,6 @@ server {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
 	}
 }
-
 EOF
 
 # // Restart Nginx
@@ -372,7 +377,7 @@ cat <<EOF >/etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
                 "clients": [],
                 "fallbacks": [
                     {
-                        "dest": "31300"
+                        "dest": "32300"
                     }
                 ]
             },
