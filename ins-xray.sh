@@ -9,7 +9,7 @@ Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_p
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 
 clear
-domain=$(cat /etc/mon/xray/domain)
+domain=$(cat /root/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
@@ -34,7 +34,7 @@ if [ "$BASH" ]; then
 fi
 mesg n || true
 clear
-menu
+neofetch
 END
 chmod 644 /root/.profile
 
@@ -127,9 +127,14 @@ unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html
 rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+mkdir -p /home/vps/public_html
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+chown -R www-data:www-data /home/vps/public_html
+
 # // Xray Version
 #version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
+#version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
 
 wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
 unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
@@ -664,3 +669,4 @@ sleep 2
 clear
 
 rm -f ins-xray.sh
+cp /root/domain /etc/xray
