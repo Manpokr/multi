@@ -149,8 +149,8 @@ chown -R www-data:www-data /usr/share/nginx/html
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 mkdir -p /home/vps/public_html
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-chown -R nobody:nogroup /home/vps/public_html
-#chown -R www-data:www-data /home/vps/public_html
+#chown -R nobody:nogroup /home/vps/public_html
+chown -R www-data:www-data /home/vps/public_html
 
 # // Xray Version
 #version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
