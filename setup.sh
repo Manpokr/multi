@@ -46,7 +46,8 @@ touch /etc/mon/xray/clients.txt
 touch /etc/mon/v2ray/clients.txt
 
 # // Update
-apt-get update -y && apt-get upgrade -y && update-grub -y
+apt-get update -y && apt-get upgrade -y
+#&& update-grub -y
 clear
 
 # // CloudFlare
