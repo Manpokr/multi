@@ -23,11 +23,11 @@ fi
 clear
 
 # // ADD FOLDER
-mkdir -p /etc/v2ray
-mkdir -p /etc/xray
+mkdir -p /etc/mon/v2ray
+mkdir -p /etc/mon/xray
 touch /root/domain
-touch /etc/v2ray/domain
-touch /etc/xray/Domain
+touch /etc/mon/v2ray/domain
+touch /etc/mon/xray/Domain
 apt install jq curl -y
 
 # // ACC CLOUDFLARE
@@ -91,6 +91,6 @@ RESULT=$(curl -sLX PUT "https://api.cloudflare.com/client/v4/zones/${ZONE}/dns_r
 # // MV DOMAIN
 echo "Host : $SUB_DOMAIN"
 echo $SUB_DOMAIN > /root/domain
-echo $SUB_DOMAIN > /etc/xray/domain
-echo $SUB_DOMAIN > /etc/v2ray/domain
+echo $SUB_DOMAIN > /etc/mon/xray/domain
+echo $SUB_DOMAIN > /etc/mon/v2ray/domain
 rm -f cf.sh
