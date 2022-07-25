@@ -187,6 +187,7 @@ WantedBy=multi-user.target
 EOF
 
 # // Install Cert
+apt install -y socat
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 sleep 2
