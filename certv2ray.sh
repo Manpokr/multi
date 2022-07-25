@@ -37,35 +37,46 @@ source /var/lib/manpokr/ipvps.conf
 domain=$IP
 
 # // ###
-sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
 clear
-
-cd .acme.sh
 echo -e "\033[0;32mstarting........\033[m"
 echo -e "Port ${RED}80${NC} Akan di Hentikan Saat Proses install Cert"
 echo -e ""
 sleep 2
 
+sudo pkill -f nginx & wait $!
 systemctl stop nginx
-systemctl stop v2ray
-systemctl stop v2ray.service
 systemctl stop xray
 systemctl stop xray.service
-systemctl stop trojan
-systemctl stop trojan.service
-cd acme.sh
-bash acme.sh --set-default-ca --server letsencrypt
-bash acme.sh --issue -d $domain --standalone -k ec-256 --listen-v6 --force
-bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-sleep 2
+
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 systemctl daemon-reload
 systemctl restart nginx
 systemctl daemon-reload
-systemctl restart trojan
-systemctl restart trojan.service
-systemctl restart xray
-systemctl restart xray.service
+#cd .acme.sh
+
+
+#systemctl stop nginx
+#systemctl stop v2ray
+#systemctl stop v2ray.service
+#systemctl stop xray
+#systemctl stop xray.service
+#systemctl stop trojan
+#systemctl stop trojan.service
+#cd acme.sh
+#bash acme.sh --set-default-ca --server letsencrypt
+#bash acme.sh --issue -d $domain --standalone -k ec-256 --listen-v6 --force
+#bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+#sleep 2
+
+#systemctl daemon-reload
+#systemctl restart nginx
+#systemctl daemon-reload
+#systemctl restart trojan
+#systemctl restart trojan.service
+#systemctl restart xray
+#systemctl restart xray.service
 echo ""
 echo Done
 echo ""
