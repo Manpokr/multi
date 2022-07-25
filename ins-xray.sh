@@ -649,6 +649,26 @@ wget -O cekxray "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekxra
 wget -O delxray "https://raw.githubusercontent.com/Manpokr/multi/main/del/delxray.sh"
 wget -O renewxray "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewxray.sh"
 wget -O trialxray "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialxray.sh"
+
+wget -O addvless "https://raw.githubusercontent.com/Manpokr/multi/main/add/addvless.sh"
+wget -O cekvless "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekvless.sh"
+wget -O delvless "https://raw.githubusercontent.com/Manpokr/multi/main/del/delvless.sh"
+wget -O renewvless "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewvless.sh"
+wget -O trialvless "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialvless.sh"
+
+wget -O addvmess "https://raw.githubusercontent.com/Manpokr/multi/main/add/addvmess.sh"
+wget -O cekvmess "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cekvmess.sh"
+wget -O delvmess "https://raw.githubusercontent.com/Manpokr/multi/main/del/delvmess.sh"
+wget -O renewvmess "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewvmess.sh"
+wget -O trialvmess "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialvmess.sh"
+
+wget -O addtrojan "https://raw.githubusercontent.com/Manpokr/multi/main/add/addtrojan.sh"
+wget -O cektrojan "https://raw.githubusercontent.com/Manpokr/multi/main/cek/cektrojan.sh"
+wget -O deltrojan "https://raw.githubusercontent.com/Manpokr/multi/main/del/deltrojan.sh"
+wget -O renewtrojan "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewtrojan.sh"
+wget -O trialtrojan "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialtrojan.sh"
+
+
 wget -O menu-xray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menu-xray.sh"
 
 chmod +x addxray
@@ -656,6 +676,25 @@ chmod +x delxray
 chmod +x cekxray
 chmod +x renewxray
 chmod +x trialxray
+
+chmod +x addvless
+chmod +x delvless
+chmod +x cekvless
+chmod +x renewvless
+chmod +x trialvless
+
+chmod +x addvmess
+chmod +x delvmess
+chmod +x cekvmess
+chmod +x renewvmess
+chmod +x trialvmess
+
+chmod +x addtrojan
+chmod +x deltrojan
+chmod +x cektrojan
+chmod +x renewtrojan
+chmod +x trialtrojan
+
 chmod +x menu-xray
 cd
 
