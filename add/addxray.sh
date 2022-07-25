@@ -32,16 +32,15 @@ IP=$( curl -s ipinfo.io/ip );
 clear
 source /var/lib/manpokr/ipvps.conf
 if [[ "$IP" = "" ]]; then
-domain=$(cat /etc/xray/domain)
+domain=$(cat /etc/mon/xray/domain)
 else
-domain=$(cat /etc/xray/domain)
+domain=$(cat /etc/mon/xray/domain)
 fi
 
-domain=$(cat /etc/xray/domain)
 xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 		read -rp "User: " -e user
-		CLIENT_EXISTS=$(grep -w $user /etc/xray/clients.txt | wc -l)
+		CLIENT_EXISTS=$(grep -w $user /etc/mon/xray/clients.txt | wc -l)
 
 		if [[ ${CLIENT_EXISTS} == '1' ]]; then
 			echo ""
@@ -58,7 +57,7 @@ exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
 email=${user}@${domain}
 
-cat>/etc/xray/tls.json<<EOF
+cat>/etc/mon/xray/tls.json<<EOF
 {
        "v": "2",
        "ps": "${user}",
@@ -76,8 +75,8 @@ cat>/etc/xray/tls.json<<EOF
 }
 EOF
 vmess_base641=$( base64 -w 0 <<< $vmess_json1)
-vmesslink1="vmess://$(base64 -w 0 /etc/xray/tls.json)"
-echo -e "${user} ${exp} ${uuid}" >> /etc/xray/clients.txt
+vmesslink1="vmess://$(base64 -w 0 /etc/mon/xray/tls.json)"
+echo -e "${user} ${exp} ${uuid}" >> /etc/mon/xray/clients.txt
 
 cat /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${dom}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/mon/xray/conf/02_VLESS_TCP_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/02_VLESS_TCP_inbounds_tmp.json /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
@@ -102,7 +101,7 @@ cat /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.cl
 
 # // Link Xtls
 IP=$( curl -s ipinfo.io/ip )
-cat <<EOF >>"/etc/config-user/${user}"
+cat <<EOF >>"/etc/mon/config-user/${user}"
 vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$sni#$user
 trojan://$uuid@$dom:$xtls?sni=$sni#$user
 vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user
