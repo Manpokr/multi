@@ -49,6 +49,7 @@ sudo apt update
 apt -y install nginx 
 systemctl daemon-reload
 systemctl enable nginx
+
 # //
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
@@ -121,37 +122,16 @@ systemctl daemon-reload
 service nginx restart
 cd
 rm -rf /usr/share/nginx/html
-wget -q -P /usr/share/nginx https://raw.githubusercontent.com/racunzx/hijk.art/main/html.zip 
+wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
 rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
-# // Install Cert
-sudo pkill -f nginx & wait $!
-systemctl stop nginx
-sleep 2
-
-cd /root/
-wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
-bash acme.sh --install
-rm acme.sh
-
-cd .acme.sh
-sudo bash acme.sh --upgrade --auto-upgrade
-sudo bash acme.sh --set-default-ca --server letsencrypt
-sudo bash acme.sh --register-account -m anjang614@gmail.com
-sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/mon/tls/$domain.log
-sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-
-cat /etc/mon/tls/$domain.log
-systemctl daemon-reload
-systemctl restart nginx
-service squid start
 # // Xray Version
 #version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
 version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
 
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
 unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
 rm -rf /etc/mon/xray/Xray-linux-64.zip
 chmod 655 /etc/mon/xray/xray
@@ -181,6 +161,26 @@ RestartPreventExitStatus=23
 [Install]                                                                 
 WantedBy=multi-user.target
 EOF
+# // Install Cert
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
+sleep 2
+
+cd /root/
+wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+bash acme.sh --install
+rm acme.sh
+
+cd .acme.sh
+sudo bash acme.sh --upgrade --auto-upgrade
+sudo bash acme.sh --set-default-ca --server letsencrypt
+sudo bash acme.sh --register-account -m anjang614@gmail.com
+sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/mon/tls/$domain.log
+sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+
+cat /etc/mon/tls/$domain.log
+systemctl daemon-reload
+systemctl restart nginx
 
 # // Restart & Add File
 systemctl daemon-reload
@@ -254,6 +254,11 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           {
             "dest": 31296,
             "xver": 1
+           },
+           {
+            "alpn": "h1",
+            "dest": 31333,
+            "xver": 0
            },
            {
             "alpn": "h2",
