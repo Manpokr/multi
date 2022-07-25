@@ -48,19 +48,18 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 			exit 1
 		fi
 	done
-uuid=$(cat /proc/sys/kernel/random/uuid)
 read -p "Expired (days): " masaaktif
 read -p "SNI (bug) : " sni
 read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " sub
 dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
-email=${user}@${domain}
-
+email=${user}
+uuid=$(cat /proc/sys/kernel/random/uuid)
 cat>/etc/mon/xray/tls.json<<EOF
 {
        "v": "2",
-       "ps": "${user}",
+       "ps": "${user}@manVPN",
        "add": "${dom}",
        "port": "${xtls}",
        "id": "${uuid}",
