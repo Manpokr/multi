@@ -74,17 +74,61 @@ apt upgrade -y
 apt dist-upgrade -y
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
+apt-get purge apache2* -y
+rm -rf /etc/apache2
 
 # // install wget and curl
 apt -y install wget curl
 
 # // Install Requirements Tools
+apt install ruby -y
+apt install python -y
+apt install make -y
+apt install cowsay -y
+apt install figlet -y
+apt install lolcat -y
+apt install cmake -y
+apt install ncurses-utils -y
+apt install coreutils -y
+apt install rsyslog -y
+apt install net-tools -y
 apt install zip -y
 apt install unzip -y
+apt install nano -y
+apt install sed -y
+apt install gnupg -y
+apt install gnupg1 -y
+apt install bc -y
 apt install jq -y
-apt install lsof -y
-apt install lsb_release -y
+apt install apt-transport-https -y
+apt install build-essential -y
+apt install dirmngr -y
+apt install libxml-parser-perl -y
 apt install neofetch -y
+apt install git -y
+apt install lsof -y
+apt install libsqlite3-dev -y
+apt install libz-dev -y
+apt install gcc -y
+apt install g++ -y
+apt install libreadline-dev -y
+apt install zlib1g-dev -y
+apt install libssl-dev -y
+apt install libssl1.0-dev -y
+gem install lolcat
+apt install jq curl -y
+apt install dnsutils jq -y
+apt-get install net-tools -y
+apt-get install tcpdump -y
+apt-get install dsniff -y
+apt install grepcidr -y
+
+#apt install zip -y
+#apt install unzip -y
+#apt install jq -y
+#apt install lsof -y
+#apt install lsb_release -y
+#apt install neofetch -y
 
 # // set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
@@ -95,51 +139,54 @@ sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 
 # // install
 # install
-apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
-cat> /root/.profile << END
+#apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
+#cat> /root/.profile << END
 # ~/.profile: executed by Bourne-compatible login shells.
 
-if [ "$BASH" ]; then
-  if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-  fi
-fi
+#if [ "$BASH" ]; then
+#  if [ -f ~/.bashrc ]; then
+#    . ~/.bashrc
+#  fi
+#fi
 
 mesg n || true
-clear
-neofetch
-END
-chmod 644 /root/.profile
+#clear
+#neofetch
+#END
+#chmod 644 /root/.profile
+
+# install
+apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl neofetch git lsof
 
 # // Version
-source /etc/os-release
-OS=$ID
-ver=$VERSION_ID
+#source /etc/os-release
+#OS=$ID
+#ver=$VERSION_ID
 
 # // Install nginx Debian / Ubuntu
 #if [[ $OS == 'debian' ]]; then
-         sudo apt install gnupg2 ca-certificates lsb-release -y 
-         echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-         echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-         curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-         # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-         sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-         sudo apt update
-         sudo apt update 
-         apt -y install nginx 
-         systemctl daemon-reload
-         systemctl enable nginx
+#         sudo apt install gnupg2 ca-certificates lsb-release -y 
+ #        echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+ #        echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+#         curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+#         # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+ #        sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+  #       sudo apt update
+ #        sudo apt update 
+ #        apt -y install nginx 
+ #        systemctl daemon-reload
+ #        systemctl enable nginx
 #elif [[ $OS == 'ubuntu' ]]; then
-         sudo apt install gnupg2 ca-certificates lsb-release -y 
-	 echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-	 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
-	 curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-	 # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-	 sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-	 sudo apt update
-         apt -y install nginx 
-         systemctl daemon-reload
-         systemctl enable nginx
+ #        sudo apt install gnupg2 ca-certificates lsb-release -y 
+#	 echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+#	 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+#	 curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+#	 # gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+#	 sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+#	 sudo apt update
+#         apt -y install nginx 
+#         systemctl daemon-reload
+#         systemctl enable nginx
 #fi
 
 # // Install Nginx
