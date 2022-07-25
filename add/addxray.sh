@@ -48,14 +48,15 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 			exit 1
 		fi
 	done
-uuid=$(cat /proc/sys/kernel/random/uuid)
+
 read -p "Expired (days): " masaaktif
 read -p "SNI (bug) : " sni
 read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " sub
 dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
-email=${user}@${domain}
+email=${user}
+uuid=$(cat /proc/sys/kernel/random/uuid)
 
 #       echo -e "${user} ${exp} ${uuid}" >> /etc/mon/xray/clients.txt
 	echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
@@ -84,7 +85,8 @@ cat /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.cl
 # // Link Xtls
 IP=$( curl -s ipinfo.io/ip )
 cat <<EOF >>"/etc/mon/config-user/${user}"
-vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user
+vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user@manVPN
+
 EOF
 
 # // CONF
@@ -94,7 +96,7 @@ vl3="vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=tcp&${sni}#${use
 
 #tr0="trojan://$uuid@$dom:$xtls?sni=$sni#$user"
 #tr1="trojan://$uuid@$dom:8445?mode=gun&security=tls&type=grpc&serviceName=trgrpc&sni=${sni}#$user"
-vl4="vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user"
+#vl4="vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user"
 #tr2="trojan://$uuid@$dom:$xtls?security=xtls&headerType=none&type=tcp&flow=xtls-rprx-direct&sni=$sni#$user"
 systemctl restart xray.service
 clear
@@ -109,7 +111,7 @@ echo -e "Sni            : ${sni}"
 echo -e "port           : $xtls"
 echo -e "id             : ${uuid}"
 echo -e "================================="
-echo -e "Vless Xtls     : ${vl4}"
+echo -e "Vless Xtls     : vless://$uuid@$dom:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user@manVPN"
 echo -e "================================="
 echo -e "Vless Tcp-TLS  : ${vl3}"
 echo -e "================================="
