@@ -9,7 +9,7 @@ Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_p
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 
 clear
-domain=$(cat /etc/xray/domain)
+domain=$(cat /etc/mon/xray/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
@@ -262,8 +262,8 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           ],
           "certificates": [
             {
-              "certificateFile": "/etc/xray/xray.crt",
-              "keyFile": "/etc/xray/xray.key",
+              "certificateFile": "/etc/mon/xray/xray.crt",
+              "keyFile": "/etc/mon/xray/xray.key",
               "ocspStapling": 3600,
               "usage": "encipherment"
            }
@@ -570,10 +570,6 @@ LimitNPROC=10000
 LimitNOFILE=1000000
 [Install]
 WantedBy=multi-user.target
-EOF
-
-cat <<EOF > /etc/xray/clients.txt
-                  user xray
 EOF
 
 # // xray
