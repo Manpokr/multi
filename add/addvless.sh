@@ -48,14 +48,15 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
 			exit 1
 		fi
 	done
-uuid=$(cat /proc/sys/kernel/random/uuid)
+
 read -p "Expired (days): " masaaktif
 read -p "SNI (bug) : " sni
 read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " sub
 dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
-email=${user}@${domain}
+email=${user}
+uuid=$(cat /proc/sys/kernel/random/uuid)
 
 echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
@@ -66,12 +67,12 @@ echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 # // Link Xtls
 IP=$( curl -s ipinfo.io/ip )
 cat <<EOF >>"/etc/mon/config-user/${user}"
-vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$sni#$user
+vless://$uuid@$dom:$xtls?encryption=none&security=xtls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user@manVPN
 
 EOF
 
 # // CONF
-vl1="vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$sni#$user"
+#vl1="vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$sni#$user"
 
 systemctl restart vl-wstls.service
 clear
@@ -86,7 +87,7 @@ echo -e "Sni            : ${sni}"
 echo -e "port           : $xtls"
 echo -e "id             : ${uuid}"
 echo -e "================================="
-echo -e "Vless Ws-Tls   : ${vl1}"
+echo -e "Vless Ws-Tls   : vless://$uuid@$dom:$xtls?encryption=none&security=xtls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user@manVPN"
 echo -e "================================="
 echo -e "Created        : $hariini"
 echo -e "Expired On     : $exp"
