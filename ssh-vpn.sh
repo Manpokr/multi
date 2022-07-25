@@ -117,7 +117,7 @@ OS=$ID
 ver=$VERSION_ID
 
 # // Install nginx Debian / Ubuntu
-if [[ $OS == 'debian' ]]; then
+#if [[ $OS == 'debian' ]]; then
          sudo apt install gnupg2 ca-certificates lsb-release -y 
          echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
          echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
@@ -129,7 +129,7 @@ if [[ $OS == 'debian' ]]; then
          apt -y install nginx 
          systemctl daemon-reload
          systemctl enable nginx
-elif [[ $OS == 'ubuntu' ]]; then
+#elif [[ $OS == 'ubuntu' ]]; then
          sudo apt install gnupg2 ca-certificates lsb-release -y 
 	 echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
 	 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
@@ -140,24 +140,24 @@ elif [[ $OS == 'ubuntu' ]]; then
          apt -y install nginx 
          systemctl daemon-reload
          systemctl enable nginx
-fi
+#fi
 
 # // Install Nginx
-sudo pkill -f nginx & wait $!
-systemctl stop nginx
-sudo apt install gnupg2 ca-certificates lsb-release -y
-apt -y install nginx 
+#sudo pkill -f nginx & wait $!
+#systemctl stop nginx
+#sudo apt install gnupg2 ca-certificates lsb-release -y
+#apt -y install nginx 
 
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-#mkdir -p /home/vps/public_html
+mkdir -p /home/vps/public_html
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
 
-systemctl daemon-reload
-systemctl enable nginx
+#systemctl daemon-reload
+#systemctl enable nginx
 
-touch /etc/nginx/conf.d/alone.conf
+#touch /etc/nginx/conf.d/alone.conf
 
-cat <<EOF >>/etc/nginx/conf.d/alone.conf
+#cat <<EOF >>/etc/nginx/conf.d/alone.conf
 		server {
 				listen 81;
 				server_name _;
@@ -224,16 +224,16 @@ server {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
 	}
 }
-EOF
+#EOF
 
 # // move
-sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
-sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
-sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
+#sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
+#sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
+#sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
 
 # // System Nginx
-mkdir /etc/systemd/system/nginx.service.d
-printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+#mkdir /etc/systemd/system/nginx.service.d
+#printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 
 rm /etc/nginx/conf.d/default.conf
 systemctl daemon-reload
@@ -241,11 +241,11 @@ service nginx restart
 cd
 
 # // Html
-rm -rf /usr/share/nginx/html
-wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
-unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
-rm -f /usr/share/nginx/html.zip*
-chown -R www-data:www-data /usr/share/nginx/html
+#rm -rf /usr/share/nginx/html
+#wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
+#unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
+#rm -f /usr/share/nginx/html.zip*
+#chown -R www-data:www-data /usr/share/nginx/html
 
 # // install badvpn
 cd
