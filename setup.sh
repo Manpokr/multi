@@ -92,6 +92,8 @@ rm -f /root/ohp.sh
 rm -f /root/cert.sh
 rm -f /root/domain
 rm -f /root/cf.sh
+
+systemctl daemon-reload
 history -c
 clear
 
