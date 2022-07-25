@@ -149,7 +149,7 @@ sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 #  fi
 #fi
 
-mesg n || true
+#mesg n || true
 #clear
 #neofetch
 #END
