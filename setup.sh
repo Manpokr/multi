@@ -33,20 +33,20 @@ clear
 mkdir -p /etc/mon
 mkdir -p /etc/mon/xray
 mkdir -p /etc/mon/v2ray
-mkdir -p /etc/tls
-mkdir -p /etc/config-url
-mkdir -p /etc/config-user
+mkdir -p /etc/mon/tls
+mkdir -p /etc/mon/config-url
+mkdir -p /etc/mon/config-user
 mkdir -p /etc/mon/xray/conf
 mkdir -p /etc/mon/v2ray/conf
 mkdir -p /etc/systemd/system/
 mkdir -p /var/log/xray/
 mkdir -p /var/log/v2ray/
 mkdir /var/lib/manpokr;
-touch /etc/xray/clients.txt
-touch /etc/v2ray/clients.txt
+touch /etc/mon/xray/clients.txt
+touch /etc/mon/v2ray/clients.txt
 
 # // Update
-apt-get update && apt-get upgrade -y && update-grub -y
+apt-get update -y && apt-get upgrade -y && update-grub -y
 clear
 
 # // CloudFlare
@@ -62,14 +62,17 @@ secs_to_human() {
 }
 start=$(date +%s)
 
+# // Instal Xray
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
+
 # // Install ssh ovpn
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 # // Install v2ray Trojan
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
 
 # // Instal Xray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
 $# // Instal V2ray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
