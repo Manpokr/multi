@@ -126,6 +126,27 @@ unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html
 rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
+# // Install Cert
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
+sleep 2
+
+cd /root/
+wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+bash acme.sh --install
+rm acme.sh
+
+cd .acme.sh
+sudo bash acme.sh --upgrade --auto-upgrade
+sudo bash acme.sh --set-default-ca --server letsencrypt
+sudo bash acme.sh --register-account -m anjang614@gmail.com
+sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/mon/tls/$domain.log
+sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+
+cat /etc/mon/tls/$domain.log
+systemctl daemon-reload
+systemctl restart nginx
+service squid start
 # // Xray Version
 #version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
 version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
