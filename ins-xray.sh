@@ -38,17 +38,36 @@ neofetch
 END
 chmod 644 /root/.profile
 
-# install NGINX webserver
-sudo apt install gnupg2 ca-certificates lsb-release -y 
-echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-sudo apt update 
-apt -y install nginx 
-systemctl daemon-reload
-systemctl enable nginx
+# // Version
+source /etc/os-release
+OS=$ID
+ver=$VERSION_ID
+
+# // Install nginx Debian / Ubuntu
+if [[ $OS == 'debian' ]]; then
+         sudo apt install gnupg2 ca-certificates lsb-release -y
+         echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+         echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+         curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
+        #  gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+         sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+         sudo apt update
+         sudo apt update
+         apt -y install nginx
+         systemctl daemon-reload
+         systemctl enable nginx
+elif [[ $OS == 'ubuntu' ]]; then
+         sudo apt install gnupg2 ca-certificates lsb-release -y
+         echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+         echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+         curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
+        #  gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+         sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+         sudo apt update
+         apt -y install nginx
+         systemctl daemon-reload
+         systemctl enable nginx
+fi
 
 # //
 sudo pkill -f nginx & wait $!
@@ -125,7 +144,7 @@ rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
 rm -f /usr/share/nginx/html.zip*
-chown -R www-data:www-data /usr/share/nginx/html
+#chown -R www-data:www-data /usr/share/nginx/html
 
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 mkdir -p /home/vps/public_html
