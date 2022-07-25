@@ -32,8 +32,8 @@ timedatectl set-timezone Asia/Kuala_Lumpur
 date
 
 sleep 0.5
-domain=$(cat /etc/xray/domain)
-source /var/lib/premium-script/ipvps.conf
+domain=$(cat /etc/mon/xray/domain)
+source /var/lib/manpokr/ipvps.conf
 domain=$IP
 
 # // ###
@@ -53,10 +53,10 @@ systemctl stop xray
 systemctl stop xray.service
 systemctl stop trojan
 systemctl stop trojan.service
-
+cd acme.sh
 bash acme.sh --set-default-ca --server letsencrypt
 bash acme.sh --issue -d $domain --standalone -k ec-256 --listen-v6 --force
-bash acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 sleep 2
 
 systemctl daemon-reload
