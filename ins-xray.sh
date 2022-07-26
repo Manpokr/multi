@@ -8,9 +8,26 @@ LIGHT='\033[0;37m'
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 
+apt install iptables iptables-persistent -y
+apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
+apt install socat cron bash-completion ntpdate -y
+ntpdate pool.ntp.org
+apt -y install chrony
+apt -y install unzip
+apt -y install tar
+apt -y install binutils
+apt -y install sudo
+timedatectl set-ntp true
+systemctl enable chronyd && systemctl restart chronyd
+systemctl enable chrony && systemctl restart chrony
+timedatectl set-timezone Asia/Kuala_Lumpur
+chronyc sourcestats -v
+chronyc tracking -v
+date
 
-
-curl -s https://get.acme.sh | sh -s >
+sudo apt remove --purge nginx*
+sudo apt autoremove
+sudo apt update
 
 sudo apt install gnupg2 ca-certificates lsb-release -y 
 echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
@@ -110,6 +127,7 @@ curl https://get.acme.sh | sh -s email=anjang614@gmail.com
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 cd
+
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
