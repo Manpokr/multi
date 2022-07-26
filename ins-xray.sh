@@ -43,7 +43,7 @@ apt -y install unzip
 apt -y install tar
 apt -y install binutils
 apt -y install sudo
-apt install neofetch
+apt -y install neofetch
 
 sudo apt remove --purge nginx*
 sudo apt autoremove
