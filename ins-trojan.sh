@@ -34,18 +34,22 @@ systemctl stop nginx
 sleep 2
 
 curl https://get.acme.sh | sh -s email=anjang614@gmail.com 
-sudo pkill -f nginx & wait $!
-systemctl stop nginx
-sleep 2
-/root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
+
 /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/mon/tls/$domain.log
+/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
-cat /etc/mon/tls/$domain.log
+cat /etc/mon/xray/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 service squid start
+
+
+#/root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
+#/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+#/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/mon/tls/$domain.log
+#~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 # // Cp Json
 uuid=$(cat /proc/sys/kernel/random/uuid)
