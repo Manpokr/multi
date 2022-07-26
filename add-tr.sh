@@ -16,7 +16,7 @@ clear
 # // Add User
 uuid=$(cat /etc/trojan/uuid.txt)
 source /var/lib/manpokr/ipvps.conf
-domain=$(cat /etc/xray/domain)
+domain=$(cat /etc/mon/xray/domain)
 tr="$(cat ~/log-install.txt | grep -i "Trojan-GFW" | cut -d: -f2|sed 's/ //g')"
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${user_EXISTS} == '0' ]]; do
 		read -rp "Password: " -e user
