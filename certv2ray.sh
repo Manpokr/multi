@@ -53,7 +53,7 @@ systemctl stop trojan.service
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
-cat /etc/rare/tls/$domain.log
+cat /etc/mon/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 systemctl restart xray
