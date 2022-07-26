@@ -160,9 +160,14 @@ service nginx restart
 cd
 
 # CertV2ray
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
 curl https://get.acme.sh | sh -s email=anjang614@gmail.com 
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+cat /etc/mon/tls/$domain.log
+systemctl daemon-reload
+systemctl restart nginx
 
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
