@@ -23,7 +23,7 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 
 # // Cek Scripts
-if [ -f "/etc/xray/domain" ]; then
+if [ -f "/etc/mon/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
@@ -37,6 +37,7 @@ read -p " Hostname / Domain: " host
 
 # // Add Folder
 clear
+mkdir -p /usr/bin/xray
 mkdir -p /etc/mon
 mkdir -p /etc/mon/xray
 mkdir -p /etc/mon/v2ray
