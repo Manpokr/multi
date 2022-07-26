@@ -62,12 +62,6 @@ echo "Manternet" >> /home/contact
 clear
 # // Update
 apt-get update -y && apt-get upgrade -y && update-grub -y
-
-sysctl -w net.ipv6.conf.all.disable_ipv6=1
-sysctl -w net.ipv6.conf.default.disable_ipv6=1
-
-
-
 clear
 
 # // CloudFlare
