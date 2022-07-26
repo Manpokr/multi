@@ -6,17 +6,6 @@ LIGHT='\033[0;37m'
 
 # // Getting
 domain=$(cat /root/domain)
-apt install iptables iptables-persistent -y
-apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install socat cron bash-completion ntpdate -y
-ntpdate pool.ntp.org
-apt -y install chrony
-timedatectl set-ntp true
-systemctl enable chronyd && systemctl restart chronyd
-systemctl enable chrony && systemctl restart chrony
-timedatectl set-timezone Asia/Kuala_Lumpur
-chronyc sourcestats -v
-chronyc tracking -v
 date
 
 # // Add Folder
@@ -26,30 +15,6 @@ touch /etc/trojan/akun.conf
 
 # // install Trojan-Gfw
 bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
-
-# // Install Cert
-apt install -y socat
-sudo pkill -f nginx & wait $!
-systemctl stop nginx
-sleep 2
-
-curl https://get.acme.sh | sh -s email=anjang614@gmail.com 
-
-/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-
-cat /etc/mon/xray/tls/$domain.log
-systemctl daemon-reload
-systemctl restart nginx
-service squid start
-
-
-#/root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
-#/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-#/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/mon/tls/$domain.log
-#~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 # // Cp Json
 uuid=$(cat /proc/sys/kernel/random/uuid)
@@ -123,13 +88,6 @@ EOF
 cat <<EOF > /etc/trojan/uuid.txt
 $uuid
 EOF
-
-sleep 1
-echo -e "[${CYAN}INFO${NC}] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
-chmod +x /usr/bin/bbr
-bbr >/dev/null 2>&1
-rm /usr/bin/bbr >/dev/null 2>&1
 
 # // IpTables
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 2087 -j ACCEPT
