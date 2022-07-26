@@ -44,6 +44,8 @@ apt -y install tar
 apt -y install binutils
 apt -y install sudo
 apt -y install neofetch
+apt -y install jq
+apt -y install inetutils-ping
 
 sudo apt remove --purge nginx*
 sudo apt autoremove
