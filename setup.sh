@@ -27,17 +27,9 @@ if [ -f "/etc/mon/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
-sleep 5
-clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "$green Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
-echo -e "$green Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-read -p " Hostname / Domain: " host
 
 # // Add Folder
 clear
-mkdir -p /usr/bin/xray
 mkdir -p /etc/mon
 mkdir -p /etc/mon/xray
 mkdir -p /etc/mon/v2ray
@@ -53,9 +45,6 @@ mkdir /var/lib/manpokr;
 touch /etc/mon/xray/clients.txt
 touch /etc/mon/v2ray/clients.txt
 
-echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
-echo "$host" >> /etc/mon/xray/domain
-echo "$host" >> /root/domain
 echo "2.0 Beta" >> /home/version
 echo "Manternet" >> /home/contact
 
@@ -75,18 +64,14 @@ secs_to_human() {
 }
 start=$(date +%s)
 
-
-# // Install ssh ovpn
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
+# // Instal Xray
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
 # // Install v2ray Trojan
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
 
-# // Instal Xray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
-
-# // Instal Xray
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
+# // Install ssh ovpn
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 $# // Instal V2ray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
