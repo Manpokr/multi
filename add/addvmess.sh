@@ -31,48 +31,47 @@ echo -e "\e[31mDaftar IP dalam github lok sayang okay? mun dah daftar tapi masih
 exit 0                                                                                                                                                                                                          
 fi         
                                                                                                                                                                                                      
-function add-user() {                                                                                                                                                                                           
-        clear                                                                                                                                                                                                   
-        read -p "Username  : " user                                                                                                                                                                             
-        if grep -qw "$user" /etc/mon/xray/clients.txt; then                                                                                                                                                     
-                echo -e ""                                                                                                                                                                                      
-                echo -e "User ${RED}$user${NC} already exist"                                                                                                                                                   
-                echo -e ""                                                                                                                                                                                      
-        echo ""                                                                                                                                                                                                 
-        read -n 1 -s -r -p "Press any key to back on menu"                                                                                                                                                      
-        xray-menu                                                                                                                                                                                               
-        fi                                                                                                                                                                                                      
-    read -p " Bug : " sni                                                                                                                                                                                  
-        read -p "Duration (day) : " duration                                                                                                                                                                    
-        uuid=$(cat /proc/sys/kernel/random/uuid)                                                                                                                                                                
-        exp=$(date -d +${duration}days +%Y-%m-%d)                                                                                                                                                               
-        expired=$(date -d "${exp}" +"%d %b %Y")                                                                                                                                                                 
-        hariini=$(date -d "0 days" +"%d-%b-%Y")                                                                                                                                                                 
-        domain=$(cat /etc/mon/xray/domain)                                                                                                                                                                      
-        xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"                                                                                                           
-        email=${user}                                                                                                                                                                                           
-    cat>/etc/mon/xray/tls.json<<EOF                                                                                                                                                                             
-      {                                                                                                                                                                                                         
-       "v": "2",                                                                                                                                                                                                
-       "ps": "${user}",                                                                                                                                                                                         
-       "add": "${domain}",                                                                                                                                                                                      
-       "port": "${xtls}",                                                                                                                                                                                       
-       "id": "${uuid}",                                                                                                                                                                                         
-       "aid": "0",                                                                                                                                                                                              
-       "scy": "auto",                                                                                                                                                                                           
-       "net": "ws",                                                                                                                                                                                             
-       "type": "none",                                                                                                                                                                                          
-       "host": "${sni}",                                                                                                                                                                                        
-       "path": "/xrayvws",                                                                                                                                                                                      
-       "tls": "tls",                                                                                                                                                                                            
-       "sni": "${sni}"                                                                                                                                                                                          
-}                                                                                                                                                                                                               
-EOF                                                                                                                                                                                                             
-
-    vmess_base641=$( base64 -w 0 <<< $vmess_json1)                                                                                                                                                              
-    vmesslink1="vmess://$(base64 -w 0 /etc/mon/xray/tls.json)"                                                                                                                                                  
-        echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
-
+	clear
+    echo ""
+	read -p "Username  : " user
+	if grep -qw "$user" /etc/mon/xray/clients.txt; then
+		echo -e ""
+		echo -e "User ${RED}$user${NC} already exist"
+		echo -e ""
+		echo -e "\034[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+        echo ""
+        read -n 1 -s -r -p "Press any key to back on menu"
+        xray-menu
+	fi
+    read -p "BUG TELCO : " sni
+	read -p "Duration (day) : " duration
+	uuid=$(cat /proc/sys/kernel/random/uuid)
+	exp=$(date -d +${duration}days +%Y-%m-%d)
+	expired=$(date -d "${exp}" +"%d %b %Y")
+        hariini=$(date -d "0 days" +"%d-%b-%Y")
+	domain=$(cat /etc/mon/xray/domain)
+	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
+	email=${user}
+    cat>/etc/mon/xray/tls.json<<EOF
+      {
+       "v": "2",
+       "ps": "${user}",
+       "add": "${domain}",
+       "port": "${xtls}",
+       "id": "${uuid}",
+       "aid": "0",
+       "scy": "auto",
+       "net": "ws",
+       "type": "none",
+       "host": "${sni}",
+       "path": "/xrayvws",
+       "tls": "tls",
+       "sni": "${sni}"
+}
+EOF
+    vmess_base641=$( base64 -w 0 <<< $vmess_json1)
+    vmesslink1="vmess://$(base64 -w 0 /etc/mon/xray/tls.json)"
+	echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
     cat /etc/mon/xray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json /etc/mon/xray/conf/05_VMess_WS_inbounds.json
@@ -80,19 +79,18 @@ EOF
     cat <<EOF >>"/etc/mon/config-user/${user}"
 ${vmesslink1}
 EOF
-
     cat <<EOF >>"/etc/mon/config-url/${user}"
 # =======================================
 # XRAY CORE CONFIG MERLIN CLASH ASUS
 # telegram: Manternet
 # =======================================
 proxies:
-  - {name: VLess Splice ${user}, server: $domain, port: $xtls, type: vless, flow: xtls-rprx-splice, uuid: $uuid, cipher: auto, tls: true, skip-cert-verify: true, network: tcp, sni: $sni, udp: true}
-  - {name: VLess Direct ${user}, server: $domain, port: $xtls, type: vless, flow: xtls-rprx-direct, uuid: $uuid, cipher: auto, tls: true, skip-cert-verify: true, network: tcp, sni: $sni, udp: true}
-  - {name: VLess WS ${user}, server: $domain, port: $xtls, type: vless, flow: xtls-rprx-direct, uuid: $uuid, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-path: /xrayws, ws-headers: {Host: $sni}, sni: $sni, udp: true}
-  - {name: Trojan ${user}, server: $domain, port: $xtls, type: trojan, password: $uuid, sni: $sni, skip-cert-verify: true, udp: true}
-  - {name: VMess ${user}, server: $domain, port: $xtls, type: vmess, uuid: $uuid, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-path: /xrayvws, ws-headers: {Host: $sni}, udp: true}
-  - {name: VMess SNI ${user}, server: $domain, port: $xtls, type: vmess, uuid: $uuid, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-path: /xrayvws, ws-headers: {Host: $sni}, sni: $sni, udp: true}
+  - {name: VLess Splice ${user}, server: $domain, port: $xtls, type: vless, flow: xtls-rprx-splice, uuid: $uuid, cipher: auto, tls: true, skip-cert-verify: true, network: tcp, sni: $BUG, udp: true}
+  - {name: VLess Direct ${user}, server: $domain, port: $xtls, type: vless, flow: xtls-rprx-direct, uuid: $uuid, cipher: auto, tls: true, skip-cert-verify: true, network: tcp, sni: $BUG, udp: true}
+  - {name: VLess WS ${user}, server: $domain, port: $xtls, type: vless, flow: xtls-rprx-direct, uuid: $uuid, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-path: /xrayws, ws-headers: {Host: $BUG}, sni: $BUG, udp: true}
+  - {name: Trojan ${user}, server: $domain, port: $xtls, type: trojan, password: $uuid, sni: $BUG, skip-cert-verify: true, udp: true}
+  - {name: VMess ${user}, server: $domain, port: $xtls, type: vmess, uuid: $uuid, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-path: /xrayvws, ws-headers: {Host: $BUG}, udp: true}
+  - {name: VMess SNI ${user}, server: $domain, port: $xtls, type: vmess, uuid: $uuid, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-path: /xrayvws, ws-headers: {Host: $BUG}, sni: $BUG, udp: true}
 port: 3333
 socks-port: 23456
 redir-port: 23457
@@ -214,14 +212,13 @@ tproxy-port: 23458
 EOF
 	base64Result=$(base64 -w 0 /etc/mon/config-user/${user})
     echo ${base64Result} >"/etc/mon/config-url/${uuid}"
-
     systemctl restart xray.service
     echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
-
     sleep 2
     clear
+
     echo -e "=================================" 
-    echo -e "      XRAY VMESS USER INFO " 
+    echo -e "     XRAY USER INFORMATION " 
     echo -e "=================================" 
     echo -e " Username : $user" 
     echo -e " IP/Host  : ${MYIP}" 
@@ -237,6 +234,3 @@ EOF
     echo -e "================================="
     echo -e " ScriptMod By Manternet "
     echo ""
-    read -n 1 -s -r -p "Press any key to back on menu"
-    xray-menu   
-}
