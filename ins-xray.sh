@@ -13,10 +13,6 @@ apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dns
 apt install socat cron bash-completion ntpdate -y
 ntpdate pool.ntp.org
 apt -y install chrony
-apt -y install unzip
-apt -y install tar
-apt -y install binutils
-apt -y install sudo
 timedatectl set-ntp true
 systemctl enable chronyd && systemctl restart chronyd
 systemctl enable chrony && systemctl restart chrony
@@ -25,10 +21,32 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
+apt -y install unzip
+apt -y install tar
+apt -y install binutils
+apt -y install sudo
+apt install neofetch
+
 sudo apt remove --purge nginx*
 sudo apt autoremove
 sudo apt update
 
+# // Install
+apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
+cat> /root/.profile << END
+# ~/.profile: executed by Bourne-compatible login shells.
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+mesg n || true
+clear
+neofetch
+END
+chmod 644 /root/.profile
+
+# // Nginx
 sudo apt install gnupg2 ca-certificates lsb-release -y 
 echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
 echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
