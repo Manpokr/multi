@@ -53,7 +53,7 @@ bl='\e[36;1m'
 
 # // VPS Information
 # // Domain
-domain=$(cat /etc/xray/domain)
+domain=$(cat /etc/mon/xray/domain)
 
 # // Status certificate
 modifyTime=$(stat $HOME/.acme.sh/${domain}_ecc/${domain}.key | sed -n '7,6p' | awk '{print $2" "$3" "$4" "$5}')
@@ -138,7 +138,7 @@ echo -e "\e[5;33m Date                    :\033[m  $DATE"
 echo -e "\e[5;33m Telegram                :\033[m  $tele"
 echo -e "\e[5;33m Bash Version            :\033[m ${PURPLE}$versibash${NC}"                                                                                                                                                                                                 
 echo -e "\e[5;33m Xray Version            :\033[m  ${PURPLE}$verxray${NC}"                                                                                                                                                                                                 
-echo -e "\e[5;33m V2ray Version           :\033[m  ${PURPLE}$verv2ray${NC}"                                                                                                                                                                                                
+#echo -e "\e[5;33m V2ray Version           :\033[m  ${PURPLE}$verv2ray${NC}"                                                                                                                                                                                                
 echo -e "\e[5;33m Script Version          :\033[m  ${BLUE}$Sver${NC}"
 echo -e "\e[5;33m Certificate status      :\033[m  \e[33mExpired in ${tlsStatus} days\e[0m"
 echo -e "\033[5;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[37m"
