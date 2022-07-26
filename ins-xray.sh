@@ -7,6 +7,9 @@ NC='\033[0;37m'
 LIGHT='\033[0;37m'
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
+source /etc/os-release
+release=$ID
+ver=$VERSION_ID
 
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
@@ -47,13 +50,23 @@ END
 chmod 644 /root/.profile
 
 # // Nginx
-sudo apt install gnupg2 ca-certificates lsb-release -y 
-echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-sudo apt update 
+	if [[ "${release}" == "debian" ]]; then
+		sudo apt install gnupg2 ca-certificates lsb-release -y 
+		echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
+		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+		sudo apt update
+
+	elif [[ "${release}" == "ubuntu" ]]; then
+		sudo apt install gnupg2 ca-certificates lsb-release -y
+		echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+		sudo apt update 
 
 systemctl daemon-reload
 systemctl enable nginx
