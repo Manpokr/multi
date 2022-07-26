@@ -77,7 +77,7 @@ chmod 644 /root/.profile
 		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
 		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
 		sudo apt update 
-
+fi
 systemctl daemon-reload
 systemctl enable nginx
 
