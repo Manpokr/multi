@@ -2,19 +2,24 @@
 # Xray Auto Setup 
 # =========================
 RED='\033[0;31m'                                                                                          
-GREEN='\033[0;32m'                                                                                                                                                                                 
+GREEN='\033[0;32m'                                                                                        
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'                                                                                         
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'                                                                                         
 NC='\033[0;37m'
 LIGHT='\033[0;37m'
+
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 source /etc/os-release
 release=$ID
 ver=$VERSION_ID
 
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "$green Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
-echo -e "$green Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
+echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
+echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 read -p " Hostname / Domain: " host
 echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
 echo "$host" >> /etc/mon/xray/domain
