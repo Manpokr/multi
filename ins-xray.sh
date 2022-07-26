@@ -11,6 +11,16 @@ source /etc/os-release
 release=$ID
 ver=$VERSION_ID
 
+echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "$green Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
+echo -e "$green Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
+echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+read -p " Hostname / Domain: " host
+echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
+echo "$host" >> /etc/mon/xray/domain
+echo "$host" >> /root/domain
+domain=$(cat /etc/mon/xray/domain)
+
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
@@ -70,17 +80,6 @@ chmod 644 /root/.profile
 
 systemctl daemon-reload
 systemctl enable nginx
-
-clear
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "$green Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
-echo -e "$green Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
-echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-read -p " Hostname / Domain: " host
-echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
-echo "$host" >> /etc/mon/xray/domain
-echo "$host" >> /root/domain
-domain=$(cat /etc/mon/xray/domain)
 
 # // Install nginx
 sudo pkill -f nginx & wait $!
