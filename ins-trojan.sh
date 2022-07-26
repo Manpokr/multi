@@ -6,7 +6,6 @@ LIGHT='\033[0;37m'
 
 # // Getting
 domain=$(cat /root/domain)
-
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
@@ -62,8 +61,8 @@ cat <<EOF > /etc/trojan/config.json
     ],
     "log_level": 1,
     "ssl": {
-        "cert": "/etc/xray/xray.crt",
-        "key": "/etc/xray/xray.key",
+        "cert": "/etc/mon/xray/xray.crt",
+        "key": "/etc/mon/xray/xray.key",
         "key_password": "",
         "cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384",
         "cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
@@ -120,6 +119,13 @@ EOF
 cat <<EOF > /etc/trojan/uuid.txt
 $uuid
 EOF
+
+sleep 1
+echo -e "[${CYAN}INFO${NC}] Installing bbr.."
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+chmod +x /usr/bin/bbr
+bbr >/dev/null 2>&1
+rm /usr/bin/bbr >/dev/null 2>&1
 
 # // IpTables
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 2087 -j ACCEPT
