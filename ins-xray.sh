@@ -149,27 +149,16 @@ chown -R www-data:www-data /usr/share/nginx/html
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 mkdir -p /home/vps/public_html
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-#chown -R nobody:nogroup /home/vps/public_html
-chown -R www-data:www-data /home/vps/public_html
+#chown -R www-data:www-data /home/vps/public_html
 
 # // Xray Version
 #version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
 version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
 
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
-
-
-cd `mktemp -d`
-curl -sL "$xraycore_link" -o xray.zip
-unzip -q xray.zip && rm -rf xray.zip
-mv xray /etc/mon/xray
-chmod +x /etc/mon/xray/xray
-
-
-#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
-#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-#rm -rf /etc/mon/xray/Xray-linux-64.zip
-#chmod 655 /etc/mon/xray/Xray
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
+unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+rm -rf /etc/mon/xray/Xray-linux-64.zip
+chmod 655 /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
