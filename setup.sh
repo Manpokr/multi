@@ -46,16 +46,13 @@ touch /etc/mon/xray/clients.txt
 touch /etc/mon/v2ray/clients.txt
 
 # // Update
-apt-get update -y && apt-get upgrade -y
+apt-get update -y && apt-get upgrade -y && update-grub -y
 
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sysctl -w net.ipv6.conf.default.disable_ipv6=1
-sysctl -w net.ipv6.conf.lo.disable_ipv6=1
-echo -e "net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
 
-#&& update-grub -y
+
+
 clear
 
 # // CloudFlare
