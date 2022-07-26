@@ -27,6 +27,13 @@ if [ -f "/etc/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
+sleep 5
+clear
+echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "$green Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
+echo -e "$green Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
+echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+read -p " Hostname / Domain: " host
 
 # // Add Folder
 clear
@@ -45,6 +52,13 @@ mkdir /var/lib/manpokr;
 touch /etc/mon/xray/clients.txt
 touch /etc/mon/v2ray/clients.txt
 
+echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
+echo "$host" >> /etc/mon/xray/domain
+echo "$host" >> /root/domain
+echo "2.0 Beta" >> /home/version
+echo "Manternet" >> /home/contact
+
+clear
 # // Update
 apt-get update -y && apt-get upgrade -y && update-grub -y
 
@@ -56,11 +70,9 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1
 clear
 
 # // CloudFlare
-wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
-echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
-echo "2.0 Beta" >> /home/version
-echo "Manternet" >> /home/contact
-clear
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
+#echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
+
 
 # // Start
 secs_to_human() {
@@ -68,14 +80,15 @@ secs_to_human() {
 }
 start=$(date +%s)
 
-# // Instal Xray
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
 # // Install ssh ovpn
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 # // Install v2ray Trojan
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
+
+# // Instal Xray
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
 # // Instal Xray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
