@@ -47,13 +47,20 @@ sudo pkill -f nginx & wait $!
 systemctl stop nginx
 systemctl stop xray
 systemctl stop xray.service
+systemctl stop trojan
+systemctl stop trojan.service
 
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/mon/tls/$domain.log
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
+cat /etc/rare/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
-systemctl daemon-reload
+systemctl restart xray
+systemctl restart xray.service
+systemctl restart trojan
+systemctl restart trojan.service
+
 #cd .acme.sh
 
 
