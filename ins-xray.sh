@@ -52,10 +52,7 @@ if [[ $OS == 'debian' ]]; then
         #  gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
          sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
          sudo apt update
-         sudo apt update
-         apt -y install nginx
-         systemctl daemon-reload
-         systemctl enable nginx
+         
 elif [[ $OS == 'ubuntu' ]]; then
          sudo apt install gnupg2 ca-certificates lsb-release -y
          echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
@@ -64,9 +61,7 @@ elif [[ $OS == 'ubuntu' ]]; then
         #  gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
          sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
          sudo apt update
-         apt -y install nginx
-         systemctl daemon-reload
-         systemctl enable nginx
+         
 fi
 
 # //
@@ -146,9 +141,9 @@ unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html
 rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
-curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-mkdir -p /home/vps/public_html
-curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+#curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+#mkdir -p /home/vps/public_html
+#curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
 #chown -R www-data:www-data /home/vps/public_html
 
 # // Xray Version
