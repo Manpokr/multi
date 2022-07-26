@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 RED='\033[0;31m' 
 NC='\033[0m' 
 GREEN='\033[0;32m' 
@@ -27,69 +27,49 @@ exit 0
 fi
 clear
 
-# // Add Xtls
-IP=$( curl -s ipinfo.io/ip );
-clear
-source /var/lib/manpokr/ipvps.conf
-if [[ "$IP" = "" ]]; then
-domain=$(cat /etc/mon/xray/domain)
-else
-domain=$(cat /etc/mon/xray/domain)
-fi
+# // Add Vless
+echo ""
+        read -p "Username  : " user
+	if grep -qw "$user" /etc/mon/xray/clients.txt; then
+		echo -e ""
+		echo -e "User ${RED}$user${NC} already exist !!!"
+		exit 1
+	fi
+    read -p "SNI (BUG) : " sni
+	read -p "Duration (day) : " duration
+	uuid=$(cat /proc/sys/kernel/random/uuid)
+	exp=$(date -d +${duration}days +%Y-%m-%d)
+	expired=$(date -d "${exp}" +"%d %b %Y")
+        hariini=$(date -d "0 days" +"%d-%b-%Y")
+	domain=$(cat /etc/mon/xray/domain)
+	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
+	email=${user}
 
-xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
-		read -rp "User: " -e user
-		CLIENT_EXISTS=$(grep -w $user /etc/mon/xray/clients.txt | wc -l)
-
-		if [[ ${CLIENT_EXISTS} == '1' ]]; then
-			echo ""
-			echo -e " Name was already use, please choose another name ${RED}!!!${NC}"
-			exit 1
-		fi
-	done
-
-read -p "Expired (days): " masaaktif
-read -p "SNI (bug) : " sni
-read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " sub
-dom=$sub$domain
-exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
-hariini=`date -d "0 days" +"%Y-%m-%d"`
-email=${user}
-uuid=$(cat /proc/sys/kernel/random/uuid)
-
-echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
-
-    cat /etc/mon/xray/conf/03_VLESS_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json
-	mv -f /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
-
-    
-# // Link Xtls
-IP=$( curl -s ipinfo.io/ip )
-cat <<EOF >>"/etc/mon/config-user/${user}"
-vless://$uuid@$dom:$xtls?encryption=none&security=xtls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user@manVPN
-
+        echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
+        cat /etc/rare/xray/conf/03_VLESS_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","email": "'${email}'"}]' > /etc/rare/xray/conf/03_VLESS_WS_inbounds_tmp.json
+	mv -f /etc/rare/xray/conf/03_VLESS_WS_inbounds_tmp.json /etc/rare/xray/conf/03_VLESS_WS_inbounds.json
+       
+cat <<EOF >>"/etc/rare/config-user/${user}"
+vless://$uuid@$domain:$xtls?encryption=none&security=xtls&sni=$BUG&type=ws&host=$BUG&path=/xrayws#$user@IanVPN
 EOF
-
-# // CONF
-#vl1="vless://$uuid@$dom:$xtls?security=tls&encryption=none&type=ws&headerType=none&path=/xrayws&sni=$sni#$user"
-
-systemctl restart vl-wstls.service
-clear
-echo -e "================================="
-echo -e "      XRAY VLESS-WS CONFIG       "
-echo -e "================================="
-echo -e "Remarks        : ${user}"
-echo -e "IP/Host        : ${IP}"
-echo -e "Domain         : ${domain}"
-echo -e "Subdomain      : ${dom}"
-echo -e "Sni            : ${sni}"
-echo -e "port           : $xtls"
-echo -e "id             : ${uuid}"
-echo -e "================================="
-echo -e "Vless Ws-Tls   : vless://$uuid@$dom:$xtls?encryption=none&security=xtls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user@manVPN"
-echo -e "================================="
-echo -e "Created        : $hariini"
-echo -e "Expired On     : $exp"
-echo -e "================================="
-echo -e "Script By Manternet"
+ 
+    systemctl restart xray.service
+    echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
+    sleep 2
+    echo -e "=================================" 
+    echo -e "   XRAY VLESS USER INFORMATION " 
+    echo -e "=================================" 
+    echo -e " Username : $user" 
+    echo -e " IP/Host  : ${MYIP}" 
+    echo -e " Domain   : ${domain}" 
+    echo -e " Sni      : ${sni}"
+    echo -e " Port     : $xtls"
+    echo -e " id       : $uuid"
+    echo -e "================================="
+    echo -e " Vless TLS : vless://$uuid@$BUG.$domain:$xtls?encryption=none&security=xtls&sni=$BUG&type=ws&host=$BUG&path=/xrayws#$user@IanVPN"
+    echo -e "================================="
+    echo -e " Created      : $hariini"
+    echo -e " Expired date : $expired"
+    echo -e "================================="
+    echo -e " ScriptMod By Manternet "
+    echo ""
