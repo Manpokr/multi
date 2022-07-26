@@ -132,11 +132,6 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
             "xver": 1
            },
            {
-            "alpn": "h1",
-            "dest": 31333,
-            "xver": 0
-           },
-           {
             "alpn": "h2",
             "dest": 31302,
             "xver": 0
