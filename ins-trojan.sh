@@ -29,23 +29,21 @@ touch /etc/trojan/akun.conf
 bash -c "$(wget -O- https://raw.githubusercontent.com/trojan-gfw/trojan-quickstart/master/trojan-quickstart.sh)"
 
 # // Install Cert
+apt install -y socat
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 sleep 2
 
-cd /root/
-wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
-bash acme.sh --install
-rm acme.sh
+curl https://get.acme.sh | sh -s email=anjang614@gmail.com 
+sudo pkill -f nginx & wait $!
+systemctl stop nginx
+sleep 2
+/root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
-cd .acme.sh
-sudo bash acme.sh --upgrade --auto-upgrade
-sudo bash acme.sh --set-default-ca --server letsencrypt
-sudo bash acme.sh --register-account -m anjang614@gmail.com
-sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
-sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
-
-cat /etc/tls/$domain.log
+cat /etc/mon/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 service squid start
