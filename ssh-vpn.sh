@@ -344,6 +344,7 @@ apt autoremove -y
 
 # // finishing
 cd
+chown -R www-data:www-data /usr/share/nginx/html
 /etc/init.d/nginx restart
 /etc/init.d/openvpn restart
 /etc/init.d/cron restart
