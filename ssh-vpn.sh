@@ -140,6 +140,9 @@ menu
 END
 chmod 644 /root/.profile
 
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+
 # // install badvpn
 cd
 wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Manpokr/multi/main/badvpn-udpgw64"
@@ -397,9 +400,9 @@ apt-get -y remove sendmail*
 apt autoremove -y
 
 # // finishing
-mkdir /home/vps/public_html
+mkdir -p /home/vps/public_html
 cd
-chown -R www-data:www-data /home/vps/public_html
+#chown -R www-data:www-data /home/vps/public_html
 /etc/init.d/nginx restart
 /etc/init.d/openvpn restart
 /etc/init.d/cron restart
