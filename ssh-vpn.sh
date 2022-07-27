@@ -125,6 +125,22 @@ date
 # // set locale
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 
+# // Install
+apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
+cat> /root/.profile << END
+# ~/.profile: executed by Bourne-compatible login shells.
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+mesg n || true
+clear
+neofetch
+END
+chmod 644 /root/.profile
+
+
 # // install badvpn
 cd
 wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Manpokr/multi/main/badvpn-udpgw64"
@@ -382,8 +398,9 @@ apt-get -y remove sendmail*
 apt autoremove -y
 
 # // finishing
+mkdir /home/vps/public_html
 cd
-chown -R www-data:www-data /usr/share/nginx/html
+chown -R www-data:www-data /home/vps/public_html
 /etc/init.d/nginx restart
 /etc/init.d/openvpn restart
 /etc/init.d/cron restart
