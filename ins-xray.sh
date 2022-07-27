@@ -181,7 +181,7 @@ chown -R www-data:www-data /usr/share/nginx/html
 cd
 
 # // Xray Version
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
 unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
 rm -rf /etc/mon/xray/Xray-linux-64.zip
 chmod 655 /etc/mon/xray/xray
