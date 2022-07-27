@@ -166,7 +166,7 @@ systemctl stop nginx
 curl https://get.acme.sh | sh
 
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
+/root/.acme.sh/acme.sh --issue -d cg34.manternet.online --standalone -k ec-256 --force --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 cat /etc/mon/tls/$domain.log
@@ -447,7 +447,7 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
       "protocol": "vmess",
       "tag": "VMessWS",
       "settings": {
-        "clients": []
+        "clients": [
          {                                                               
             "id": "${uuid}",                 
             "alterId": 0,                                                 
