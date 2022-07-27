@@ -532,6 +532,183 @@ cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
 }
 EOF
 
+cat> /etc/mon/xray/none.json << END
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 80,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "${uuid}",
+            "alterId": 32
+#none
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/xrayvws",
+          "headers": {
+            "Host": ""
+          }
+         },
+        "quicSettings": {},
+        "sockopt": {
+          "mark": 0,
+          "tcpFastOpen": true
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "domain": "$domain"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "ip": [
+          "0.0.0.0/8",
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.0.0.0/24",
+          "192.0.2.0/24",
+          "192.168.0.0/16",
+          "198.18.0.0/15",
+          "198.51.100.0/24",
+          "203.0.113.0/24",
+          "::1/128",
+          "fc00::/7",
+          "fe80::/10"
+        ],
+        "outboundTag": "blocked"
+      },
+      {
+        "type": "field",
+        "outboundTag": "blocked",
+        "protocol": [
+          "bittorrent"
+        ]
+      }
+    ]
+  }
+}
+END
+cat> /etc/mon/xray/vnone.json << END
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 8000,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "${uuid}"
+#none
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/xrayws",
+          "headers": {
+            "Host": ""
+          }
+         },
+        "quicSettings": {},
+        "sockopt": {
+          "mark": 0,
+          "tcpFastOpen": true
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "domain": "$domain"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "ip": [
+          "0.0.0.0/8",
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.0.0.0/24",
+          "192.0.2.0/24",
+          "192.168.0.0/16",
+          "198.18.0.0/15",
+          "198.51.100.0/24",
+          "203.0.113.0/24",
+          "::1/128",
+          "fc00::/7",
+          "fe80::/10"
+        ],
+        "outboundTag": "blocked"
+      },
+      {
+        "type": "field",
+        "outboundTag": "blocked",
+        "protocol": [
+          "bittorrent"
+        ]
+      }
+    ]
+  }
+}
+END
+
 cat > /etc/systemd/system/vl-xtls.service << EOF
 [Unit]
 Description=XRay Xtls Service
@@ -644,6 +821,37 @@ LimitNOFILE=1000000
 [Install]
 WantedBy=multi-user.target
 EOF
+cat > /etc/systemd/system/vm-none.service << EOF
+[Unit]
+Description=XRay vm none Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/none.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /etc/systemd/system/vl-none.service << EOF
+[Unit]
+Description=XRay Vl None Service
+Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
+After=network.target nss-lookup.target
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/vnone.json
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+[Install]
+WantedBy=multi-user.target
+EOF
 
 sleep 1
 #echo -e "[\e[32mINFO\e[0m] Installing bbr.."
@@ -661,6 +869,8 @@ iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8000 -j ACCEPT
 
 # // xray
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31230 -j ACCEPT
@@ -670,6 +880,8 @@ iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8000 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 80 -j ACCEPT
 
 iptables-save >/etc/iptables.rules.v4
 netfilter-persistent save
@@ -693,7 +905,10 @@ systemctl enable vl-grpc
 systemctl restart vl-grpc
 systemctl enable tr-xtls
 systemctl restart tr-xtls
-
+systemctl enable vm-none
+systemctl restart vm-none
+systemctl enable vl-none
+systemctl restart vl-none
 # // Download
 cd /usr/bin
 wget -O addxray "https://raw.githubusercontent.com/Manpokr/multi/main/add/addxray.sh"
