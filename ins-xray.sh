@@ -148,7 +148,7 @@ EOF
 
 # // Move
 sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
-sed -i 's/bbb/($content_type/g' /etc/nginx/conf.d/alone.conf
+sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
 sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
 
 mkdir /etc/systemd/system/nginx.service.d
