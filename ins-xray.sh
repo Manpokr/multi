@@ -50,7 +50,7 @@ apt -y install inetutils-ping
 apt -y install socat
 
 # // Nginx
-	if [[ "${release}" == "debian" ]]; then
+	#if [[ "${release}" == "debian" ]]; then
 		sudo apt install gnupg2 ca-certificates lsb-release -y 
 		echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
 		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
@@ -59,15 +59,15 @@ apt -y install socat
 		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
 		sudo apt update
 
-	elif [[ "${release}" == "ubuntu" ]]; then
-		sudo apt install gnupg2 ca-certificates lsb-release -y
-		echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+#	elif [[ "${release}" == "ubuntu" ]]; then
+#		sudo apt install gnupg2 ca-certificates lsb-release -y
+#		echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+#		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+#		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
 		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-		sudo apt update 
-fi
+#		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+#		sudo apt update 
+#fi
 systemctl daemon-reload
 systemctl enable nginx
 
@@ -276,7 +276,14 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
       "protocol": "vless",
       "tag": "VLESSTCP",
       "settings": {
-        "clients": [],
+        "clients": [
+          {                                                                                   
+            "id": "${uuid}",                                     
+            "add": "${domain}",                                                   
+            "flow": "xtls-rprx-direct",                                                       
+            "email": "manternet"                                                                    
+          }                                                                                   
+        ],
         "decryption": "none",
         "fallbacks": [
           {
@@ -337,7 +344,12 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
       "protocol": "vless",
       "tag": "VLESSWS",
       "settings": {
-        "clients": [],
+        "clients": [
+          {                                                               
+            "id": "${uuid}",                 
+            "email": "manternet"                                                
+          }                                                               
+        ],
         "decryption": "none"
       },
       "streamSettings": {
@@ -398,7 +410,12 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
       "protocol": "trojan",
       "tag": "trojanTCP",
       "settings": {
-        "clients": [],
+        "clients": [
+         {                                                               
+            "password": "${uuid}",           
+            "email": "manternet"                                                
+          }                                                               
+        ],
         "fallbacks": [
           {
             "dest": "31300"
@@ -431,6 +448,13 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
       "tag": "VMessWS",
       "settings": {
         "clients": []
+         {                                                               
+            "id": "${uuid}",                 
+            "alterId": 0,                                                 
+            "add": "${domain}",                               
+            "email": "manternet"                                                 
+          }                                                               
+        ]                                                                 
       },
       "streamSettings": {
         "network": "ws",
