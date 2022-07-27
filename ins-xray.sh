@@ -80,7 +80,7 @@ systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
 		server {
-				listen 80;
+				listen 81;
 				server_name _;
 				return 403;
         }
@@ -90,8 +90,8 @@ cat <<EOF >>/etc/nginx/conf.d/alone.conf
 				return 403;
 		}
         server {
-        	listen 80;
-        	listen [::]:80;
+        	listen 81;
+        	listen [::]:81;
         	server_name ${domain};
         	return 302 https://${domain}aaa;
         }
@@ -646,12 +646,12 @@ WantedBy=multi-user.target
 EOF
 
 sleep 1
-echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
-chmod +x /usr/bin/bbr
-bbr >/dev/null 2>&1
-rm /usr/bin/bbr >/dev/null 2>&1
-sleep 2
+#echo -e "[\e[32mINFO\e[0m] Installing bbr.."
+#wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+#chmod +x /usr/bin/bbr
+#bbr >/dev/null 2>&1
+#rm /usr/bin/bbr >/dev/null 2>&1
+#sleep 2
 
 # // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31230 -j ACCEPT
