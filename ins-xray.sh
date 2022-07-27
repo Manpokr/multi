@@ -96,48 +96,59 @@ systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
+		server {
+				listen 80;
+				server_name _;
+				return 403;
+        }
+		server {
+				listen 127.0.0.1:31300;
+				server_name _;
+				return 403;
+		}
+        server {
+        	listen 80;
+        	listen [::]:80;
+        	server_name ${domain};
+        	return 302 https://${domain}aaa;
+        }
 server {
-	listen 81;
-	listen [::]:81;
-	server_name ${domain};
-	# shellcheck disable=SC2154
-	return 301 https://${domain};
-}
-server {
-		listen 127.0.0.1:31300;
-		server_name _;
-		return 403;
-}
-server {
-	listen 127.0.0.1:31302 http2;
+	listen 127.0.0.1:31302 http2 so_keepalive=on;
 	server_name ${domain};
 	root /usr/share/nginx/html;
+
+	client_header_timeout 1071906480m;
+    keepalive_timeout 1071906480m;
+
 	location /s/ {
-    		add_header Content-Type text/plain;
-    		alias /etc/mon/config-url/;
+    	add_header Content-Type text/plain;
+    	alias /etc/mon/config-url/;
     }
-    location /xraygrpc {
-		client_max_body_size 0;
-#		keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
+
+    location /vlgrpc {
+    	if (bbb !~ "application/grpc") {
+    		return 404;
+    	}
+ 		client_max_body_size 0;
+		grpc_set_header X-Real-IP ccc;
 		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31301;
 	}
-	location /xraytrojangrpc {
-		client_max_body_size 0;
-		# keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
+
+	location /trgrpc {
+		if (bbb !~ "application/grpc") {
+            		return 404;
+		}
+ 		client_max_body_size 0;
+		grpc_set_header X-Real-IP ccc;
 		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
+		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31304;
 	}
+	location / {
+        	add_header Strict-Transport-Security "max-age=15552000; preload" always;
+    }
 }
 server {
 	listen 127.0.0.1:31300;
@@ -152,6 +163,12 @@ server {
 	}
 }
 EOF
+
+# // Move
+sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
+sed -i 's/bbb/($content_type/g' /etc/nginx/conf.d/alone.conf
+sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
+
 mkdir /etc/systemd/system/nginx.service.d
 printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 rm /etc/nginx/conf.d/default.conf
@@ -162,9 +179,13 @@ cd
 # CertV2ray
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
-curl https://get.acme.sh | sh -s email=anjang614@gmail.com 
+
+curl https://get.acme.sh | sh
+
+/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
 /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+
 cat /etc/mon/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
@@ -177,25 +198,10 @@ chown -R www-data:www-data /usr/share/nginx/html
 cd
 
 # // Xray Version
-#version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[]|select (.prerelease==false)|.tag_name' | head -1)"
-
-#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
-#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-#rm -rf /etc/mon/xray/Xray-linux-64.zip
-#chmod 655 /etc/mon/xray/xray
-
-# / / Ambil Xray Core Version Terbaru
-latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-
-# / / Installation Xray Core
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
-
-# / / Unzip Xray Linux 64
-cd `mktemp -d`
-curl -sL "$xraycore_link" -o xray.zip
-unzip -q xray.zip && rm -rf xray.zip
-mv xray /etc/mon/xray/
-chmod +x /etc/mon/xray/xray
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
+unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+rm -rf /etc/mon/xray/Xray-linux-64.zip
+chmod 655 /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
