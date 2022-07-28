@@ -52,8 +52,7 @@ echo ""
 	mv -f /etc/mon/xray/conf/02_VLESS_TCP_inbounds_tmp.json /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
        
 cat <<EOF >>"/etc/mon/config-user/${user}"
-vless://$uuid@$domain:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user
-vless://$uuid@$domain:$xtls?flow=xtls-rprx-splice&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user
+vless://${uuid}@${domain}:${xtls}?encryption=none&security=xtls&type=tcp&host=${sni}&headerType=none&sni=${sni}&flow=xtls-rprx-direct#${email}
 
 EOF
  
@@ -72,9 +71,7 @@ EOF
     echo -e "Port     : $xtls"
     echo -e "id       : $uuid"
     echo -e "================================="
-    echo -e "Vless XTLS SPLICE : vless://$uuid@$domain:$xtls?flow=xtls-rprx-splice&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user"
-    echo -e "================================="
-    echo -e "Vless XTLS DIRECT : vless://$uuid@$domain:$xtls?flow=xtls-rprx-direct&encryption=none&security=xtls&sni=$sni&type=tcp&headerType=none&host=$sni#$user"
+    echo -e "Vless XTLS DIRECT : vless://${uuid}@${domain}:${xtls}?encryption=none&security=xtls&type=tcp&host=${sni}&headerType=none&sni=${sni}&flow=xtls-rprx-direct#${email}"
     echo -e "================================="
     echo -e "Created      : $hariini"
     echo -e "Expired date : $expired"
