@@ -161,7 +161,7 @@ chown -R www-data:www-data /usr/share/nginx/html
 cd
 
 # // Xray Version
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
 unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
 rm -rf /etc/mon/xray/Xray-linux-64.zip
 chmod 655 /etc/mon/xray/xray
@@ -266,14 +266,7 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
       "protocol": "vless",
       "tag": "VLESSTCP",
       "settings": {
-        "clients": [
-          {                                                                                   
-            "id": "${uuid}",                                     
-            "add": "${domain}",                                                   
-            "flow": "xtls-rprx-direct",                                                       
-            "email": "manternet"                                                                    
-          }                                                                                   
-        ],
+        "clients": [],                                                                                   
         "decryption": "none",
         "fallbacks": [
           {
@@ -339,12 +332,7 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
       "protocol": "vless",
       "tag": "VLESSWS",
       "settings": {
-        "clients": [
-          {                                                               
-            "id": "${uuid}",                 
-            "email": "manternet"                                                
-          }                                                               
-        ],
+        "clients": [],
         "decryption": "none"
       },
       "streamSettings": {
@@ -405,12 +393,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
       "protocol": "trojan",
       "tag": "trojanTCP",
       "settings": {
-        "clients": [
-         {                                                               
-            "password": "${uuid}",           
-            "email": "manternet"                                                
-          }                                                               
-        ],
+        "clients": [],
         "fallbacks": [
           {
             "dest": "31300"
@@ -442,14 +425,7 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
       "protocol": "vmess",
       "tag": "VMessWS",
       "settings": {
-        "clients": [
-         {                                                               
-            "id": "${uuid}",                 
-            "alterId": 0,                                                 
-            "add": "${domain}",                               
-            "email": "manternet"                                                 
-          }                                                               
-        ]                                                                 
+        "clients": []                                                                 
       },
       "streamSettings": {
         "network": "ws",
