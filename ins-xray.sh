@@ -15,6 +15,10 @@ Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 domain=$(cat /etc/mon/xray/domain)
+installType='apt -y install'
+source /etc/os-release
+release=$ID
+ver=$VERSION_ID
 
 apt -y install wget
 apt -y install curl
@@ -27,10 +31,11 @@ apt -y install sudo
 apt -y install lsb-release
 apt -y install bash-completion
 apt -y install nginx
+
 if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
-    ${installType} cron
+    apt -y install cron
 else
-    ${installType} crontabs
+    apt -y install crontabs
 fi
 
 if [[ "${release}" == "debian" ]]; then
