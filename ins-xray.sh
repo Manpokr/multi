@@ -69,7 +69,7 @@ elif [[ "${release}" == "ubuntu" ]]; then
 		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
 		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
 		sudo apt update 
-
+fi
 # // Install nginx
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
