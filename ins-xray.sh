@@ -171,7 +171,7 @@ curl https://get.acme.sh | sh
 /root/.acme.sh/acme.sh --upgrade --auto-upgrade
 /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
+/root/.acme.sh/acme.sh --issue --insecure -d ${domain} --standalone -k ec-256 --force --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 cat /etc/mon/tls/$domain.log
