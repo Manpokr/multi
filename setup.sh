@@ -27,6 +27,15 @@ if [ -f "/etc/mon/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
+echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
+echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
+echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+read -p " Hostname / Domain: " host
+echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
+echo "$host" >> /etc/mon/xray/domain
+echo "$host" >> /root/domain
+domain=$(cat /etc/mon/xray/domain)
 
 # // Add Folder
 clear
@@ -53,59 +62,9 @@ clear
 apt-get update -y && apt-get upgrade -y && update-grub -y
 clear
 
-apt update -y
-apt upgrade -y
-apt dist-upgrade -y
-apt-get remove --purge ufw firewalld -y
-apt-get remove --purge exim4 -y
-apt-get purge apache2* -y
-rm -rf /etc/apache2
-
-# // Install Wget And Curl
-apt -y install wget curl
-apt -y install net-tools
-
-
-
-# install wget and curl
-apt -y install wget curl
-# // Install Requirements Tools
-apt install ruby -y
-apt install python -y
-apt install make -y
-apt install cmake -y
-apt install coreutils -y
-apt install rsyslog -y
-apt install net-tools -y
-apt install zip -y
-apt install unzip -y
-apt install nano -y
-apt install sed -y
-apt install gnupg -y
-apt install gnupg1 -y
-apt install bc -y
-apt install jq -y
-apt install apt-transport-https -y
-apt install build-essential -y
-apt install dirmngr -y
-apt install libxml-parser-perl -y
-apt install neofetch -y
-apt install git -y
-apt install lsof -y
-apt install libsqlite3-dev -y
-apt install libz-dev -y
-apt install gcc -y
-apt install g++ -y
-apt install libreadline-dev -y
-apt install zlib1g-dev -y
-apt install libssl-dev -y
-apt install libssl1.0-dev -y
-apt install dos2unix -y
-
 # // CloudFlare
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
-#echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
-
+echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
 
 # // Start
 secs_to_human() {
@@ -113,14 +72,14 @@ secs_to_human() {
 }
 start=$(date +%s)
 
+# // Install ssh ovpn
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
+
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
-# // Install v2ray Trojan
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
-
-# // Install ssh ovpn
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
+ // Install v2ray Trojan
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
 
 # // Instal V2ray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
