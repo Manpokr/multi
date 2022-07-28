@@ -103,7 +103,7 @@ rm -rf /etc/mon/xray/conf/*
 rm -rf /etc/mon/xray/config_full.json
 
 # // Uuid Service
-uuid=$(cat /proc/sys/kernel/random/uuid)
+uuid=$(/etc/mon/xray/xray uuid)
 
 # // Json File
 cat <<EOF >/etc/mon/xray/conf/00_log.json
@@ -147,6 +147,162 @@ cat <<EOF >/etc/mon/xray/conf/11_dns.json
           "localhost"
         ]
   }
+}
+EOF
+
+cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 31296,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "tag": "trojanTCP",
+      "settings": {
+        "clients": [
+             {
+                  "password": "${uuid}",
+		  "email": "${domain}_trojan_tcp"
+             }
+        ],
+        "fallbacks": [
+            {"dest": "31300"}
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none",
+        "tcpSettings": {
+          "acceptProxyProtocol": true
+        }
+      }
+    }
+  ]
+}
+EOF
+
+cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 31297,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "tag": "VLESSWS",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/xrayws"
+        }
+      }
+    }
+  ]
+}
+EOF
+
+cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+    "inbounds": [
+        {
+            "port": 31304,
+            "listen": "127.0.0.1",
+            "protocol": "trojan",
+            "tag": "trojangRPCTCP",
+            "settings": {
+                "clients": [],
+                "fallbacks": [
+                    {
+                        "dest": "31300"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "grpc",
+                "security": "none",
+                "grpcSettings": {
+                    "serviceName": "trgrpc"
+                }
+            }
+        }
+    ]
+}
+EOF
+
+cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 31299,
+      "protocol": "vmess",
+      "tag": "VMessWS",
+      "settings": {
+        "clients": []                                                                 
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/xrayvws"
+        }
+      }
+    }
+  ]
+}
+EOF
+
+cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
+{
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
+    "inbounds":[
+    {
+        "port": 31301,
+        "listen": "127.0.0.1",
+        "protocol": "vless",
+        "tag":"VLESSGRPC",
+        "settings": {
+            "clients": [],
+            "decryption": "none"
+        },
+        "streamSettings": {
+            "network": "grpc",
+            "grpcSettings": {
+                "serviceName": "vlgrpc"
+            }
+        }
+    }
+]
 }
 EOF
 
@@ -215,154 +371,7 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
   ]
 }
 EOF
-cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
-{
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
-  "inbounds": [
-    {
-      "port": 31297,
-      "listen": "127.0.0.1",
-      "protocol": "vless",
-      "tag": "VLESSWS",
-      "settings": {
-        "clients": [],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true,
-          "path": "/xrayws"
-        }
-      }
-    }
-  ]
-}
-EOF
-cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
-{
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
-    "inbounds": [
-        {
-            "port": 31304,
-            "listen": "127.0.0.1",
-            "protocol": "trojan",
-            "tag": "trojangRPCTCP",
-            "settings": {
-                "clients": [],
-                "fallbacks": [
-                    {
-                        "dest": "31300"
-                    }
-                ]
-            },
-            "streamSettings": {
-                "network": "grpc",
-                "security": "none",
-                "grpcSettings": {
-                    "serviceName": "trgrpc"
-                }
-            }
-        }
-    ]
-}
-EOF
-cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
-{
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
-  "inbounds": [
-    {
-      "port": 31296,
-      "listen": "127.0.0.1",
-      "protocol": "trojan",
-      "tag": "trojanTCP",
-      "settings": {
-        "clients": [],
-        "fallbacks": [
-          {
-            "dest": "31300"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": true
-        }
-      }
-    }
-  ]
-}
-EOF
-cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
-{
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
-  "inbounds": [
-    {
-      "listen": "127.0.0.1",
-      "port": 31299,
-      "protocol": "vmess",
-      "tag": "VMessWS",
-      "settings": {
-        "clients": []                                                                 
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true,
-          "path": "/xrayvws"
-        }
-      }
-    }
-  ]
-}
-EOF
-cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
-{
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
-    "inbounds":[
-    {
-        "port": 31301,
-        "listen": "127.0.0.1",
-        "protocol": "vless",
-        "tag":"VLESSGRPC",
-        "settings": {
-            "clients": [],
-            "decryption": "none"
-        },
-        "streamSettings": {
-            "network": "grpc",
-            "grpcSettings": {
-                "serviceName": "vlgrpc"
-            }
-        }
-    }
-]
-}
-EOF
+
 cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
 
 {
