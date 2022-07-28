@@ -27,6 +27,13 @@ if [ -f "/etc/mon/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
+
+# // Start
+secs_to_human() {
+    echo "Installation time : $(( ${1} / 3600 )) hours $(( (${1} / 60) % 60 )) minute's $(( ${1} % 60 )) seconds"
+}
+start=$(date +%s)
+
 echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
 echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
@@ -63,23 +70,17 @@ apt-get update -y && apt-get upgrade -y && update-grub -y
 clear
 
 # // CloudFlare
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
+wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
 echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
-
-# // Start
-secs_to_human() {
-    echo "Installation time : $(( ${1} / 3600 )) hours $(( (${1} / 60) % 60 )) minute's $(( ${1} % 60 )) seconds"
-}
-start=$(date +%s)
-
-# // Install ssh ovpn
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
- // Install v2ray Trojan
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
+# // Install ssh ovpn
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
+
+# // Install v2ray Trojan
+#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
 
 # // Instal V2ray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
