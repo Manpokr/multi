@@ -142,11 +142,23 @@ alias acme.sh=~/.acme.sh/acme.sh
 /root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 cat /etc/mon/tls/$domain.log
+
+
+mkdir /etc/systemd/system/nginx.service.d
+printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+rm /etc/nginx/conf.d/default.conf
 systemctl daemon-reload
 systemctl start nginx
 nginx -s stop
 pgrep -f "nginx" | xargs kill -9
 systemctl restart nginx
+
+cd
+rm -rf /usr/share/nginx/html
+wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
+unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
+rm -f /usr/share/nginx/html.zip*
+chown -R www-data:www-data /usr/share/nginx/html
 
 # // Xray Version
 version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
