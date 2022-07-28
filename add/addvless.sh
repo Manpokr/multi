@@ -60,6 +60,7 @@ vless://${uuid}@${domain}:$none?path=/xrayws&encryption=none&type=ws&sni=$sni#${
 EOF
  
     systemctl restart xray.service
+    systemctl restart vl-ws
     echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
     sleep 2
     clear
