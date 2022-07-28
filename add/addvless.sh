@@ -37,7 +37,8 @@ echo ""
 	fi
     read -p "SNI (BUG) : " sni
 	read -p "Duration (day) : " duration
-	uuid=$(cat /proc/sys/kernel/random/uuid)
+        uuid=$(/etc/mon/xray/xray uuid)
+#	uuid=$(cat /proc/sys/kernel/random/uuid)
 	exp=$(date -d +${duration}days +%Y-%m-%d)
 	expired=$(date -d "${exp}" +"%d %b %Y")
         hariini=$(date -d "0 days" +"%d-%b-%Y")
@@ -60,7 +61,7 @@ vless://${uuid}@${domain}:$none?path=/xrayws&encryption=none&type=ws&sni=$sni#${
 EOF
  
     systemctl restart xray.service
-    systemctl restart vl-ws
+    systemctl restart vl-none
     echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
     sleep 2
     clear
