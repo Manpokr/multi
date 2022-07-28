@@ -42,16 +42,21 @@ echo ""
 	expired=$(date -d "${exp}" +"%d %b %Y")
         hariini=$(date -d "0 days" +"%d-%b-%Y")
 	domain=$(cat /etc/mon/xray/domain)
-	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
+	none=$( cat /etc/mon/xray/vnone.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g');
+        xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
 	email=${user}
 
         echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
         cat /etc/mon/xray/conf/03_VLESS_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","email": "'${email}'"}]' > /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/03_VLESS_WS_inbounds_tmp.json /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
-       
+ 
+        sed -i '/#none$/a\### '"$user $exp"'\
+        },{"id": "'""$uuid""'","email": "'""$user""'"' /etc/mon/xray/vnone.json
+
 cat <<EOF >>"/etc/mon/config-user/${user}"
 vless://$uuid@$domain:$xtls?encryption=none&security=tls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user
+vless://${uuid}@${domain}:$none?path=/xrayws&encryption=none&type=ws&sni=$sni#${user}
 EOF
  
     systemctl restart xray.service
@@ -66,9 +71,12 @@ EOF
     echo -e "Domain   : ${domain}" 
     echo -e "Sni      : ${sni}"
     echo -e "Port     : $xtls"
+    echo -e "Port     : $none"
     echo -e "id       : $uuid"
     echo -e "================================="
     echo -e "Vless TLS : vless://$uuid@$domain:$xtls?encryption=none&security=tls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user"
+    echo -e "================================="
+    echo -e "Vless NON-TLS : vless://${uuid}@${domain}:$none?path=/xrayws&encryption=none&type=ws&sni=$sni#${user}"
     echo -e "================================="
     echo -e "Created      : $hariini"
     echo -e "Expired date : $expired"
