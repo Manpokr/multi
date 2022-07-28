@@ -49,6 +49,20 @@ apt -y install jq
 apt -y install inetutils-ping
 apt -y install socat
 
+apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
+cat> /root/.profile << END
+# ~/.profile: executed by Bourne-compatible login shells.
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+mesg n || true
+clear
+menu
+END
+chmod 644 /root/.profile
+
 # // Nginx
 	#if [[ "${release}" == "debian" ]]; then
 		sudo apt install gnupg2 ca-certificates lsb-release -y 
