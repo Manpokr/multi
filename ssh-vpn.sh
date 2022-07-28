@@ -75,49 +75,6 @@ apt dist-upgrade -y
 apt-get remove --purge ufw firewalld -y
 apt-get remove --purge exim4 -y
 
-# // install wget and curl
-apt -y install wget curl 
-
-apt install ruby -y
-apt install python -y
-apt install make -y
-apt install cowsay -y
-apt install cmake -y
-apt install ncurses-utils -y
-apt install coreutils -y
-apt install rsyslog -y
-apt install net-tools -y
-apt install zip -y
-apt install unzip -y
-apt install nano -y
-apt install sed -y
-apt install gnupg -y
-apt install gnupg1 -y
-apt install bc -y
-apt install jq -y
-apt install apt-transport-https -y
-apt install build-essential -y
-apt install dirmngr -y
-apt install libxml-parser-perl -y
-apt install neofetch -y
-apt install git -y
-apt install lsof -y
-apt install libsqlite3-dev -y
-apt install libz-dev -y
-apt install gcc -y
-apt install g++ -y
-apt install libreadline-dev -y
-apt install zlib1g-dev -y
-apt install libssl-dev -y
-apt install libssl1.0-dev -y
-gem install lolcat
-apt install jq curl -y
-apt install dnsutils jq -y
-apt-get install net-tools -y
-apt-get install tcpdump -y
-apt-get install dsniff -y
-apt install grepcidr -y
-
 # // set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
 date
