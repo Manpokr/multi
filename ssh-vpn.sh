@@ -125,8 +125,13 @@ date
 # // set locale
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 
+apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl neofetch git lsof
+#echo "neofetch" >> .profile
+echo "status" >> .profile
+
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+mkdir -p /home/vps/public_html
 
 # // install badvpn
 cd
@@ -385,7 +390,6 @@ apt-get -y remove sendmail*
 apt autoremove -y
 
 # // finishing
-mkdir -p /home/vps/public_html
 cd
 #chown -R www-data:www-data /home/vps/public_html
 /etc/init.d/nginx restart
