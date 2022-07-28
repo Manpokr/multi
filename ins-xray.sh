@@ -12,179 +12,66 @@ LIGHT='\033[0;37m'
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
-source /etc/os-release
-release=$ID
-ver=$VERSION_ID
-
-echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
-echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
-echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-read -p " Hostname / Domain: " host
-echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
-echo "$host" >> /etc/mon/xray/domain
-echo "$host" >> /root/domain
-domain=$(cat /etc/mon/xray/domain)
-date
-apt -y install unzip
-apt -y install tar
-apt -y install binutils
-apt -y install sudo
-apt -y install neofetch
-apt -y install jq
-apt -y install inetutils-ping
-apt -y install socat
-
-apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
-cat> /root/.profile << END
-# ~/.profile: executed by Bourne-compatible login shells.
-if [ "$BASH" ]; then
-  if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-  fi
-fi
-mesg n || true
+MYIP=$(wget -qO- ipinfo.io/ip);
 clear
-menu
-END
-chmod 644 /root/.profile
+domain=$(cat /etc/mon/xray/domain)
 
-# // Nginx
-		sudo apt install gnupg2 ca-certificates lsb-release -y 
-		echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-		sudo apt update 
-
-
-
-#sudo apt install gnupg2 ca-certificates lsb-release -y 
-#echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-#echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
-#curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
-# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-#sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-#sudo apt update
-systemctl daemon-reload
-systemctl enable nginx
-
-# // Install nginx
-sudo pkill -f nginx & wait $!
-systemctl stop nginx
-apt -y install nginx 
-systemctl daemon-reload
-systemctl enable nginx
-touch /etc/nginx/conf.d/alone.conf
-cat <<EOF >>/etc/nginx/conf.d/alone.conf
-server {
-	listen 81;
-	listen [::]:81;
-	server_name ${domain};
-	# shellcheck disable=SC2154
-	return 301 https://${domain};
-}
-server {
-		listen 127.0.0.1:31300;
-		server_name _;
-		return 403;
-}
-server {
-	listen 127.0.0.1:31302 http2;
-	server_name ${domain};
-	root /usr/share/nginx/html;
-	location /s/ {
-    		add_header Content-Type text/plain;
-    		alias /etc/mon/config-url/;
-    }
-    location /xraygrpc {
-		client_max_body_size 0;
-#		keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
-		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31301;
-	}
-	location /xraytrojangrpc {
-		client_max_body_size 0;
-		# keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
-		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31304;
-	}
-}
-server {
-	listen 127.0.0.1:31300;
-	server_name ${domain};
-	root /usr/share/nginx/html;
-	location /s/ {
-		add_header Content-Type text/plain;
-		alias /etc/mon/config-url/;
-	}
-	location / {
-		add_header Strict-Transport-Security "max-age=15552000; preload" always;
-	}
-}
-EOF
-
-# // Move
-#sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
-#sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
-#sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
-
-mkdir /etc/systemd/system/nginx.service.d
-printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
-rm /etc/nginx/conf.d/default.conf
-systemctl daemon-reload
-service nginx restart
-cd
+apt install iptables iptables-persistent -y
+apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
+apt install socat cron bash-completion ntpdate -y
+ntpdate pool.ntp.org
+apt -y install chrony
+timedatectl set-ntp true
+systemctl enable chronyd && systemctl restart chronyd
+systemctl enable chrony && systemctl restart chrony
+timedatectl set-timezone Asia/Kuala_Lumpur
+chronyc sourcestats -v
+chronyc tracking -v
+date
 
 # CertV2ray
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
-curl https://get.acme.sh | sh
+sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
+domain=$(cat /root/domain)
+mkdir /root/.acme.sh
 
-/root/.acme.sh/acme.sh --upgrade --auto-upgrade
-/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
+chmod +x /root/.acme.sh/acme.sh
+cd /root/
+
+wget -O acme.sh https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+bash acme.sh --install
+
+rm acme.sh
+cd .acme.sh
+
+sudo bash acme.sh --upgrade --auto-upgrade
+sudo bash acme.sh --set-default-ca --server letsencrypt
+sudo bash acme.sh --register-account -m anjang614@gmail.com 
+sudo bash acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
+sudo bash acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 cat /etc/mon/tls/$domain.log
 systemctl daemon-reload
 systemctl restart nginx
 
-rm -rf /usr/share/nginx/html
-wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
-unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
-rm -f /usr/share/nginx/html.zip*
-chown -R www-data:www-data /usr/share/nginx/html
-cd
-
 # // Xray Version
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
-unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-rm -rf /etc/mon/xray/Xray-linux-64.zip
-chmod 655 /etc/mon/xray/xray
+#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
+#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+#rm -rf /etc/mon/xray/Xray-linux-64.zip
+#chmod 655 /etc/mon/xray/xray
 
 # / / Installation Xray Core
-#xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
 
 # / / Unzip Xray Linux 64
-#cd `mktemp -d`
-#curl -sL "$xraycore_link" -o xray.zip
-#unzip -q xray.zip && rm -rf xray.zip
-#mv xray /etc/mon/xray
-#chmod +x /etc/mon/xray/xray
+cd `mktemp -d`
+curl -sL "$xraycore_link" -o xray.zip
+unzip -q xray.zip && rm -rf xray.zip
+mv xray /etc/mon/xray
+chmod +x /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
