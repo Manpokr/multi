@@ -151,9 +151,9 @@ server {
 EOF
 
 # // Move
-sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
-sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
-sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
+#sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
+#sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
+#sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
 
 mkdir /etc/systemd/system/nginx.service.d
 printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
@@ -186,10 +186,20 @@ chown -R www-data:www-data /usr/share/nginx/html
 cd
 
 # // Xray Version
-wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
-unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-rm -rf /etc/mon/xray/Xray-linux-64.zip
-chmod 655 /etc/mon/xray/xray
+#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
+#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+#rm -rf /etc/mon/xray/Xray-linux-64.zip
+#chmod 655 /etc/mon/xray/xray
+
+# / / Installation Xray Core
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
+
+# / / Unzip Xray Linux 64
+cd `mktemp -d`
+curl -sL "$xraycore_link" -o xray.zip
+unzip -q xray.zip && rm -rf xray.zip
+mv xray /etc/mon/xray
+chmod +x /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
@@ -294,6 +304,11 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           {
             "dest": 31296,
             "xver": 1
+           },
+           {
+            "alpn": "h1",
+            "dest": 31333,
+            "xver": 0
            },
            {
             "alpn": "h2",
