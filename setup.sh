@@ -122,7 +122,7 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +
 # // Install ssh ovpn
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
-$# // Instal V2ray
+# // Instal V2ray
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
 
 # // Backup
