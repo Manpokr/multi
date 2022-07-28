@@ -25,21 +25,7 @@ echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
 echo "$host" >> /etc/mon/xray/domain
 echo "$host" >> /root/domain
 domain=$(cat /etc/mon/xray/domain)
-
-apt install iptables iptables-persistent -y
-apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install socat cron bash-completion ntpdate -y
-apt -y install systemd-timesyncd
-ntpdate pool.ntp.org
-apt -y install chrony
-timedatectl set-ntp true
-systemctl enable chronyd && systemctl restart chronyd
-systemctl enable chrony && systemctl restart chrony
-timedatectl set-timezone Asia/Kuala_Lumpur
-chronyc sourcestats -v
-chronyc tracking -v
 date
-
 apt -y install unzip
 apt -y install tar
 apt -y install binutils
@@ -64,24 +50,13 @@ END
 chmod 644 /root/.profile
 
 # // Nginx
-	#if [[ "${release}" == "debian" ]]; then
-		sudo apt install gnupg2 ca-certificates lsb-release -y 
-		echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
-		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
-		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-		sudo apt update
-
-#	elif [[ "${release}" == "ubuntu" ]]; then
-#		sudo apt install gnupg2 ca-certificates lsb-release -y
-#		echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-#		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-#		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-#		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-#		sudo apt update 
-#fi
+sudo apt install gnupg2 ca-certificates lsb-release -y 
+echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
+# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+sudo apt update
 systemctl daemon-reload
 systemctl enable nginx
 
@@ -171,7 +146,7 @@ curl https://get.acme.sh | sh
 /root/.acme.sh/acme.sh --upgrade --auto-upgrade
 /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-/root/.acme.sh/acme.sh --issue --insecure -d ${domain} --standalone -k ec-256 --force --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
+/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 cat /etc/mon/tls/$domain.log
@@ -186,20 +161,20 @@ chown -R www-data:www-data /usr/share/nginx/html
 cd
 
 # // Xray Version
-#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
-#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-#rm -rf /etc/mon/xray/Xray-linux-64.zip
-#chmod 655 /etc/mon/xray/xray
+wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
+unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+rm -rf /etc/mon/xray/Xray-linux-64.zip
+chmod 655 /etc/mon/xray/xray
 
 # / / Installation Xray Core
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
+#xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
 
 # / / Unzip Xray Linux 64
-cd `mktemp -d`
-curl -sL "$xraycore_link" -o xray.zip
-unzip -q xray.zip && rm -rf xray.zip
-mv xray /etc/mon/xray
-chmod +x /etc/mon/xray/xray
+#cd `mktemp -d`
+#curl -sL "$xraycore_link" -o xray.zip
+#unzip -q xray.zip && rm -rf xray.zip
+#mv xray /etc/mon/xray
+#chmod +x /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
