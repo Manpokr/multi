@@ -134,109 +134,11 @@ menu
 END
 chmod 644 /root/.profile
 
-# // Nginx
-#sudo apt install gnupg2 ca-certificates lsb-release -y 
-#echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
-#echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
-#curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
-# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-#sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-#sudo apt update 
-
-
-
-sudo apt install gnupg2 ca-certificates lsb-release -y 
-echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
-curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
-# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
-sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
-sudo apt update
-systemctl daemon-reload
-systemctl enable nginx
-
-# // Install nginx
-sudo pkill -f nginx & wait $!
-systemctl stop nginx
-apt -y install nginx 
-systemctl daemon-reload
-systemctl enable nginx
-touch /etc/nginx/conf.d/alone.conf
-cat <<EOF >>/etc/nginx/conf.d/alone.conf
-server {
-	listen 81;
-	listen [::]:81;
-	server_name ${domain};
-	# shellcheck disable=SC2154
-	return 301 https://${domain};
-}
-server {
-		listen 127.0.0.1:31300;
-		server_name _;
-		return 403;
-}
-server {
-	listen 127.0.0.1:31302 http2;
-	server_name ${domain};
-	root /usr/share/nginx/html;
-	location /s/ {
-    		add_header Content-Type text/plain;
-    		alias /etc/mon/config-url/;
-    }
-    location /xraygrpc {
-		client_max_body_size 0;
-#		keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
-		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31301;
-	}
-	location /xraytrojangrpc {
-		client_max_body_size 0;
-		# keepalive_time 1071906480m;
-		keepalive_requests 4294967296;
-		client_body_timeout 1071906480m;
- 		send_timeout 1071906480m;
- 		lingering_close always;
- 		grpc_read_timeout 1071906480m;
- 		grpc_send_timeout 1071906480m;
-		grpc_pass grpc://127.0.0.1:31304;
-	}
-}
-server {
-	listen 127.0.0.1:31300;
-	server_name ${domain};
-	root /usr/share/nginx/html;
-	location /s/ {
-		add_header Content-Type text/plain;
-		alias /etc/mon/config-url/;
-	}
-	location / {
-		add_header Strict-Transport-Security "max-age=15552000; preload" always;
-	}
-}
-EOF
 
 # // Move
 #sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
 #sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
 #sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
-
-mkdir /etc/systemd/system/nginx.service.d
-printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
-rm /etc/nginx/conf.d/default.conf
-systemctl daemon-reload
-service nginx restart
-cd
-rm -rf /usr/share/nginx/html
-wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
-unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
-rm -f /usr/share/nginx/html.zip*
-chown -R www-data:www-data /usr/share/nginx/html
-
 
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
