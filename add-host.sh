@@ -36,10 +36,16 @@ systemctl stop trojan
 systemctl stop trojan.service
 
 # // Cert
+sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
+cd /root/
+wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+bash acme.sh --install
+rm acme.sh
+cd .acme.sh
 sleep 2
 sudo bash acme.sh --upgrade --auto-upgrade
 sudo bash acme.sh --set-default-ca --server letsencrypt
-sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --listen-v6 --force >> /etc/tls/$domain.log
+sudo bash acme.sh --issue -d $domain --standalone -k ec-256 --server letsencrypt --force >> /etc/tls/$domain.log
 sudo bash acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
 
 cat /etc/tls/$domain.log
@@ -74,7 +80,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
     		add_header Content-Type text/plain;
-    		alias /etc/config-url/;
+    		alias /etc/mon/config-url/;
     }
 
     location /vlgrpc {
@@ -107,7 +113,7 @@ server {
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/config-url/;
+		alias /etc/mon/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
@@ -118,7 +124,7 @@ EOF
 rm /etc/nginx/conf.d/alone2.conf
 touch /etc/nginx/conf.d/alone2.conf
 
-cat <<EOF >>/etc/nginx/conf.d/alone2.conf
+#cat <<EOF >>/etc/nginx/conf.d/alone2.conf
 server {
 	listen 82;
 	listen [::]:82;
