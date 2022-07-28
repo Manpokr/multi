@@ -53,6 +53,7 @@ echo ""
        
 cat <<EOF >>"/etc/mon/config-user/${user}"
 trojan://$uuid@$domain:$xtls?sni=$sni#$user
+trojan://${uuid}@${domain}:${xtls}?peer=${sni}&sni=${sni}&alpn=http1.1#${email}
 
 EOF
  
@@ -71,6 +72,8 @@ EOF
     echo -e "id       : $uuid"
     echo -e "================================="
     echo -e "Trojan TLS : trojan://$uuid@$domain:$xtls?sni=$sni#$user"
+    echo -e "================================="
+    echo -e "Trojan Tls : trojan://${uuid}@${domain}:${xtls}?peer=${sni}&sni=${sni}&alpn=http1.1#${email}"
     echo -e "================================="
     echo -e "Created      : $hariini"
     echo -e "Expired date : $expired"
