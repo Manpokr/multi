@@ -16,62 +16,145 @@ MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 domain=$(cat /etc/mon/xray/domain)
 
-apt install iptables iptables-persistent -y
-apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install socat cron bash-completion ntpdate -y
-ntpdate pool.ntp.org
-apt -y install chrony
-timedatectl set-ntp true
-systemctl enable chronyd && systemctl restart chronyd
-systemctl enable chrony && systemctl restart chrony
-timedatectl set-timezone Asia/Kuala_Lumpur
-chronyc sourcestats -v
-chronyc tracking -v
-date
+apt -y install wget
+apt -y install curl
+apt -y install unzip
+apt -y install socat
+apt -y install tar
+apt -y install jq
+apt -y install binutils
+apt -y install sudo
+apt -y install lsb-release
+apt -y install bash-completion
+apt -y install nginx
+if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
+    ${installType} cron
+else
+    ${installType} crontabs
+fi
 
-# CertV2ray
+if [[ "${release}" == "debian" ]]; then
+		sudo apt install gnupg2 ca-certificates lsb-release -y 
+		echo "deb http://nginx.org/packages/mainline/debian $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list 
+		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key 
+		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+		sudo apt update 
+
+elif [[ "${release}" == "ubuntu" ]]; then
+		sudo apt install gnupg2 ca-certificates lsb-release -y 
+		echo "deb http://nginx.org/packages/mainline/ubuntu $(lsb_release -cs) nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+		echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx 
+		curl -o /tmp/nginx_signing.key https://nginx.org/keys/nginx_signing.key
+		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
+		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
+		sudo apt update 
+fi
+systemctl daemon-reload
+systemctl enable nginx
+apt install gnupg2 -y
+
+if [[ "${release}" == "debian" ]]; then
+		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
+		echo "deb http://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+		sudo apt update 
+
+elif [[ "${release}" == "ubuntu" ]]; then
+		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
+		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+		sudo apt update 
+
+# // Install nginx
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
-sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
-domain=$(cat /root/domain)
-mkdir /root/.acme.sh
+touch /etc/nginx/conf.d/alone.conf
+cat <<EOF >>/etc/nginx/conf.d/alone.conf
+server {
+	listen 81;
+	listen [::]:81;
+	server_name ${domain};
+	# shellcheck disable=SC2154
+	return 301 https://${domain};
+}
+server {
+		listen 127.0.0.1:31300;
+		server_name _;
+		return 403;
+}
+server {
+	listen 127.0.0.1:31302 http2;
+	server_name ${domain};
+	root /usr/share/nginx/html;
+	location /s/ {
+    		add_header Content-Type text/plain;
+    		alias /etc/mon/config-url/;
+    }
+    location /xraygrpc {
+		client_max_body_size 0;
+#		keepalive_time 1071906480m;
+		keepalive_requests 4294967296;
+		client_body_timeout 1071906480m;
+ 		send_timeout 1071906480m;
+ 		lingering_close always;
+ 		grpc_read_timeout 1071906480m;
+ 		grpc_send_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:31301;
+	}
+	location /xraytrojangrpc {
+		client_max_body_size 0;
+		# keepalive_time 1071906480m;
+		keepalive_requests 4294967296;
+		client_body_timeout 1071906480m;
+ 		send_timeout 1071906480m;
+ 		lingering_close always;
+ 		grpc_read_timeout 1071906480m;
+ 		grpc_send_timeout 1071906480m;
+		grpc_pass grpc://127.0.0.1:31304;
+	}
+}
+server {
+	listen 127.0.0.1:31300;
+	server_name ${domain};
+	root /usr/share/nginx/html;
+	location /s/ {
+		add_header Content-Type text/plain;
+		alias /etc/mon/config-url/;
+	}
+	location / {
+		add_header Strict-Transport-Security "max-age=15552000; preload" always;
+	}
+}
+EOF
 
-curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
-chmod +x /root/.acme.sh/acme.sh
-cd /root/
 
-wget -O acme.sh https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
-bash acme.sh --install
+# CertV2ray
 
-rm acme.sh
-cd .acme.sh
-
-sudo bash acme.sh --upgrade --auto-upgrade
-sudo bash acme.sh --set-default-ca --server letsencrypt
-sudo bash acme.sh --register-account -m anjang614@gmail.com 
-sudo bash acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
-sudo bash acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
+/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 cat /etc/mon/tls/$domain.log
 systemctl daemon-reload
+systemctl start nginx
+nginx -s stop
+pgrep -f "nginx" | xargs kill -9
 systemctl restart nginx
 
 # // Xray Version
-#wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.5.5/Xray-linux-64.zip"
-#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-#rm -rf /etc/mon/xray/Xray-linux-64.zip
-#chmod 655 /etc/mon/xray/xray
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
 
-# / / Installation Xray Core
-xraycore_link="https://github.com/XTLS/Xray-core/releases/download/v1.5.5/xray-linux-64.zip"
+echo " ---> Xray-core version:${version}"
+if wget --help | grep -q show-progress; then
+		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+else
+		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+fi
 
-# / / Unzip Xray Linux 64
-cd `mktemp -d`
-curl -sL "$xraycore_link" -o xray.zip
-unzip -q xray.zip && rm -rf xray.zip
-mv xray /etc/mon/xray
-chmod +x /etc/mon/xray/xray
+unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+rm -rf /etc/mon/xray/Xray-linux-64.zip
+chmod 655 /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
@@ -98,7 +181,10 @@ EOF
 
 # // Restart & Add File
 systemctl daemon-reload
+systemctl stop xray
+systemctl start xray
 systemctl enable xray.service
+
 rm -rf /etc/mon/xray/conf/*
 rm -rf /etc/mon/xray/config_full.json
 
@@ -731,12 +817,12 @@ WantedBy=multi-user.target
 EOF
 
 sleep 1
-#echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-#wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
-#chmod +x /usr/bin/bbr
-#bbr >/dev/null 2>&1
-#rm /usr/bin/bbr >/dev/null 2>&1
-#sleep 2
+echo -e "[\e[32mINFO\e[0m] Installing bbr.."
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+chmod +x /usr/bin/bbr
+bbr >/dev/null 2>&1
+rm /usr/bin/bbr >/dev/null 2>&1
+sleep 2
 
 # // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31230 -j ACCEPT
