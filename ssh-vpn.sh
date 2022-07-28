@@ -231,6 +231,12 @@ rm /etc/nginx/conf.d/default.conf
 systemctl daemon-reload
 service nginx restart
 cd
+rm -rf /usr/share/nginx/html
+wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
+unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
+rm -f /usr/share/nginx/html.zip*
+chown -R www-data:www-data /usr/share/nginx/html
+
 
 curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
 curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
