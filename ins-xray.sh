@@ -26,7 +26,7 @@ echo "$host" >> /etc/mon/xray/domain
 echo "$host" >> /root/domain
 domain=$(cat /etc/mon/xray/domain)
 
-#apt install iptables iptables-persistent -y
+apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
 apt install socat cron bash-completion ntpdate -y
 apt -y install systemd-timesyncd
@@ -93,59 +93,48 @@ systemctl daemon-reload
 systemctl enable nginx
 touch /etc/nginx/conf.d/alone.conf
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
-		server {
-				listen 81;
-				server_name _;
-				return 403;
-        }
-		server {
-				listen 127.0.0.1:31300;
-				server_name _;
-				return 403;
-		}
-        server {
-        	listen 81;
-        	listen [::]:81;
-        	server_name ${domain};
-        	return 302 https://${domain}aaa;
-        }
 server {
-	listen 127.0.0.1:31302 http2 so_keepalive=on;
+	listen 81;
+	listen [::]:81;
+	server_name ${domain};
+	# shellcheck disable=SC2154
+	return 301 https://${domain};
+}
+server {
+		listen 127.0.0.1:31300;
+		server_name _;
+		return 403;
+}
+server {
+	listen 127.0.0.1:31302 http2;
 	server_name ${domain};
 	root /usr/share/nginx/html;
-
-	client_header_timeout 1071906480m;
-    keepalive_timeout 1071906480m;
-
 	location /s/ {
-    	add_header Content-Type text/plain;
-    	alias /etc/mon/config-url/;
+    		add_header Content-Type text/plain;
+    		alias /etc/mon/config-url/;
     }
-
-    location /vlgrpc {
-    	if (bbb !~ "application/grpc") {
-    		return 404;
-    	}
- 		client_max_body_size 0;
-		grpc_set_header X-Real-IP ccc;
+    location /xraygrpc {
+		client_max_body_size 0;
+#		keepalive_time 1071906480m;
+		keepalive_requests 4294967296;
 		client_body_timeout 1071906480m;
-		grpc_read_timeout 1071906480m;
+ 		send_timeout 1071906480m;
+ 		lingering_close always;
+ 		grpc_read_timeout 1071906480m;
+ 		grpc_send_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31301;
 	}
-
-	location /trgrpc {
-		if (bbb !~ "application/grpc") {
-            		return 404;
-		}
- 		client_max_body_size 0;
-		grpc_set_header X-Real-IP ccc;
+	location /xraytrojangrpc {
+		client_max_body_size 0;
+		# keepalive_time 1071906480m;
+		keepalive_requests 4294967296;
 		client_body_timeout 1071906480m;
-		grpc_read_timeout 1071906480m;
+ 		send_timeout 1071906480m;
+ 		lingering_close always;
+ 		grpc_read_timeout 1071906480m;
+ 		grpc_send_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31304;
 	}
-	location / {
-        	add_header Strict-Transport-Security "max-age=15552000; preload" always;
-    }
 }
 server {
 	listen 127.0.0.1:31300;
@@ -178,6 +167,9 @@ sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
 curl https://get.acme.sh | sh
+
+/root/.acme.sh/acme.sh --upgrade --auto-upgrade
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
 /root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force --server letsencrypt --listen-v6 >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
