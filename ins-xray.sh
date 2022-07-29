@@ -77,11 +77,11 @@ elif [[ "${release}" == "ubuntu" ]]; then
 		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
 		sudo apt update 
 fi
-systemctl enable warp-svc
-warp-cli --accept-tos register
-warp-cli --accept-tos set-mode proxy
-warp-cli --accept-tos set-proxy-port 31303
-warp-cli --accept-tos connect
+#systemctl enable warp-svc
+#warp-cli --accept-tos register
+#warp-cli --accept-tos set-mode proxy
+#warp-cli --accept-tos set-proxy-port 31303
+#warp-cli --accept-tos connect
 
 # // Install nginx
 
@@ -159,10 +159,10 @@ source ~/.bashrc
 if nc -z localhost 443;then /etc/init.d/nginx stop;fi
 if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 chown www-data.www-data /etc/mon/xray/xray.*
-
+chmod +x /etc/mon/xray/xray.key
 cat /etc/mon/tls/$domain.log
 
 
@@ -278,11 +278,6 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
   "inbounds": [
     {
       "port": 31296,
@@ -314,11 +309,6 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
   "inbounds": [
     {
       "port": 31297,
@@ -344,11 +334,6 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
     "inbounds": [
         {
             "port": 31304,
@@ -377,11 +362,6 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
   "inbounds": [
     {
       "listen": "127.0.0.1",
@@ -406,11 +386,6 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
     "inbounds":[
     {
         "port": 31301,
@@ -434,11 +409,6 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
   "inbounds": [
     {
       "port": 443,
@@ -501,11 +471,6 @@ EOF
 cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
 
 {
-  "log": {
-    "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
-    "loglevel": "info"
-  },
   "inbounds": [
     {
       "port": 31230,
@@ -544,7 +509,7 @@ cat> /etc/mon/xray/none.json << END
   },
   "inbounds": [
     {
-      "port": 8445,
+      "port": 880,
       "protocol": "vmess",
       "settings": {
         "clients": [
@@ -858,7 +823,7 @@ EOF
 
 sleep 1
 echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
 chmod +x /usr/bin/bbr
 bbr >/dev/null 2>&1
 rm /usr/bin/bbr >/dev/null 2>&1
@@ -873,7 +838,7 @@ iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8000 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 880 -j ACCEPT
 
 # // xray
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31230 -j ACCEPT
@@ -883,8 +848,8 @@ iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31296 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31304 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 31297 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m udp -p udp --dport 443 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8000 -j ACCEPT
-iptables -I INPUT -m state --state NEW -m udp -p udp --dport 80 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 8080 -j ACCEPT
+iptables -I INPUT -m state --state NEW -m udp -p udp --dport 880 -j ACCEPT
 
 iptables-save >/etc/iptables.rules.v4
 netfilter-persistent save
