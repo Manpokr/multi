@@ -15,11 +15,14 @@ Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 domain=$(cat /etc/mon/xray/domain)
+ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+date
 installType='apt -y install'
 source /etc/os-release
 release=$ID
 ver=$VERSION_ID
 
+apt clean all && apt update -y
 apt -y install wget
 apt -y install curl
 apt -y install unzip
@@ -30,7 +33,8 @@ apt -y install binutils
 apt -y install sudo
 apt -y install lsb-release
 apt -y install bash-completion
-#apt -y install nginx
+apt install curl pwgen openssl netcat cron -y
+
 
 if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
     apt -y install cron
@@ -59,6 +63,7 @@ elif [[ "${release}" == "ubuntu" ]]; then
                 apt -y install nginx
 fi
 systemctl daemon-reload
+ufw disable
 systemctl enable nginx
 apt install gnupg2 -y
 
@@ -72,7 +77,14 @@ elif [[ "${release}" == "ubuntu" ]]; then
 		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
 		sudo apt update 
 fi
+systemctl enable warp-svc
+warp-cli --accept-tos register
+warp-cli --accept-tos set-mode proxy
+warp-cli --accept-tos set-proxy-port 31303
+warp-cli --accept-tos connect
+
 # // Install nginx
+
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 
@@ -137,11 +149,19 @@ EOF
 
 
 # CertV2ray
-curl -s https://get.acme.sh | sh
-alias acme.sh=~/.acme.sh/acme.sh
-/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
-/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+#curl -s https://get.acme.sh | sh
+#alias acme.sh=~/.acme.sh/acme.sh
+#/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
+#/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
+#/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+
+source ~/.bashrc
+if nc -z localhost 443;then /etc/init.d/nginx stop;fi
+if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
+~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+chown www-data.www-data /etc/mon/xray/xray.*
 
 cat /etc/mon/tls/$domain.log
 
