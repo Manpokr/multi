@@ -38,11 +38,11 @@ echo ""
         hariini=$(date -d "0 days" +"%d-%b-%Y")
 	domain=$(cat /etc/mon/xray/domain)
 	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-	email=${user}
+	email=${user}@${domain}
     cat>/etc/mon/xray/tls.json<<EOF
       {
        "v": "2",
-       "ps": "${user}",
+       "ps": "${email}",
        "add": "${domain}",
        "port": "${xtls}",
        "id": "${uuid}",
