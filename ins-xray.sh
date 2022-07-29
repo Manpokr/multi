@@ -14,6 +14,7 @@ Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_p
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 clear
+
 domain=$(cat /etc/mon/xray/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
@@ -27,8 +28,10 @@ timedatectl set-timezone Asia/Kuala_Lumpur
 chronyc sourcestats -v
 chronyc tracking -v
 date
+
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
 date
+
 installType='apt -y install'
 source /etc/os-release
 release=$ID
@@ -48,11 +51,11 @@ apt -y install bash-completion
 apt install curl pwgen openssl netcat cron -y
 
 
-if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
-    apt -y install cron
-else
-    apt -y install crontabs
-fi
+#if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
+#    apt -y install cron
+#else
+#    apt -y install crontabs
+#fi
 
 if [[ "${release}" == "debian" ]]; then
 		sudo apt install gnupg2 ca-certificates lsb-release -y 
@@ -79,16 +82,16 @@ ufw disable
 systemctl enable nginx
 apt install gnupg2 -y
 
-if [[ "${release}" == "debian" ]]; then
-		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
-		echo "deb http://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
-		sudo apt update 
-
-elif [[ "${release}" == "ubuntu" ]]; then
-		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
-		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
-		sudo apt update 
-fi
+#if [[ "${release}" == "debian" ]]; then
+#		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
+#		echo "deb http://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+#		sudo apt update 
+#
+#elif [[ "${release}" == "ubuntu" ]]; then
+#		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
+#		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+#		sudo apt update 
+#fi
 #systemctl enable warp-svc
 #warp-cli --accept-tos register
 #warp-cli --accept-tos set-mode proxy
@@ -159,25 +162,6 @@ server {
 }
 EOF
 
-
-# CertV2ray
-#curl -s https://get.acme.sh | sh
-#alias acme.sh=~/.acme.sh/acme.sh
-#/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-#/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
-#/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-
-source ~/.bashrc
-if nc -z localhost 443;then /etc/init.d/nginx stop;fi
-if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
-~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-#chown www-data.www-data /etc/mon/xray/xray.*
-chmod +x /etc/mon/xray/xray.key
-cat /etc/mon/tls/$domain.log
-
-
 mkdir /etc/systemd/system/nginx.service.d
 printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 rm /etc/nginx/conf.d/default.conf
@@ -217,7 +201,6 @@ chmod +x /etc/mon/xray/xray
 #else
 #		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
 #fi
-
 #unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
 #rm -rf /etc/mon/xray/Xray-linux-64.zip
 #chmod 655 /etc/mon/xray/xray
@@ -251,9 +234,25 @@ systemctl stop xray
 systemctl start xray
 systemctl enable xray.service
 
-rm -rf /etc/mon/xray/conf/*
-rm -rf /etc/mon/xray/config_full.json
+# CertV2ray
+#curl -s https://get.acme.sh | sh
+#alias acme.sh=~/.acme.sh/acme.sh
+#/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
+#/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
+#/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
+source ~/.bashrc
+if nc -z localhost 443;then /etc/init.d/nginx stop;fi
+if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
+~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+#chown www-data.www-data /etc/mon/xray/xray.*
+chmod +x /etc/mon/xray/xray.key
+cat /etc/mon/tls/$domain.log
+
+
+rm -rf /etc/mon/xray/conf/*
 # // Uuid Service
 uuid=$(/etc/mon/xray/xray uuid)
 
