@@ -241,14 +241,25 @@ systemctl enable xray.service
 #/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
 #/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
-source ~/.bashrc
-if nc -z localhost 443;then /etc/init.d/nginx stop;fi
-if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
-~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+#source ~/.bashrc
+#if nc -z localhost 443;then /etc/init.d/nginx stop;fi
+#if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
+#~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+#~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
+#~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 #chown www-data.www-data /etc/mon/xray/xray.*
-chmod +x /etc/mon/xray/xray.key
+#chmod +x /etc/mon/xray/xray.key
+
+sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
+cd /root/
+wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+bash acme.sh --install
+rm acme.sh
+
+cd .acme.sh
+bash acme.sh --register-account -m anjang614@gmail.com
+bash acme.sh --issue -d $domain --standalone -k ec-256 --force --server letsencrypt >> /etc/mon/tls/$domain.log
+bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 cat /etc/mon/tls/$domain.log
 
 
