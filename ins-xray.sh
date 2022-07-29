@@ -179,7 +179,7 @@ rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
 # // Xray Version
-version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[0].tag_name|head -1)
 
 # / / Installation Xray Core
 xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
@@ -235,11 +235,10 @@ systemctl start xray
 systemctl enable xray.service
 
 # CertV2ray
-#curl -s https://get.acme.sh | sh
-#alias acme.sh=~/.acme.sh/acme.sh
-#/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-#/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
-#/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+curl -s https://get.acme.sh | sh
+/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
+/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 #source ~/.bashrc
 #if nc -z localhost 443;then /etc/init.d/nginx stop;fi
@@ -250,17 +249,17 @@ systemctl enable xray.service
 #chown www-data.www-data /etc/mon/xray/xray.*
 #chmod +x /etc/mon/xray/xray.key
 
-sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
-cd /root/
-wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
-bash acme.sh --install
-rm acme.sh
+#sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
+#cd /root/
+#wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
+#bash acme.sh --install
+#rm acme.sh
 
-cd .acme.sh
-bash acme.sh --register-account -m anjang614@gmail.com
-bash acme.sh --issue -d $domain --standalone -k ec-256 --force --server letsencrypt >> /etc/mon/tls/$domain.log
-bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-cat /etc/mon/tls/$domain.log
+#cd .acme.sh
+#bash acme.sh --register-account -m anjang614@gmail.com
+#bash acme.sh --issue -d $domain --standalone -k ec-256 --force --server letsencrypt >> /etc/mon/tls/$domain.log
+#bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+#cat /etc/mon/tls/$domain.log
 
 
 rm -rf /etc/mon/xray/conf/*
@@ -314,6 +313,11 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 31296,
@@ -345,6 +349,11 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 31297,
@@ -370,6 +379,11 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
     "inbounds": [
         {
             "port": 31304,
@@ -398,6 +412,11 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "listen": "127.0.0.1",
@@ -422,6 +441,11 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
     "inbounds":[
     {
         "port": 31301,
@@ -445,6 +469,11 @@ EOF
 
 cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 443,
@@ -507,6 +536,11 @@ EOF
 cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
 
 {
+  "log": {
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log",
+    "loglevel": "info"
+  },
   "inbounds": [
     {
       "port": 31230,
@@ -545,7 +579,7 @@ cat> /etc/mon/xray/none.json << END
   },
   "inbounds": [
     {
-      "port": 880,
+      "port": 80,
       "protocol": "vmess",
       "settings": {
         "clients": [
@@ -628,7 +662,7 @@ cat> /etc/mon/xray/vnone.json << END
 {
   "log": {
     "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error.log",
+    "error": "/var/log/xray/error1.log",
     "loglevel": "info"
   },
   "inbounds": [
