@@ -161,7 +161,7 @@ if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 ~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-chown www-data.www-data /etc/mon/xray/xray.*
+#chown www-data.www-data /etc/mon/xray/xray.*
 chmod +x /etc/mon/xray/xray.key
 cat /etc/mon/tls/$domain.log
 
@@ -183,18 +183,32 @@ rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
 # // Xray Version
-version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[10].tag_name|head -1)
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
 
-echo " ---> Xray-core version:${version}"
-if wget --help | grep -q show-progress; then
-		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
-else
-		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
-fi
+# / / Installation Xray Core
+xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
 
-unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-rm -rf /etc/mon/xray/Xray-linux-64.zip
-chmod 655 /etc/mon/xray/xray
+# / / Make Main Directory
+mkdir -p /etc/xray
+mkdir -p /etc/xray/conf
+
+# / / Unzip Xray Linux 64
+cd `mktemp -d`
+curl -sL "$xraycore_link" -o xray.zip
+unzip -q xray.zip && rm -rf xray.zip
+mv xray /etc/mon/xray
+chmod +x /etc/mon/xray/xray
+
+#echo " ---> Xray-core version:${version}"
+#if wget --help | grep -q show-progress; then
+#		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+#else
+#		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+#fi
+
+#unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
+#rm -rf /etc/mon/xray/Xray-linux-64.zip
+#chmod 655 /etc/mon/xray/xray
 
 # // system
 rm -rf /etc/systemd/system/xray.service
