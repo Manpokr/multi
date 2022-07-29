@@ -571,7 +571,7 @@ cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
 }
 EOF
 
-cat> /etc/mon/xray/none.json << END
+cat> /etc/mon/xray/conf/none.json << END
 {
   "log": {
     "access": "/var/log/xray/access.log",
@@ -663,7 +663,7 @@ cat> /etc/mon/xray/vnone.json << END
 {
   "log": {
     "access": "/var/log/xray/access.log",
-    "error": "/var/log/xray/error1.log",
+    "error": "/var/log/xray/error2.log",
     "loglevel": "info"
   },
   "inbounds": [
