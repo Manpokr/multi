@@ -45,7 +45,7 @@ echo ""
 	domain=$(cat /etc/mon/xray/domain)
 	none=$( cat /etc/mon/xray/vnone.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g');
         xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-	email=${user}@${domain}
+	email=${user}
 
         echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
