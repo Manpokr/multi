@@ -183,7 +183,7 @@ rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
 
 # // Xray Version
-version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[10].tag_name|head -1)
 
 echo " ---> Xray-core version:${version}"
 if wget --help | grep -q show-progress; then
