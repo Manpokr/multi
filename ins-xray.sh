@@ -239,6 +239,7 @@ curl -s https://get.acme.sh | sh
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
 /root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+cat /etc/mon/tls/$domain.log
 
 #source ~/.bashrc
 #if nc -z localhost 443;then /etc/init.d/nginx stop;fi
