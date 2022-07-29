@@ -45,7 +45,7 @@ echo ""
 	domain=$(cat /etc/mon/xray/domain)
 	none=$( cat /etc/mon/xray/vnone.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g');
         xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-	email=${user}
+	email=${user}@${domain}
 
         echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
@@ -56,7 +56,7 @@ echo ""
         },{"id": "'""$uuid""'","email": "'""$user""'"' /etc/mon/xray/vnone.json
 
 cat <<EOF >>"/etc/mon/config-user/${user}"
-vless://$uuid@$domain:$xtls?encryption=none&security=tls&sni=$sni&type=ws&host=$sni&path=/xrayws#$user
+vless://$uuid@$domain:$xtls?encryption=none&security=tls&sni=$sni&type=ws&host=$sni&path=/xrayws#$email
 vless://${uuid}@${domain}:$none?path=/xrayws&encryption=none&type=ws&sni=$sni#${user}
 EOF
  
