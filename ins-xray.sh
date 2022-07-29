@@ -30,7 +30,7 @@ apt -y install binutils
 apt -y install sudo
 apt -y install lsb-release
 apt -y install bash-completion
-apt -y install nginx
+#apt -y install nginx
 
 if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
     apt -y install cron
@@ -46,6 +46,7 @@ if [[ "${release}" == "debian" ]]; then
 		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
 		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
 		sudo apt update 
+                apt -y install nginx
 
 elif [[ "${release}" == "ubuntu" ]]; then
 		sudo apt install gnupg2 ca-certificates lsb-release -y 
@@ -55,6 +56,7 @@ elif [[ "${release}" == "ubuntu" ]]; then
 		# gpg --dry-run --quiet --import --import-options import-show /tmp/nginx_signing.key
 		sudo mv /tmp/nginx_signing.key /etc/apt/trusted.gpg.d/nginx_signing.asc
 		sudo apt update 
+                apt -y install nginx
 fi
 systemctl daemon-reload
 systemctl enable nginx
