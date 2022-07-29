@@ -34,6 +34,10 @@ secs_to_human() {
 }
 start=$(date +%s)
 
+ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1 
+
 echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
 echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
