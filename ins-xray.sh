@@ -164,7 +164,7 @@ EOF
 #curl -s https://get.acme.sh | sh
 #alias acme.sh=~/.acme.sh/acme.sh
 #/root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
-#/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --force >> /etc/mon/tls/$domain.log
+#/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --alpn --force >> /etc/mon/tls/$domain.log
 #/root/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
 
 source ~/.bashrc
