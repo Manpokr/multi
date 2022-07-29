@@ -402,7 +402,7 @@ apt autoremove -y
 
 # // finishing
 cd
-chown -R www-data:www-data /home/vps/public_html
+#chown -R www-data:www-data /home/vps/public_html
 chown -R www-data:www-data /usr/share/nginx/html
 
 /etc/init.d/nginx restart
