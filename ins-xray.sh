@@ -838,7 +838,7 @@ EOF
 
 sleep 1
 echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
 chmod +x /usr/bin/bbr
 bbr >/dev/null 2>&1
 rm /usr/bin/bbr >/dev/null 2>&1
