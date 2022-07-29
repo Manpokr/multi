@@ -34,7 +34,7 @@ date
 sleep 0.5
 domain=$(cat /etc/mon/xray/domain)
 source /var/lib/manpokr/ipvps.conf
-domain=$IP
+#domain=$IP
 
 # // ###
 clear
@@ -47,9 +47,9 @@ sudo pkill -f nginx & wait $!
 systemctl stop nginx
 systemctl stop xray
 systemctl stop xray.service
-systemctl stop trojan
-systemctl stop trojan.service
-
+#systemctl stop trojan
+#systemctl stop trojan.service
+systemctl stop vl-xtls
 source ~/.bashrc
 if nc -z localhost 443;then /etc/init.d/nginx stop;fi
 
@@ -58,6 +58,7 @@ if nc -z localhost 443;then /etc/init.d/nginx stop;fi
 
 cat /etc/mon/tls/$domain.log
 systemctl daemon-reload
+systemctl restart vl-xtls
 systemctl restart nginx
 systemctl restart xray
 systemctl restart xray.service
