@@ -44,7 +44,7 @@ echo ""
         hariini=$(date -d "0 days" +"%d-%b-%Y")
 	domain=$(cat /etc/mon/xray/domain)
 	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-	email=${user}@${domain}
+	email=${user}
 
         echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
