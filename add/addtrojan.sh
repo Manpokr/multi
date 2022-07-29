@@ -44,7 +44,7 @@ echo ""
         hariini=$(date -d "0 days" +"%d-%b-%Y")
 	domain=$(cat /etc/mon/xray/domain)
 	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-	email=${user}@${domain}
+	email=${user}
 
         echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
@@ -52,12 +52,13 @@ echo ""
 	mv -f /etc/mon/xray/conf/04_trojan_TCP_inbounds_tmp.json /etc/mon/xray/conf/04_trojan_TCP_inbounds.json
        
 cat <<EOF >>"/etc/mon/config-user/${user}"
-trojan://$uuid@$domain:$xtls?sni=$sni#$user
+trojan://$uuid@$domain:$xtls?sni=$sni#$email
 trojan://${uuid}@${domain}:${xtls}?peer=${sni}&sni=${sni}&alpn=http1.1#${email}
 
 EOF
  
     systemctl restart xray.service
+    systemctl restart tr-tcp
     echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
     sleep 2
     clear
@@ -71,7 +72,7 @@ EOF
     echo -e "Port     : $xtls"
     echo -e "id       : $uuid"
     echo -e "================================="
-    echo -e "Trojan TLS : trojan://$uuid@$domain:$xtls?sni=$sni#$user"
+    echo -e "Trojan TLS : trojan://$uuid@$domain:$xtls?sni=$sni#$email"
     echo -e "================================="
     echo -e "Trojan Tls : trojan://${uuid}@${domain}:${xtls}?peer=${sni}&sni=${sni}&alpn=http1.1#${email}"
     echo -e "================================="
