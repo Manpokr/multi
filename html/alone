@@ -1,3 +1,7 @@
+MYIP=$(wget -qO- ipinfo.io/ip);
+clear
+
+domain=$(cat /etc/mon/xray/domain)
 rm -f /etc/nginx/conf.d/alone.conf
 touch /etc/nginx/conf.d/alone.conf
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
