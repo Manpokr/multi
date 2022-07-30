@@ -140,9 +140,9 @@ chmod 644 /root/.profile
 #sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
 #sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
 
-#curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-#curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-#mkdir -p /home/vps/public_html
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+mkdir -p /home/vps/public_html
 
 # // install badvpn
 cd
