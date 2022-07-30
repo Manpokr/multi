@@ -172,6 +172,9 @@ pgrep -f "nginx" | xargs kill -9
 systemctl restart nginx
 
 cd
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+mkdir -p /home/vps/public_html
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
@@ -199,7 +202,7 @@ mkdir -p /etc/xray/conf
 if wget --help | grep -q show-progress; then
 		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
 else
-		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/Xray-linux-64.zip"
+		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
 fi
 unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
 rm -rf /etc/mon/xray/Xray-linux-64.zip
@@ -894,7 +897,7 @@ EOF
 
 sleep 1
 echo -e "[\e[32mINFO\e[0m] Installing bbr.."
-wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/bbr.sh"
+wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
 chmod +x /usr/bin/bbr
 bbr >/dev/null 2>&1
 rm /usr/bin/bbr >/dev/null 2>&1
