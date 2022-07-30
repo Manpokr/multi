@@ -492,11 +492,6 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
             "xver": 1
            },
            {
-            "alpn": "h1",
-            "dest": 31333,
-            "xver": 0
-           },
-           {
             "alpn": "h2",
             "dest": 31302,
             "xver": 0
@@ -899,9 +894,7 @@ sleep 1
 echo -e "[\e[32mINFO\e[0m] Installing bbr.."
 wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
 chmod +x /usr/bin/bbr
-bbr >/dev/null 2>&1
-rm /usr/bin/bbr >/dev/null 2>&1
-sleep 2
+
 
 # // xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31230 -j ACCEPT
