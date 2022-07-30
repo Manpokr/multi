@@ -14,6 +14,28 @@ Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_p
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 clear
+if [[ -n $(which uname) ]]; then
+		if [[ "$(uname)" == "Linux" ]]; then
+			case "$(uname -m)" in
+			'amd64' | 'x86_64')
+				xrayCoreCPUVendor="Xray-linux-64"
+				v2rayCoreCPUVendor="v2ray-linux-64"
+				;;
+			'armv8' | 'aarch64')
+				xrayCoreCPUVendor="Xray-linux-arm64-v8a"
+				v2rayCoreCPUVendor="v2ray-linux-arm64-v8a"
+				;;
+			*)
+				echo "  不支持此CPU架构--->"
+				exit 1
+				;;
+			esac
+		fi
+	else
+		echoContent red "  无法识别此CPU架构，默认amd64、x86_64--->"
+		xrayCoreCPUVendor="Xray-linux-64"
+		v2rayCoreCPUVendor="v2ray-linux-64"
+	fi
 
 domain=$(cat /etc/mon/xray/domain)
 apt install iptables iptables-persistent -y
@@ -28,7 +50,9 @@ timedatectl set-timezone Asia/Kuala_Lumpur
 chronyc sourcestats -v
 chronyc tracking -v
 date
-
+iptables -I INPUT -p tcp --dport 80 -m comment --comment "allow http(mack-a)" -j ACCEPT
+iptables -I INPUT -p tcp --dport 443 -m comment --comment "allow https(mack-a)" -j ACCEPT
+	
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
 date
 
@@ -200,12 +224,13 @@ mkdir -p /etc/xray/conf
 
 #echo " ---> Xray-core version:${version}"
 if wget --help | grep -q show-progress; then
-		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
+		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/${xrayCoreCPUVendor}.zip"
 else
-		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
+		wget -c -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/${version}/${xrayCoreCPUVendor}.zip"
 fi
-unzip -o /etc/mon/xray/Xray-linux-64.zip -d /etc/mon/xray 
-rm -rf /etc/mon/xray/Xray-linux-64.zip
+
+unzip -o /etc/mon/xray/${xrayCoreCPUVendor}.zip -d /etc/mon/xray 
+rm -rf /etc/mon/xray/${xrayCoreCPUVendor}.zip
 chmod 655 /etc/mon/xray/xray
 
 # // system
@@ -241,7 +266,7 @@ systemctl enable xray.service
 curl -s https://get.acme.sh | sh
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
 /root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
+~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
 cat /etc/mon/tls/$domain.log
 
 #source ~/.bashrc
@@ -249,8 +274,8 @@ cat /etc/mon/tls/$domain.log
 #if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
 #~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 #~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
-#~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-#chown www-data.www-data /etc/mon/xray/xray.*
+#~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
+#chown www-data.www-data /etc/mon/xray.*
 #chmod +x /etc/mon/xray/xray.key
 
 #sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
@@ -519,8 +544,8 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
           ],
           "certificates": [
             {
-              "certificateFile": "/etc/mon/xray/xray.crt",
-              "keyFile": "/etc/mon/xray/xray.key",
+              "certificateFile": "/etc/mon/tls/xray.crt",
+              "keyFile": "/etc/mon/tls/xray.key",
               "ocspStapling": 3600,
               "usage": "encipherment"
            }
