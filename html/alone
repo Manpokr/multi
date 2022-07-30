@@ -1,5 +1,9 @@
+rm -f /etc/nginx/conf.d/alone.conf
+touch /etc/nginx/conf.d/alone.conf
+cat <<EOF >>/etc/nginx/conf.d/alone.conf
+
 		server {
-				listen 80;
+				listen 81;
 				server_name _;
 				return 403;
         }
@@ -9,14 +13,14 @@
 				return 403;
 		}
         server {
-        	listen 80;
-        	listen [::]:80;
-        	server_name 047h.manternet.online;
-        	return 302 https://047h.manternet.online${request_uri};
+        	listen 81;
+        	listen [::]:81;
+        	server_name ${domain};
+        	return 302 https://${domain}${request_uri};
         }
 server {
 	listen 127.0.0.1:31302 http2 so_keepalive=on;
-	server_name 047h.manternet.online;
+	server_name ${domain};
 	root /usr/share/nginx/html;
 
 	client_header_timeout 1071906480m;
@@ -24,26 +28,26 @@ server {
 
 	location /s/ {
     	add_header Content-Type text/plain;
-    	alias /etc/v2ray-agent/subscribe/;
+    	alias /etc/mon/config-url/;
     }
 
-    location /xmumgrpc {
-    	if ($content_type !~ "application/grpc") {
+    location /vlgrpc {
+    	if (bbb !~ "application/grpc") {
     		return 404;
     	}
  		client_max_body_size 0;
-		grpc_set_header X-Real-IP $proxy_add_x_forwarded_for;
+		grpc_set_header X-Real-IP ccc;
 		client_body_timeout 1071906480m;
 		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31301;
 	}
 
-	location /xmumtrojangrpc {
-		if ($content_type !~ "application/grpc") {
+	location /trgrpc {
+		if (bbb !~ "application/grpc") {
             		return 404;
 		}
  		client_max_body_size 0;
-		grpc_set_header X-Real-IP $proxy_add_x_forwarded_for;
+		grpc_set_header X-Real-IP ccc;
 		client_body_timeout 1071906480m;
 		grpc_read_timeout 1071906480m;
 		grpc_pass grpc://127.0.0.1:31304;
@@ -54,13 +58,24 @@ server {
 }
 server {
 	listen 127.0.0.1:31300;
-	server_name 047h.manternet.online;
+	server_name ${domain};
 	root /usr/share/nginx/html;
 	location /s/ {
 		add_header Content-Type text/plain;
-		alias /etc/v2ray-agent/subscribe/;
+		alias /etc/mon/config-url/;
 	}
 	location / {
 		add_header Strict-Transport-Security "max-age=15552000; preload" always;
 	}
 }
+EOF
+
+# // Move
+sed -i 's/aaa/${request_uri}/g' /etc/nginx/conf.d/alone.conf
+sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
+sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
+systemctl daemon-reload
+systemctl start nginx
+nginx -s stop
+pgrep -f "nginx" | xargs kill -9
+systemctl restart nginx
