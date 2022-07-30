@@ -291,7 +291,8 @@ cat /etc/mon/tls/$domain.log
 
 rm -rf /etc/mon/xray/conf/*
 # // Uuid Service
-uuid=$(/etc/mon/xray/xray uuid)
+#uuid=$(/etc/mon/xray/xray uuid
+uuid=$(cat /proc/sys/kernel/random/uuid)
 
 # // Json File
 cat <<EOF >/etc/mon/xray/conf/00_log.json
