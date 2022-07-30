@@ -140,10 +140,6 @@ chmod 644 /root/.profile
 #sed -i 's/bbb/$content_type/g' /etc/nginx/conf.d/alone.conf
 #sed -i 's/ccc/$proxy_add_x_forwarded_for/g' /etc/nginx/conf.d/alone.conf
 
-curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-mkdir -p /home/vps/public_html
-
 # // install badvpn
 cd
 wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/Manpokr/multi/main/badvpn-udpgw64"
@@ -381,7 +377,7 @@ chmod +x xray-xp
 chmod +x v2ray-xp
 chmod +x kernel-updt
 
-echo "0 1 * * * reboot" >> /etc/crontab
+
 echo "0 0 * * * root /sbin/hwclock -w   # synchronize hardware & system clock each day at 00:00 am" >> /etc/crontab
 echo "0 */12 * * * root /usr/bin/clear-log # clear log every  two hours" >> /etc/crontab
 echo "0 */12 * * * root /usr/bin/clearcache  #clear cache every 12hours daily" >> /etc/crontab
@@ -389,6 +385,7 @@ echo "0 0 * * * root /usr/bin/delete # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xp # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xray-xp # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/v2ray-xp # delete expired user" >> /etc/crontab
+echo "0 1 * * * reboot" >> /etc/crontab
 
 # // remove unnecessary files
 cd
