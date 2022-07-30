@@ -351,7 +351,7 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
   "log": {
     "access": "/var/log/xray/access.log",
     "error": "/var/log/xray/error.log",
-    "loglevel": "warning"
+    "loglevel": "info"
   },
   "inbounds": [
     {
