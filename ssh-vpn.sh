@@ -385,7 +385,7 @@ echo "0 0 * * * root /usr/bin/delete # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xp # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xray-xp # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/v2ray-xp # delete expired user" >> /etc/crontab
-echo "0 1 * * * reboot" >> /etc/crontab
+echo "0 1 * * * root reboot" >> /etc/crontab
 
 # // remove unnecessary files
 cd
