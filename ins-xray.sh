@@ -38,10 +38,6 @@ if [[ -n $(which uname) ]]; then
 	fi
 
 domain=$(cat /etc/mon/xray/domain)
-apt install iptables iptables-persistent -y
-apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
-apt install socat cron bash-completion ntpdate -y
-ntpdate pool.ntp.org
 apt -y install chrony
 timedatectl set-ntp true
 systemctl enable chronyd && systemctl restart chronyd
@@ -50,9 +46,7 @@ timedatectl set-timezone Asia/Kuala_Lumpur
 chronyc sourcestats -v
 chronyc tracking -v
 date
-iptables -I INPUT -p tcp --dport 80 -m comment --comment "allow http(mack-a)" -j ACCEPT
-iptables -I INPUT -p tcp --dport 443 -m comment --comment "allow https(mack-a)" -j ACCEPT
-	
+
 ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
 date
 
@@ -244,6 +238,7 @@ Description=Xray - A unified platform for anti-censorship
 # Documentation=https://v2ray.com https://guide.v2fly.org
 After=network.target nss-lookup.target
 Wants=network-online.target
+
 [Service]
 Type=simple
 User=root
@@ -252,6 +247,7 @@ NoNewPrivileges=yes
 ExecStart=/etc/mon/xray/xray run -confdir /etc/mon/xray/conf        
 Restart=on-failure
 RestartPreventExitStatus=23
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -264,6 +260,8 @@ systemctl enable xray.service
 
 # CertV2ray
 curl -s https://get.acme.sh | sh
+/root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 /root/.acme.sh/acme.sh --register-account -m anjang614@gmail.com 
 /root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
