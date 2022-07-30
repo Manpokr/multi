@@ -326,12 +326,7 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_TCP_inbounds.json
       "protocol": "trojan",
       "tag": "trojanTCP",
       "settings": {
-        "clients": [
-             {
-                  "password": "${uuid}",
-		  "email": "${domain}_trojan_tcp"
-             }
-        ],
+        "clients": [],
         "fallbacks": [
             {"dest": "31300"}
         ]
