@@ -37,8 +37,8 @@ echo ""
 	fi
     read -p "SNI (BUG) : " sni
 	read -p "Duration (day) : " duration
-        uuid=$(/etc/mon/xray/xray uuid)
-#	uuid=$(cat /proc/sys/kernel/random/uuid)
+#        uuid=$(/etc/mon/xray/xray uuid)
+	uuid=$(cat /proc/sys/kernel/random/uuid)
 	exp=$(date -d +${duration}days +%Y-%m-%d)
 	expired=$(date -d "${exp}" +"%d %b %Y")
         hariini=$(date -d "0 days" +"%d-%b-%Y")
