@@ -353,7 +353,7 @@ cat <<EOF >/etc/mon/xray/conf/03_VLESS_WS_inbounds.json
   "log": {
     "access": "/var/log/xray/access.log",
     "error": "/var/log/xray/error.log",
-    "loglevel": "info"
+    "loglevel": "warning"
   },
   "inbounds": [
     {
@@ -392,7 +392,12 @@ cat <<EOF >/etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
             "protocol": "trojan",
             "tag": "trojangRPCTCP",
             "settings": {
-                "clients": [],
+                "clients": [
+                  {
+                      "password": "${uuid}",
+                      "email": "${domain}_trojan_gRPC"
+                    }
+                ],
                 "fallbacks": [
                     {
                         "dest": "31300"
@@ -416,7 +421,7 @@ cat <<EOF >/etc/mon/xray/conf/05_VMess_WS_inbounds.json
   "log": {
     "access": "/var/log/xray/access.log",
     "error": "/var/log/xray/error.log",
-    "loglevel": "info"
+    "loglevel": "warning"
   },
   "inbounds": [
     {
@@ -473,7 +478,7 @@ cat <<EOF >/etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
   "log": {
     "access": "/var/log/xray/access.log",
     "error": "/var/log/xray/error.log",
-    "loglevel": "info"
+    "loglevel": "warning"
   },
   "inbounds": [
     {
@@ -552,7 +557,7 @@ cat <<EOF >/etc/mon/xray/conf/07_trojan_TCP_inbounds.json
         "clients": [],
         "fallbacks": [
           {
-            "dest": "31300"
+            "dest": "31333"
           }
         ]
       },
