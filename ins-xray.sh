@@ -190,9 +190,9 @@ pgrep -f "nginx" | xargs kill -9
 systemctl restart nginx
 
 cd
-curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-mkdir -p /home/vps/public_html
+#curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+#curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+#mkdir -p /home/vps/public_html
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
