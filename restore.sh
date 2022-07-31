@@ -63,13 +63,9 @@ cp /root/backup/ss.conf /etc/shadowsocks-libev/akun.conf &> /dev/null
 echo -e "[ ${green}INFO${NC} ] • Restoring admin data..."
 sleep 1
 cp -r /root/backup/manpokr /var/lib/ &> /dev/null
-#cp -r /root/backup/wireguard /etc/ &> /dev/null
 cp -r /root/backup/.acme.sh /root/ &> /dev/null
-#cp -r /root/backup/sstp /home/ &> /dev/null
-#cp -r /root/backup/trojan-go /etc/ &> /dev/null
 cp -r /root/backup/trojan /etc/ &> /dev/null
 cp -r /root/backup /etc/ &> /dev/null
-#cp -r /root/backup/shadowsocksr /usr/local/ &> /dev/null
 cp -r /root/backup/html /usr/share/nginx/ &> /dev/null
 cp /root/backup/crontab /etc/ &> /dev/null
 cp -r /root/backup/cron.d /etc/ &> /dev/null
