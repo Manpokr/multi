@@ -38,7 +38,7 @@ echo ""
         hariini=$(date -d "0 days" +"%d-%b-%Y")
 	domain=$(cat /etc/mon/xray/domain)
 	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
-        none=$(cat /etc/mon/xray/none.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g')
+        none=$(cat /etc/mon/xray/conf/none.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g')
 	email=${user}
 cat>/etc/mon/xray/${user}-tls.json<<EOF
       {
@@ -57,12 +57,12 @@ cat>/etc/mon/xray/${user}-tls.json<<EOF
        "sni": "${sni}"
 }
 EOF
-cat>/etc/mon/xray/$user-none.json<<EOF
+cat>/etc/mon/xray/${user}-none.json<<EOF
       {
       "v": "2",
       "ps": "${user}",
       "add": "${domain}",
-      "port": "${xtls}",
+      "port": "${none}",
       "id": "${uuid}",
       "aid": "0",
       "net": "ws",
@@ -76,13 +76,16 @@ EOF
     vmess_base641=$( base64 -w 0 <<< $vmess_json1)
     vmess_base642=$( base64 -w 0 <<< $vmess_json2)
 
-    vmesslink1="vmess://$(base64 -w 0 /etc/mon/xray/tls.json)"
-    vmesslink2="vmess://$(base64 -w 0 /etc/mon/xray/none.json)"
+    vmesslink1="vmess://$(base64 -w 0 /etc/mon/xray/${user}-tls.json)"
+    vmesslink2="vmess://$(base64 -w 0 /etc/mon/xray/${user}-none.json)"
 
 	echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
     cat /etc/mon/xray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json
 	mv -f /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json /etc/mon/xray/conf/05_VMess_WS_inbounds.json
+
+    sed -i '/#none$/a\### '"$user $exp"'\
+        },{"id": "'""$uuid""'","alterId": '"0"',"email": "'""$user""'"' /etc/mon/xray/conf/none.json
 
     cat <<EOF >>"/etc/mon/config-user/${user}"
 ${vmesslink1}
