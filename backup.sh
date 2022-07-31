@@ -30,24 +30,15 @@ echo -e "[ ${green}INFO${NC} ] Processing... "
 mkdir -p /root/backup
 sleep 1
 
-#cp -r /root/.acme.sh /root/acme &> /dev/null
-#cp -r /root/acme/ /root//backup/ &> /dev/null
 cp -r /root/.acme.sh /root/backup/ &> /dev/null
 cp /etc/passwd /root/backup/ &> /dev/null
 cp /etc/group /root/backup/ &> /dev/null
 cp /etc/shadow /root/backup/ &> /dev/null
 cp /etc/gshadow /root/backup/ &> /dev/null
-cp -r /etc/wireguard /root/backup/wireguard &> /dev/null
-#cp /etc/ppp/chap-secrets /root/backup/chap-secrets &> /dev/null
-#cp /etc/ipsec.d/passwd /root/backup/passwd1 &> /dev/null
-cp /etc/shadowsocks-libev/akun.conf /root/backup/ss.conf &> /dev/null
-#cp -r /home/sstp /root/backup/sstp &> /dev/null
-cp -r /var/lib/premium-script/ /root/backup/premium-script &> /dev/null
-cp -r /etc/rare /root/backup/rare &> /dev/null
+cp -r /var/lib/manpokr/ /root/backup/premium-script &> /dev/null
+cp -r /etc/mon /root/backup/mon &> /dev/null
 cp -r /etc/trojan /root/backup/trojan &> /dev/null
-#cp -r /etc/trojan-go /root/backup/trojan-go &> /dev/null
-cp -r /usr/local/shadowsocksr/ /root/backup/shadowsocksr &> /dev/null
-#cp -r /home/vps/public_html /root/backup/public_html &> /dev/null
+cp -r /home/vps/public_html /root/backup/public_html &> /dev/null
 cp -r /usr/share/nginx/html /root/backup/html
 cp -r /etc/cron.d /root/backup/cron.d &> /dev/null
 cp /etc/crontab /root/backup/crontab &> /dev/null
@@ -57,7 +48,7 @@ zip -rP $InputPass $NameUser.zip backup > /dev/null 2>&1
 ##############++++++++++++++++++++++++#############
 LLatest=`date`
 Get_Data () {
-git clone https://github.com/Iansoftware/user-backupv1.git /root/user-backup/ &> /dev/null
+git clone https://github.com/Manpokr/user-backupv1.git /root/user-backup/ &> /dev/null
 }
 
 Mkdir_Data () {
@@ -76,15 +67,15 @@ mv /root/$NameUser.zip /root/user-backup/$NameUser/
 
 Save_And_Exit () {
     cd /root/user-backup
-    git config --global user.email "claralillian2001@gmail.com" &> /dev/null
-    git config --global user.name "Iansoftware" &> /dev/null
+    git config --global user.email "smtp5313@gmail.com" &> /dev/null
+    git config --global user.name "Manternet" &> /dev/null
     rm -rf .git &> /dev/null
     git init &> /dev/null
     git add . &> /dev/null
     git commit -m m &> /dev/null
     git branch -M main &> /dev/null
-    git remote add origin https://github.com/Iansoftware/user-backupv1.git
-    git push -f https://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@github.com/Iansoftware/user-backupv1.git &> /dev/null
+    git remote add origin https://github.com/Manpokr/user-backupv1.git
+    git push -f https://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@github.com/Manpokr/user-backupv1.git &> /dev/null
 }
 
 if [ ! -d "/root/user-backup/" ]; then
