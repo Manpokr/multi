@@ -40,15 +40,11 @@ chown -R www-data:www-data /etc/msmtprc
 # // Downloads
 cd /usr/bin
 wget -O backup-info "https://raw.githubusercontent.com/Manpokr/multi/main/backup-info.sh"
-wget -O autobackup-setup "https://raw.githubusercontent.com/Manpokr/multi/main/autobackup-setup.sh"
-wget -O autobackup "https://raw.githubusercontent.com/Manpokr/multi/main/autobackup.sh"
 wget -O backup "https://raw.githubusercontent.com/Manpokr/multi/main/backup.sh"
 wget -O restore "https://raw.githubusercontent.com/Manpokr/multi/main/restore.sh"
 wget -O strt "https://raw.githubusercontent.com/Manpokr/multi/main/strt.sh"
 wget -O limit-speed "https://raw.githubusercontent.com/Manpokr/multi/main/limit-speed.sh"
 chmod +x backup-info
-chmod +x autobackup-setup
-chmod +x autobackup
 chmod +x backup
 chmod +x restore
 chmod +x strt
