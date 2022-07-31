@@ -68,7 +68,8 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1
 
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
-echo "IP=$( curl -s ipinfo.io/ip)" >> /var/lib/manpokr/ipvps.conf
+domain=$(cat /root/domain)
+echo "IP=$domain" >> /var/lib/manpokr/ipvps.conf
 
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
