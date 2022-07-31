@@ -23,7 +23,6 @@ fi
 clear
 
 # // ADD FOLDER
-mkdir -p /etc/mon/v2ray
 mkdir -p /etc/mon/xray
 touch /root/domain
 touch /etc/mon/v2ray/domain
