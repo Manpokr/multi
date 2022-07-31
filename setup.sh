@@ -27,7 +27,7 @@ if [ -f "/etc/mon/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
-
+apt clean all && apt update -y
 echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
 echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
