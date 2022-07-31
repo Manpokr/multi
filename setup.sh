@@ -27,6 +27,8 @@ if [ -f "/etc/mon/xray/domain" ]; then
 echo "Script Already Installed"
 exit 0
 fi
+
+# // Domain
 apt clean all && apt update -y
 echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
@@ -74,11 +76,11 @@ echo "IP=$domain" >> /var/lib/manpokr/ipvps.conf
 # // Instal Xray
 wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-xray.sh && chmod +x ins-xray.sh && screen -S xray ./ins-xray.sh
 
-# // Install ssh ovpn
-wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
-
 # // Install v2ray Trojan
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
+
+# // Install ssh ovpn
+wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && screen -S ssh-vpn ./ssh-vpn.sh
 
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
