@@ -14,30 +14,12 @@ Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_p
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 clear
-if [[ -n $(which uname) ]]; then
-		if [[ "$(uname)" == "Linux" ]]; then
-			case "$(uname -m)" in
-			'amd64' | 'x86_64')
-				xrayCoreCPUVendor="Xray-linux-64"
-				v2rayCoreCPUVendor="v2ray-linux-64"
-				;;
-			'armv8' | 'aarch64')
-				xrayCoreCPUVendor="Xray-linux-arm64-v8a"
-				v2rayCoreCPUVendor="v2ray-linux-arm64-v8a"
-				;;
-			*)
-				echo "  不支持此CPU架构--->"
-				exit 1
-				;;
-			esac
-		fi
-	else
-		echoContent red "  无法识别此CPU架构，默认amd64、x86_64--->"
-		xrayCoreCPUVendor="Xray-linux-64"
-		v2rayCoreCPUVendor="v2ray-linux-64"
-	fi
 
 domain=$(cat /etc/mon/xray/domain)
+apt install iptables iptables-persistent -y
+apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
+apt install socat cron bash-completion ntpdate -y
+ntpdate pool.ntp.org
 apt -y install chrony
 timedatectl set-ntp true
 systemctl enable chronyd && systemctl restart chronyd
@@ -47,33 +29,25 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
-ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
-date
+# install
+apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
+cat> /root/.profile << END
+# ~/.profile: executed by Bourne-compatible login shells.
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+mesg n || true
+clear
+menu
+END
+chmod 644 /root/.profile
 
 installType='apt -y install'
 source /etc/os-release
 release=$ID
 ver=$VERSION_ID
-
-apt clean all && apt update -y
-apt -y install wget
-apt -y install curl
-apt -y install unzip
-apt -y install socat
-apt -y install tar
-apt -y install jq
-apt -y install binutils
-apt -y install sudo
-apt -y install lsb-release
-apt -y install bash-completion
-apt install curl pwgen openssl netcat cron -y
-
-
-#if [[ "${release}" == "ubuntu" ]] || [[ "${release}" == "debian" ]]; then
-#    apt -y install cron
-#else
-#    apt -y install crontabs
-#fi
 
 if [[ "${release}" == "debian" ]]; then
 		sudo apt install gnupg2 ca-certificates lsb-release -y 
@@ -95,31 +69,16 @@ elif [[ "${release}" == "ubuntu" ]]; then
 		sudo apt update 
                 apt -y install nginx
 fi
-systemctl daemon-reload
-ufw disable
-systemctl enable nginx
-apt install gnupg2 -y
 
-#if [[ "${release}" == "debian" ]]; then
-#		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
-#		echo "deb http://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
-#		sudo apt update 
-#
-#elif [[ "${release}" == "ubuntu" ]]; then
-#		curl -s https://pkg.cloudflareclient.com/pubkey.gpg | sudo apt-key add - 
-#		echo "deb http://pkg.cloudflareclient.com/ focal main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
-#		sudo apt update 
-#fi
-#systemctl enable warp-svc
-#warp-cli --accept-tos register
-#warp-cli --accept-tos set-mode proxy
-#warp-cli --accept-tos set-proxy-port 31303
-#warp-cli --accept-tos connect
+systemctl daemon-reload
+systemctl enable nginx
 
 # // Install nginx
-
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
+sudo apt install gnupg2 ca-certificates lsb-release -y
+systemctl daemon-reload
+systemctl enable nginx
 
 touch /etc/nginx/conf.d/alone.conf
 cat <<EOF >>/etc/nginx/conf.d/alone.conf
@@ -184,20 +143,18 @@ mkdir /etc/systemd/system/nginx.service.d
 printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 rm /etc/nginx/conf.d/default.conf
 systemctl daemon-reload
-systemctl start nginx
-nginx -s stop
-pgrep -f "nginx" | xargs kill -9
-systemctl restart nginx
-
+service nginx restart
 cd
-#curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
-#curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
-#mkdir -p /home/vps/public_html
+
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
 rm -f /usr/share/nginx/html.zip*
 chown -R www-data:www-data /usr/share/nginx/html
+
+curl https://raw.githubusercontent.com/Manpokr/multi/main/nginx.conf > /etc/nginx/nginx.conf
+curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/conf.d/vps.conf
+mkdir -p /home/vps/public_html
 
 # // Xray Version
 version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
@@ -267,28 +224,6 @@ curl -s https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
 cat /etc/mon/tls/$domain.log
 
-#source ~/.bashrc
-#if nc -z localhost 443;then /etc/init.d/nginx stop;fi
-#if ! [ -d /root/.acme.sh ];then curl https://get.acme.sh | sh;fi
-#~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-#~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force >> /etc/mon/tls/$domain.log
-#~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
-#chown www-data.www-data /etc/mon/xray.*
-#chmod +x /etc/mon/xray/xray.key
-
-#sudo lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
-#cd /root/
-#wget https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh
-#bash acme.sh --install
-#rm acme.sh
-
-#cd .acme.sh
-#bash acme.sh --register-account -m anjang614@gmail.com
-#bash acme.sh --issue -d $domain --standalone -k ec-256 --force --server letsencrypt >> /etc/mon/tls/$domain.log
-#bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-#cat /etc/mon/tls/$domain.log
-
-
 rm -rf /etc/mon/xray/conf/*
 # // Uuid Service
 #uuid=$(/etc/mon/xray/xray uuid
@@ -327,15 +262,6 @@ cat <<EOF >/etc/mon/xray/conf/10_ipv4_outbounds.json
             "tag":"blackhole-out"
         }
     ]
-}
-EOF
-cat <<EOF >/etc/mon/xray/conf/11_dns.json
-{
-    "dns": {
-        "servers": [
-          "localhost"
-        ]
-  }
 }
 EOF
 
@@ -770,148 +696,14 @@ cat> /etc/mon/xray/vnone.json << END
 }
 END
 
-cat > /etc/systemd/system/vl-xtls.service << EOF
-[Unit]
-Description=XRay Xtls Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/02_VLESS_TCP_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/vl-wstls.service << EOF
-[Unit]
-Description=XRay VLess Ws Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/03_VLESS_WS_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/tr-grpc.service << EOF
-[Unit]
-Description=XRay Trojan Grpc Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_gRPC_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-
-cat > /etc/systemd/system/tr-tcp.service << EOF
-[Unit]
-Description=XRay Trojan TCP Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/04_trojan_TCP_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/vm-ws.service << EOF
-[Unit]
-Description=XRay Vmess Ws Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/05_VMess_WS_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/vl-grpc.service << EOF
-[Unit]
-Description=XRay VLess Grpc Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/06_VLESS_gRPC_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/tr-xtls.service << EOF
-[Unit]
-Description=XRay Trojan xtls Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/conf/07_trojan_TCP_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-cat > /etc/systemd/system/vm-none.service << EOF
-[Unit]
-Description=XRay vm none Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/none.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/vl-none.service << EOF
-[Unit]
-Description=XRay Vl None Service
-Documentation=https://speedtest.net https://github.com/XTLS/Xray-core
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/xray/xray -config /etc/mon/xray/vnone.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
+cat <<EOF >/etc/mon/xray/conf/11_dns.json
+{
+    "dns": {
+        "servers": [
+          "localhost"
+        ]
+  }
+}
 EOF
 
 sleep 1
@@ -948,26 +740,11 @@ netfilter-persistent reload
 
 # // Starting
 systemctl daemon-reload
-systemctl enable xray.service
+systemctl restart xray
+systemctl enable xray
 systemctl restart xray.service
-systemctl enable vl-xtls
-systemctl restart vl-xtls
-systemctl enable vl-wstls
-systemctl restart vl-wstls
-systemctl enable tr-grpc
-systemctl restart tr-grpc
-systemctl enable tr-tcp
-systemctl restart tr-tcp
-systemctl enable vm-ws
-systemctl restart vm-ws
-systemctl enable vl-grpc
-systemctl restart vl-grpc
-systemctl enable tr-xtls
-systemctl restart tr-xtls
-systemctl enable vm-none
-systemctl restart vm-none
-systemctl enable vl-none
-systemctl restart vl-none
+systemctl enable xray.service
+
 # // Download
 cd /usr/bin
 wget -O addxray "https://raw.githubusercontent.com/Manpokr/multi/main/add/addxray.sh"
@@ -1024,14 +801,14 @@ chmod +x trialtrojan
 chmod +x menu-xray
 cd
 
-systemctl daemon-reload
-systemctl restart nginx
-systemctl restart xray
 
+rm -f ins-xray.sh
 clear
 echo -e " ${RED}XRAY INSTALL DONE ${NC}"
 sleep 2
 clear
 
-rm -f ins-xray.sh
 cp /root/domain /etc/xray
+systemctl daemon-reload
+systemctl restart nginx
+systemctl restart xray
