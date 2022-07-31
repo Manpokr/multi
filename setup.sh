@@ -28,50 +28,43 @@ echo "Script Already Installed"
 exit 0
 fi
 
+echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
+echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
+echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+read -p " Hostname / Domain: " host
+
+# // Add Folder
+clear
+mkdir -p /etc/mon
+mkdir -p /etc/mon/xray
+mkdir -p /etc/mon/tls
+mkdir -p /etc/mon/config-url
+mkdir -p /etc/mon/config-user
+mkdir -p /etc/mon/xray/conf
+mkdir -p /etc/systemd/system/
+mkdir -p /var/log/xray/
+mkdir /var/lib/manpokr;
+touch /etc/mon/xray/clients.txt
+echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
+echo "$host" >> /etc/mon/xray/domain
+echo "$host" >> /root/domain
+echo "2.0 Beta" >> /home/version
+echo "Manternet" >> /home/contact
+
 # // Start
 secs_to_human() {
     echo "Installation time : $(( ${1} / 3600 )) hours $(( (${1} / 60) % 60 )) minute's $(( ${1} % 60 )) seconds"
 }
 start=$(date +%s)
 
-ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
-sysctl -w net.ipv6.conf.all.disable_ipv6=1
-sysctl -w net.ipv6.conf.default.disable_ipv6=1 
-
-echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "${CYAN} Sila Masukkan Sub Domain (sub.yourdomain.com) $NC"
-echo -e "${CYAN} Jika tiada Sila [ Ctrl+C ] • To-Exit $NC"
-echo -e "\e[36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-read -p " Hostname / Domain: " host
-echo "IP=$host" >> /var/lib/manpokr/ipvps.conf
-echo "$host" >> /etc/mon/xray/domain
-echo "$host" >> /root/domain
-domain=$(cat /etc/mon/xray/domain)
-
-# // Add Folder
-clear
-mkdir -p /etc/mon
-mkdir -p /etc/mon/xray
-mkdir -p /etc/mon/v2ray
-mkdir -p /etc/mon/tls
-mkdir -p /etc/mon/config-url
-mkdir -p /etc/mon/config-user
-mkdir -p /etc/mon/xray/conf
-mkdir -p /etc/mon/v2ray/conf
-mkdir -p /etc/systemd/system/
-mkdir -p /var/log/xray/
-mkdir -p /var/log/v2ray/
-mkdir /var/lib/manpokr;
-touch /etc/mon/xray/clients.txt
-touch /etc/mon/v2ray/clients.txt
-
-echo "2.0 Beta" >> /home/version
-echo "Manternet" >> /home/contact
-
 clear
 # // Update
 apt-get update -y && apt-get upgrade -y && update-grub -y
 clear
+ln -fs /usr/share/zoneinfo/Asia/Kuala_Lumpur /etc/localtime
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1 
 
 # // CloudFlare
 wget https://raw.githubusercontent.com/Manpokr/multi/main/cf.sh && chmod +x cf.sh && ./cf.sh
@@ -86,9 +79,6 @@ wget https://raw.githubusercontent.com/Manpokr/multi/main/ssh-vpn.sh && chmod +x
 # // Install v2ray Trojan
 #wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-trojan.sh && chmod +x ins-trojan.sh && screen -S trojan ./ins-trojan.sh
 
-# // Instal V2ray
-#wget https://raw.githubusercontent.com/Manpokr/multi/main/ins-v2ray.sh && chmod +x ins-v2ray.sh && screen -S v2ray ./ins-v2ray.sh
-
 # // Backup
 wget https://raw.githubusercontent.com/Manpokr/multi/main/set-br.sh && chmod +x set-br.sh && ./set-br.sh
 
@@ -99,13 +89,11 @@ rm -f /root/ssh-vpn.sh
 rm -f /root/ins-trojan.sh
 rm -f /root/set-br.sh
 rm -f /root/ins-xray.sh
-rm -f /root/ins-v2ray.sh
 rm -f /root/ohp.sh
-rm -f /root/cert.sh
 rm -f /root/domain
 rm -f /root/cf.sh
 
-systemctl daemon-reload
+restart
 history -c
 clear
 
@@ -126,16 +114,6 @@ echo "   - XRAY VLESS XTLS DIRECT  : 443"  | tee -a log-install.txt
 echo "   - XRAY VLESS WS TLS       : 443"  | tee -a log-install.txt
 echo "   - XRAY TROJAN TLS         : 443"  | tee -a log-install.txt
 echo "   - XRAY VMESS TLS          : 443"  | tee -a log-install.txt
-echo "   - XRAY VLESS GRPC         : 8445"  | tee -a log-install.txt
-echo "   - XRAY TROJAN GRPC TLS    : 8445"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "   - V2RAY VLESS TLS SPLICE  : 8080" | tee -a log-install.txt
-echo "   - V2RAY VLESS TLS DIRECT  : 8080" | tee -a log-install.txt
-echo "   - V2RAY VLESS WS TLS      : 8080" | tee -a log-install.txt
-echo "   - V2RAY TROJAN TLS        : 8080" | tee -a log-install.txt
-echo "   - V2RAY VMESS TLS         : 8080" | tee -a log-install.txt
-echo "   - V2RAY VLESS GRPC        : 8446"  | tee -a log-install.txt
-echo "   - V2RAY TROJAN GRPC TLS   : 8446"  | tee -a log-install.txt
 echo "   - Trojan-GFW              : 2087" | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
 echo "   >>> Server Information & Other Features"  | tee -a log-install.txt
@@ -145,8 +123,7 @@ echo "   - DDOS Dflate              : [ON]"  | tee -a log-install.txt
 echo "   - IPtables                 : [ON]"  | tee -a log-install.txt
 echo "   - Auto-Reboot              : [OFF]" | tee -a log-install.txt
 echo "   - IPv6                     : [OFF]" | tee -a log-install.txt
-echo "   - Auto-Remove-Expired      : [ON]"  | tee -a log-install.txt
-echo "   - Autobackup Data                "  | tee -a log-install.txt
+echo "   - Auto-Remove-Expired      : [ON]"  | tee -a log-install.txt                
 echo "   - AutoKill Multi Login User       " | tee -a log-install.txt
 echo "   - Auto Delete Expired Account     " | tee -a log-install.txt
 echo "   - Fully automatic script          " | tee -a log-install.txt
