@@ -58,7 +58,6 @@ trojan://${uuid}@${domain}:${xtls}?peer=${sni}&sni=${sni}&alpn=http1.1#${email}
 EOF
  
     systemctl restart xray.service
-    systemctl restart tr-tcp
     echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
     sleep 2
     clear
