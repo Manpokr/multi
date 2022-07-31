@@ -30,12 +30,6 @@ systemctl restart v2ray.service
 echo -e "[ \033[32mok\033[0m ] v2ray.service Service Restarted"
 systemctl restart trojan
 echo -e "[ \033[32mok\033[0m ] trojan Service Restarted"
-systemctl restart shadowsocks-libev
-echo -e "[ \033[32mok\033[0m ] shadowsocks-libev Service Restarted"
-systemctl restart ssrmu
-echo -e "[ \033[32mok\033[0m ] ssrmu Service Restarted"
-systemctl restart wg-quick@wg0
-echo -e "[ \033[32mok\033[0m ] wg-quick@wg0 Service Restarted"
 systemctl restart ssh
 echo -e "[ \033[32mok\033[0m ] SSH Service Restarted"
 systemctl restart stunnel4
