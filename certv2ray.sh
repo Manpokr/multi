@@ -1,9 +1,6 @@
 #!/bin/bash
 RED='\033[0;31m'                                                                                          
 GREEN='\033[0;32m'                                                                                        
-ORANGE='\033[0;33m'
-BLUE='\033[0;34m'                                                                                         
-PURPLE='\033[0;35m'
 CYAN='\033[0;36m'                                                                                         
 NC='\033[0;37m'
 LIGHT='\033[0;37m'
@@ -33,30 +30,28 @@ date
 
 sleep 0.5
 domain=$(cat /etc/mon/xray/domain)
-source /var/lib/manpokr/ipvps.conf
-#domain=$IP
 
-# // ###
+# // Start
 clear
 echo -e "\033[0;32mstarting........\033[m"
 echo -e "Port ${RED}80${NC} Akan di Hentikan Saat Proses install Cert"
 echo -e ""
 sleep 2
 
+# // Stop Service
 sudo pkill -f nginx & wait $!
 systemctl stop nginx
 systemctl stop xray
 systemctl stop xray.service
-#systemctl stop trojan
-#systemctl stop trojan.service
-systemctl stop vl-xtls
-source ~/.bashrc
-if nc -z localhost 443;then /etc/init.d/nginx stop;fi
+systemctl stop trojan
+systemctl stop trojan.service
 
-~/.acme.sh/acme.sh --issue -d "$domain" -k ec-256 --force --alpn >> /etc/mon/tls/$domain.log
-~/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+/root/.acme.sh/acme.sh --issue -d ${domain} --standalone -k ec-256 --server letsencrypt --force >> /etc/mon/tls/$domain.log
+~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
 cat /etc/mon/tls/$domain.log
+
+# // Restart Service
 systemctl daemon-reload
 systemctl restart vl-xtls
 systemctl restart nginx
@@ -65,32 +60,8 @@ systemctl restart xray.service
 systemctl restart trojan
 systemctl restart trojan.service
 
-#cd .acme.sh
-
-
-#systemctl stop nginx
-#systemctl stop v2ray
-#systemctl stop v2ray.service
-#systemctl stop xray
-#systemctl stop xray.service
-#systemctl stop trojan
-#systemctl stop trojan.service
-#cd acme.sh
-#bash acme.sh --set-default-ca --server letsencrypt
-#bash acme.sh --issue -d $domain --standalone -k ec-256 --listen-v6 --force
-#bash acme.sh --installcert -d $domain --fullchainpath /etc/mon/xray/xray.crt --keypath /etc/mon/xray/xray.key --ecc
-#sleep 2
-
-#systemctl daemon-reload
-#systemctl restart nginx
-#systemctl daemon-reload
-#systemctl restart trojan
-#systemctl restart trojan.service
-#systemctl restart xray
-#systemctl restart xray.service
-echo ""
-echo Done
-echo ""
+echo -e ""
+echo -e "${CYAN}Done${NC}
 sleep 2
 clear
 neofetch
