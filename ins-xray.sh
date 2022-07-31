@@ -15,6 +15,7 @@ Info="${Green_font_prefix}[information]${Font_color_suffix}"
 MYIP=$(wget -qO- ipinfo.io/ip);
 clear
 
+# // Install 
 domain=$(cat /etc/mon/xray/domain)
 apt install iptables iptables-persistent -y
 apt install curl socat xz-utils wget apt-transport-https gnupg gnupg2 gnupg1 dnsutils lsb-release -y 
@@ -29,7 +30,7 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
-# install
+# install Fix
 apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
 cat> /root/.profile << END
 # ~/.profile: executed by Bourne-compatible login shells.
@@ -44,6 +45,7 @@ menu
 END
 chmod 644 /root/.profile
 
+# // Nginx
 installType='apt -y install'
 source /etc/os-release
 release=$ID
@@ -146,6 +148,7 @@ systemctl daemon-reload
 service nginx restart
 cd
 
+# // Html
 rm -rf /usr/share/nginx/html
 wget -q -P /usr/share/nginx https://raw.githubusercontent.com/Manpokr/multi/main/html/html.zip 
 unzip -o /usr/share/nginx/html.zip -d /usr/share/nginx/html 
@@ -159,20 +162,7 @@ mkdir -p /home/vps/public_html
 # // Xray Version
 #version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
 
-# / / Installation Xray Core
-#xraycore_link="https://github.com/XTLS/Xray-core/releases/download/$version/xray-linux-64.zip"
-
-# / / Make Main Directory
-mkdir -p /etc/xray
-mkdir -p /etc/xray/conf
-
-# / / Unzip Xray Linux 64
-#cd `mktemp -d`
-#curl -sL "$xraycore_link" -o xray.zip
-#unzip -q xray.zip && rm -rf xray.zip
-#mv xray /etc/mon/xray
-#chmod +x /etc/mon/xray/xray
-
+# // Download Xray
 echo " ---> Xray-core version:${version}"
 if wget --help | grep -q show-progress; then
 		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
@@ -215,7 +205,7 @@ systemctl stop xray
 systemctl start xray
 systemctl enable xray.service
 
-# CertV2ray
+# // CertV2ray
 curl -s https://get.acme.sh | sh
 /root/.acme.sh/acme.sh  --upgrade  --auto-upgrade
 /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
@@ -224,8 +214,8 @@ curl -s https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --installcert -d ${domain} --fullchainpath /etc/mon/tls/xray.crt --keypath /etc/mon/tls/xray.key --ecc
 cat /etc/mon/tls/$domain.log
 
-rm -rf /etc/mon/xray/conf/*
 # // Uuid Service
+rm -rf /etc/mon/xray/conf/*
 #uuid=$(/etc/mon/xray/xray uuid
 uuid=$(cat /proc/sys/kernel/random/uuid)
 
@@ -712,7 +702,7 @@ wget -q -O /usr/bin/bbr "https://raw.githubusercontent.com/Manpokr/multi/main/ad
 chmod +x /usr/bin/bbr
 
 
-# // xray
+# // Iptable xray
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31230 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31301 -j ACCEPT
 iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 31299 -j ACCEPT
@@ -771,7 +761,7 @@ wget -O deltrojan "https://raw.githubusercontent.com/Manpokr/multi/main/del/delt
 wget -O renewtrojan "https://raw.githubusercontent.com/Manpokr/multi/main/renew/renewtrojan.sh"
 wget -O trialtrojan "https://raw.githubusercontent.com/Manpokr/multi/main/trial/trialtrojan.sh"
 
-
+# // Menu Xray
 wget -O menu-xray "https://raw.githubusercontent.com/Manpokr/multi/main/menu/menu-xray.sh"
 
 chmod +x addxray
