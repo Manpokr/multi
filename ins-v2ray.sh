@@ -12,7 +12,7 @@ clear
 # // Domain
 
 date
-domain=$(cat /etc/v2ray/domain)
+domain=$(cat /etc/mon/v2ray/domain)
 
 # // NGINX V2RAY CONF
 sudo pkill -f nginx & wait $!
@@ -46,7 +46,7 @@ server {
     keepalive_timeout 1071906480m;
 	location /s/ {
     	add_header Content-Type text/plain;
-    	alias /etc/config-url/;
+    	alias /etc/mon/config-url/;
     }
     location /v2vlgrpc {
     	if (bbb !~ "application/grpc") {
@@ -168,15 +168,7 @@ cat <<EOF >/etc/mon/v2ray/conf/10_ipv4_outbounds.json
     ]
 }
 EOF
-cat <<EOF >/etc/mon/v2ray/conf/11_dns.json
-{
-    "dns": {
-        "servers": [
-          "localhost"
-        ]
-  }
-}
-EOF
+
 cat <<EOF >/etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
 {
   "log": {
@@ -421,119 +413,14 @@ cat <<EOF >/etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
   ]
 }
 EOF
-
-# // System
-cat > /etc/systemd/system/v2-vl-xtls.service << EOF
-[Unit]
-Description=V2Ray Xtls Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/v2-vl-ws.service << EOF
-[Unit]
-Description=V2Ray VLess WS Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/03_VLESS_WS_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/v2-tr-grpc.service << EOF
-[Unit]
-Description=V2Ray Trojan grpc Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/04_trojan_gRPC_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-
-cat > /etc/systemd/system/v2-tr-tcp.service << EOF
-[Unit]
-Description=V2Ray Trojan TLS Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/04_trojan_TCP_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/v2-vm-ws.service << EOF
-[Unit]
-Description=V2Ray Vmess Ws Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/05_VMess_WS_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/v2-vl-grpc.service << EOF
-[Unit]
-Description=V2Ray VLess grpc Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/06_VLESS_gRPC_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat > /etc/systemd/system/v2-tr-xtls.service << EOF
-[Unit]
-Description=V2Ray Trojan Xtls Service
-Documentation=https://speedtest.net https://v2ray.com
-After=network.target nss-lookup.target
-[Service]
-User=root
-NoNewPrivileges=true
-ExecStart=/etc/mon/v2ray/v2ray -config /etc/mon/v2ray/conf/07_trojan_TCP_inbounds.json
-RestartPreventExitStatus=23
-LimitNPROC=10000
-LimitNOFILE=1000000
-[Install]
-WantedBy=multi-user.target
+cat <<EOF >/etc/mon/v2ray/conf/11_dns.json
+{
+    "dns": {
+        "servers": [
+          "localhost"
+        ]
+  }
+}
 EOF
 
 cat <<EOF > /etc/v2ray/clients.txt
@@ -565,20 +452,6 @@ systemctl restart v2ray
 systemctl enable v2ray
 systemctl restart v2ray.service
 systemctl enable v2ray.service
-systemctl enable v2-vl-xtls
-systemctl restart v2-vl-xtls
-systemctl enable v2-vl-ws
-systemctl restart v2-vl-ws
-systemctl enable v2-tr-grpc
-systemctl restart v2-tr-grpc
-systemctl enable v2-tr-tcp
-systemctl restart v2-tr-tcp
-systemctl enable v2-vm-ws
-systemctl restart v2-vm-ws
-systemctl enable v2-vl-grpc
-systemctl restart v2-vl-grpc
-systemctl enable v2-tr-xtls
-systemctl restart v2-tr-xtls
 
 # // Menu V2ray
 cd /usr/bin
