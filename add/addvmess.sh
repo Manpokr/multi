@@ -38,8 +38,9 @@ echo ""
         hariini=$(date -d "0 days" +"%d-%b-%Y")
 	domain=$(cat /etc/mon/xray/domain)
 	xtls="$(cat ~/log-install.txt | grep -w "XRAY VLESS XTLS SPLICE" | cut -d: -f2|sed 's/ //g')"
+        none=$(cat /etc/mon/xray/none.json | grep port | sed 's/"//g' | sed 's/port//g' | sed 's/://g' | sed 's/,//g' | sed 's/       //g')
 	email=${user}
-    cat>/etc/mon/xray/${user}-tls.json<<EOF
+cat>/etc/mon/xray/${user}-tls.json<<EOF
       {
        "v": "2",
        "ps": "${email}",
@@ -56,8 +57,28 @@ echo ""
        "sni": "${sni}"
 }
 EOF
+cat>/etc/mon/xray/$user-none.json<<EOF
+      {
+      "v": "2",
+      "ps": "${user}",
+      "add": "${domain}",
+      "port": "${xtls}",
+      "id": "${uuid}",
+      "aid": "0",
+      "net": "ws",
+      "path": "/xrayvws",
+      "type": "none",
+      "host": "${sni}",
+      "tls": "none"
+}
+EOF
+
     vmess_base641=$( base64 -w 0 <<< $vmess_json1)
+    vmess_base642=$( base64 -w 0 <<< $vmess_json2)
+
     vmesslink1="vmess://$(base64 -w 0 /etc/mon/xray/tls.json)"
+    vmesslink2="vmess://$(base64 -w 0 /etc/mon/xray/none.json)"
+
 	echo -e "${user}\t${uuid}\t${exp}" >> /etc/mon/xray/clients.txt
 
     cat /etc/mon/xray/conf/05_VMess_WS_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"add": "'${domain}'","email": "'${email}'"}]' > /etc/mon/xray/conf/05_VMess_WS_inbounds_tmp.json
@@ -197,7 +218,7 @@ dns:
 tproxy: true
 tproxy-port: 23458
 EOF
-	base64Result=$(base64 -w 0 /etc/mon/config-user/${user})
+    base64Result=$(base64 -w 0 /etc/mon/config-user/${user})
     echo ${base64Result} >"/etc/mon/config-url/${uuid}"
     systemctl restart xray.service
     echo -e "${CYAN}[Info]${NC} xray Start Successfully !"
@@ -205,21 +226,22 @@ EOF
     clear
 
     echo -e "=================================" 
-    echo -e "     XRAY USER INFORMATION " 
+    echo -e "   XRAY VMESS USER INFORMATION " 
     echo -e "=================================" 
-    echo -e " Username : $user" 
-    echo -e " IP/Host  : ${MYIP}" 
-    echo -e " Domain   : ${domain}" 
-    echo -e " Sni      : ${sni}"
-    echo -e " Port     : $xtls"
-    echo -e " id       : $uuid"
+    echo -e " Username      : $user" 
+    echo -e " IP/Host       : ${MYIP}" 
+    echo -e " Domain        : ${domain}" 
+    echo -e " Sni           : ${sni}"
+    echo -e " Port TLS      : $xtls"
+    echo -e " Port None TLS : $none"
+    echo -e " id            : $uuid"
     echo -e "================================="
-    echo -e " Vmess TLS : ${vmesslink1}"
+    echo -e " Vmess TLS     : ${vmesslink1}"
     echo -e "================================="
-    echo -e " Link url Clash: https://${domain}/s/${user}"
+    echo -e " Vmess None-TLS: ${vmesslink2}"
     echo -e "================================="
-    echo -e " Created      : $hariini"
-    echo -e " Expired date : $expired"
+    echo -e " Created       : $hariini"
+    echo -e " Expired date  : $expired"
     echo -e "================================="
     echo -e " ScriptMod By Manternet "
     echo ""
