@@ -77,7 +77,6 @@ apt-get remove --purge exim4 -y
 
 # // Install Wget And Curl
 apt -y install wget curl
-apt -y install net-tools
 
 # // Install Requirements Tools
 apt install ruby -y
@@ -227,6 +226,7 @@ sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
 wget https://raw.githubusercontent.com/Manpokr/multi/main/vpn.sh &&  chmod +x vpn.sh && ./vpn.sh
 
 # // install fail2ban
+apt install -y dnsutils tcpdump dsniff grepcidr
 apt -y install fail2ban
 
 # // Instal DDOS Flate
@@ -300,11 +300,7 @@ wget -O tendang "https://raw.githubusercontent.com/Manpokr/multi/main/tendang.sh
 
 # // menu system
 wget -O m-system "https://raw.githubusercontent.com/Manpokr/multi/main/m-system.sh"
-wget -O m-domain "https://raw.githubusercontent.com/Manpokr/multi/main/m-domain.sh"
 wget -O add-host "https://raw.githubusercontent.com/Manpokr/multi/main/add-host.sh"
-wget -O cff "https://raw.githubusercontent.com/Manpokr/multi/main/cff.sh"
-wget -O cfd "https://raw.githubusercontent.com/Manpokr/multi/main/cfd.sh"
-wget -O cfh "https://raw.githubusercontent.com/Manpokr/multi/main/cfh.sh"
 wget -O certv2ray "https://raw.githubusercontent.com/Manpokr/multi/main/certv2ray.sh"
 wget -O port-change "https://raw.githubusercontent.com/Manpokr/multi/main/port-change.sh"
 
@@ -315,25 +311,20 @@ wget -O port-tr "https://raw.githubusercontent.com/Manpokr/multi/main/port-tr.sh
 wget -O port-squid "https://raw.githubusercontent.com/Manpokr/multi/main/port-squid.sh"
 
 # // menu system
-wget -O m-webmin "https://raw.githubusercontent.com/Manpokr/multi/main/m-webmin.sh"
 wget -O ram "https://raw.githubusercontent.com/Manpokr/multi/main/ram.sh"
 wget -O speedtest "https://raw.githubusercontent.com/Manpokr/multi/main/speedtest_cli.py"
 wget -O vpsinfo "https://raw.githubusercontent.com/Manpokr/multi/main/vpsinfo.sh"
 wget -O status "https://raw.githubusercontent.com/Manpokr/multi/main/status.sh"
 wget -O about "https://raw.githubusercontent.com/Manpokr/multi/main/about.sh"
-wget -O auto-reboot "https://raw.githubusercontent.com/Manpokr/multi/main/auto-reboot.sh"
 wget -O clear-log "https://raw.githubusercontent.com/Manpokr/multi/main/clear-log.sh"
 wget -O clearcache "https://raw.githubusercontent.com/Manpokr/multi/main/clearcache.sh"
 wget -O restart "https://raw.githubusercontent.com/Manpokr/multi/main/restart.sh"
 wget -O bw "https://raw.githubusercontent.com/Manpokr/multi/main/bw.sh"
 wget -O resett "https://raw.githubusercontent.com/Manpokr/multi/main/resett.sh"
-wget -O kernel-updt "https://raw.githubusercontent.com/Manpokr/multi/main/kernel-updt.sh"
 
 # // xpired
 wget -O xp "https://raw.githubusercontent.com/Manpokr/multi/main/xp.sh"
 wget -O xray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/xray-xp.sh"
-wget -O v2ray-xp "https://raw.githubusercontent.com/Manpokr/multi/main/v2ray-xp.sh"
-wget -O bbr "https://raw.githubusercontent.com/Manpokr/multi/main/addon/bbr.sh"
 
 chmod +x menu
 chmod +x m-sshovpn
@@ -348,25 +339,18 @@ chmod +x autokill
 chmod +x ceklim
 chmod +x tendang
 chmod +x m-system
-chmod +x m-domain
 chmod +x add-host
-chmod +x cff
-chmod +x cfd
-chmod +x cfh
 chmod +x certv2ray
 chmod +x port-change
 chmod +x port-ssl
 chmod +x port-ovpn
 chmod +x port-tr
 chmod +x port-squid
-chmod +x m-webmin
 chmod +x ram
 chmod +x speedtest
 chmod +x vpsinfo
 chmod +x status
 chmod +x about
-chmod +x bbr
-chmod +x auto-reboot
 chmod +x clear-log
 chmod +x clearcache
 chmod +x restart
@@ -374,9 +358,6 @@ chmod +x bw
 chmod +x resett
 chmod +x xp
 chmod +x xray-xp
-chmod +x v2ray-xp
-chmod +x kernel-updt
-
 
 echo "0 0 * * * root /sbin/hwclock -w   # synchronize hardware & system clock each day at 00:00 am" >> /etc/crontab
 echo "0 */12 * * * root /usr/bin/clear-log # clear log every  two hours" >> /etc/crontab
@@ -384,7 +365,6 @@ echo "0 */12 * * * root /usr/bin/clearcache  #clear cache every 12hours daily" >
 echo "0 0 * * * root /usr/bin/delete # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xp # delete expired user" >> /etc/crontab
 echo "0 0 * * * root /usr/bin/xray-xp # delete expired user" >> /etc/crontab
-echo "0 0 * * * root /usr/bin/v2ray-xp # delete expired user" >> /etc/crontab
 echo "0 1 * * * root reboot" >> /etc/crontab
 
 # // remove unnecessary files
@@ -400,7 +380,6 @@ apt autoremove -y
 # // finishing
 cd
 #chown -R www-data:www-data /home/vps/public_html
-chown -R www-data:www-data /usr/share/nginx/html
 
 /etc/init.d/nginx restart
 /etc/init.d/openvpn restart
