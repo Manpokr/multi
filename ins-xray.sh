@@ -1,18 +1,28 @@
 #!/bin/bash
 # Xray Auto Setup 
+# My Telegram : https://t.me/Manternet
 # =========================
 RED='\033[0;31m'                                                                                          
 GREEN='\033[0;32m'                                                                                        
-ORANGE='\033[0;33m'
-BLUE='\033[0;34m'                                                                                         
-PURPLE='\033[0;35m'
 CYAN='\033[0;36m'                                                                                         
 NC='\033[0;37m'
 LIGHT='\033[0;37m'
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[information]${Font_color_suffix}"
+
+# // Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
+echo "Checking VPS"
+IZIN=$(curl -sS https://raw.githubusercontent.com/Manpokr/mon/main/ip | awk '{print $4}' | grep $MYIP )
+if [[ $MYIP = $IZIN ]]; then
+echo -e "${GREEN}Permission Accepted...${NC}"
+else
+echo -e "${RED}Permission Denied!${NC}";
+echo -e "${LIGHT}Please Contact Admin!!!${NC}"
+rm -f ins-xray.sh
+exit 0
+fi
 clear
 
 # // Install 
@@ -30,7 +40,7 @@ chronyc sourcestats -v
 chronyc tracking -v
 date
 
-# install Fix
+# // install Fix
 apt-get --reinstall --fix-missing install -y linux-headers-cloud-amd64 bzip2 gzip coreutils wget jq screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl git lsof
 cat> /root/.profile << END
 # ~/.profile: executed by Bourne-compatible login shells.
@@ -160,10 +170,11 @@ curl https://raw.githubusercontent.com/Manpokr/multi/main/vps.conf > /etc/nginx/
 mkdir -p /home/vps/public_html
 
 # // Xray Version
-#version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
+version=$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | jq -r .[4].tag_name|head -1)
 
 # // Download Xray
-echo " ---> Xray-core version:${version}"
+echo -e " ---> Xray-core version:${RED}${version}${NC}"
+sleep 1
 if wget --help | grep -q show-progress; then
 		wget -c -q --show-progress -P /etc/mon/xray/ "https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip"
 else
