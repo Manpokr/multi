@@ -56,9 +56,9 @@ read -p "Subdomain (EXP : manternet.xyz. / Press Enter If Only Using Hosts) : " 
 dom=$sub$domain
 exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
 hariini=`date -d "0 days" +"%Y-%m-%d"`
-email=${user}@${domain}
+email=${user}
 
-cat>/etc/v2ray/tls.json<<EOF
+cat>/etc/v2ray/$user-tls.json<<EOF
 {
        "v": "2",
        "ps": "${user}",
@@ -76,8 +76,9 @@ cat>/etc/v2ray/tls.json<<EOF
 }
 EOF
 vmess_base641=$( base64 -w 0 <<< $vmess_json1)
-vmesslink1="vmess://$(base64 -w 0 /etc/v2ray/tls.json)"
-echo -e "${user} ${exp} ${uuid}" >> /etc/v2ray/clients.txt
+vmesslink1="vmess://$(base64 -w 0 /etc/v2ray/$user-tls.json)"
+
+echo -e "${user}\t${uuid}\t${exp}" >> /etc/rare/v2ray/clients.txt
 
 cat /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","add": "'${dom}'","flow": "xtls-rprx-direct","email": "'${email}'"}]' > /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds_tmp.json
 	mv -f /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds_tmp.json /etc/mon/v2ray/conf/02_VLESS_TCP_inbounds.json
